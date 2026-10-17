@@ -1376,7 +1376,7 @@ button {
 .hero-image {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-1.jpg') center/cover;
+  background: url('/local/photo-1.jpg') center/cover;
   transform: scale(1.03);
   animation: hero-image 1.2s ease both;
 }
@@ -1634,7 +1634,7 @@ h2 em {
 .who-photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(7, 39, 66, .1), rgba(7, 39, 66, .48)), url('\public\local\\photo-2.jpg') center/cover;
+  background: linear-gradient(135deg, rgba(7, 39, 66, .1), rgba(7, 39, 66, .48)), url('/local/photo-2.jpg') center/cover;
 }
 
 .image-caption {
@@ -2433,7 +2433,7 @@ button:focus-visible {
   min-height: 245px;
   padding: 28px;
   color: var(--white);
-  background: linear-gradient(135deg, rgba(7, 92, 145, .18), rgba(7, 18, 31, .22)), url('\public\local\\photo-2.jpg') center/cover;
+  background: linear-gradient(135deg, rgba(7, 92, 145, .18), rgba(7, 18, 31, .22)), url('/local/photo-2.jpg') center/cover;
   overflow: hidden;
   isolation: isolate;
 }
@@ -3428,7 +3428,7 @@ button:focus-visible {
 .about-hero-image {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-4.jpg') center/cover;
+  background: url('/local/photo-4.jpg') center/cover;
 }
 
 .about-hero-shade {
@@ -4680,7 +4680,7 @@ button:focus-visible {
 .products-hero-image {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-5.jpg') center/cover;
+  background: url('/local/photo-5.jpg') center/cover;
   animation: products-hero-in .9s cubic-bezier(.22, 1, .36, 1) both;
 }
 
@@ -5601,15 +5601,15 @@ button:focus-visible {
 
 /* Distinct hero media for each main page. */
   .about-hero-image {
-    background-image: url('\public\local\\photo-6.jpg');
+    background-image: url('/local/photo-6.jpg');
 }
 
 .about-hero-image {
-  background-image: url('\public\local\\photo-7.jpg');
+  background-image: url('/local/photo-7.jpg');
 }
 
 .services-hero-image {
-  background-image: url('\public\local\\photo-8.jpg');
+  background-image: url('/local/photo-8.jpg');
 }
 
 .hero-video {
@@ -7185,7 +7185,7 @@ button:focus-visible {
 .services-hero-image {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-1.jpg') center/cover;
+  background: url('/local/photo-1.jpg') center/cover;
 }
 
 .services-hero-shade {
@@ -7571,7 +7571,7 @@ button:focus-visible {
 .om-image-photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(7, 39, 66, .1), rgba(7, 39, 66, .48)), url('\public\local\\photo-2.jpg') center/cover;
+  background: linear-gradient(135deg, rgba(7, 39, 66, .1), rgba(7, 39, 66, .48)), url('/local/photo-2.jpg') center/cover;
   transition: transform .7s cubic-bezier(.2, .7, .2, 1);
 }
 
@@ -7728,7 +7728,7 @@ button:focus-visible {
 .products-photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(7, 39, 66, .08), rgba(7, 39, 66, .46)), url('\public\local\\photo-3.jpg') center/cover;
+  background: linear-gradient(135deg, rgba(7, 39, 66, .08), rgba(7, 39, 66, .46)), url('/local/photo-3.jpg') center/cover;
   transition: transform .7s cubic-bezier(.2, .7, .2, 1);
 }
 
@@ -8422,7 +8422,7 @@ button:focus-visible {
 .projects-hero-bg-visual {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-1.jpg') center/cover;
+  background: url('/local/photo-1.jpg') center/cover;
   transform: scale(1.02);
   opacity: 0.88;
 }
@@ -9220,7 +9220,7 @@ button:focus-visible {
 .media-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-2.jpg') center/cover;
+  background: url('/local/photo-2.jpg') center/cover;
   transform: scale(1.02);
 }
 
@@ -9799,7 +9799,7 @@ button:focus-visible {
 .careers-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-9.jpg') center/cover;
+  background: url('/local/photo-9.jpg') center/cover;
   transform: scale(1.02);
 }
 
@@ -10310,7 +10310,7 @@ button:focus-visible {
 .contact-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('\public\local\\photo-7.jpg') center/cover;
+  background: url('/local/photo-7.jpg') center/cover;
   transform: scale(1.02);
 }
 
@@ -13773,7 +13773,7 @@ button:focus-visible {
 .mg-hero-img {
   position: absolute;
   inset: 0;
-  background:url('\public\local\\photo-8.jpg') center/cover no-repeat;
+  background:url('/local/photo-8.jpg') center/cover no-repeat;
   opacity: .45;
 }
 .mg-hero-shade {
