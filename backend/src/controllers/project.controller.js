@@ -1,5 +1,5 @@
 import { deleteProject, createProject, getProject, listProjects, updateProjectStatus } from '../services/project.service.js';
-import { deleteProjectImage, uploadProjectImage } from '../config/cloudinary.js';
+import { deleteProjectImage, uploadProjectImage } from '../services/media-storage.service.js';
 import { sendSuccess } from '../utils/response.js';
 
 const categories = [
@@ -51,14 +51,17 @@ const validationError = (details) => {
 export const create = async (request, response) => {
   const input = { ...request.body, services: parseServices(request.body.services) };
   const details = validateProjectInput(input);
-  const files = request.files?.images || request.files?.image || [];
+  const files = [
+    ...(request.files?.images || []),
+    ...(request.files?.image || [])
+  ];
   if (!files.length) details.images = 'At least one project image is required.';
   if (Object.keys(details).length > 0) throw validationError(details);
 
   const images = [];
   try {
     for (const file of files) {
-      images.push(await uploadProjectImage(file.buffer));
+      images.push(await uploadProjectImage(file));
     }
     return sendSuccess(response, 201, 'Project created successfully.', await createProject({
       ...input,

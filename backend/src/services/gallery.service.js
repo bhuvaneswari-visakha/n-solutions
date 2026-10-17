@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { deleteMediaImage } from '../config/cloudinary.js';
+import { deleteMediaImage } from './media-storage.service.js';
 import { Gallery } from '../models/Gallery.js';
 
 const invalidId = () => { const error = new Error('Invalid gallery ID.'); error.statusCode = 400; return error; };

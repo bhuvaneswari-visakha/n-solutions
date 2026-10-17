@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { join } from 'node:path';
 import authRoutes from './routes/auth.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import leadRoutes from './routes/lead.routes.js';
@@ -31,6 +32,15 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: false, limit: '10kb' }));
+app.use('/uploads/public', express.static(join(env.uploadDirectory, 'public'), {
+  dotfiles: 'deny',
+  index: false,
+  redirect: false,
+  setHeaders: (response) => {
+    response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    response.setHeader('X-Content-Type-Options', 'nosniff');
+  }
+}));
 
 app.get('/health', (request, response) => {
   response.json({ success: true, message: 'NSolutions Solar API is healthy.' });

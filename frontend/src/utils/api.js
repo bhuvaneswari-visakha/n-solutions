@@ -3,7 +3,20 @@
  * Centralized HTTP client for making API requests with authentication
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+export const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api'
+).replace(/\/+$/, '')
+
+export function resolveMediaUrl(url) {
+  if (typeof url !== 'string' || !url) return ''
+  if (!url.startsWith('/uploads/')) return url
+
+  if (/^https?:\/\//i.test(API_BASE_URL)) {
+    return new URL(url, API_BASE_URL).toString()
+  }
+
+  return url
+}
 
 /**
  * Get authentication token from localStorage

@@ -990,11 +990,6 @@ const aboutProcess = [
   ['06', 'Support & maintenance', 'Provide ongoing support and maintenance following commissioning.'],
 ]
 
-const installationServices = [
-  { number: '01', title: 'Commercial solar installation', text: 'Turnkey solar installations for commercial establishments, designed to make effective use of available rooftop or project space and support the transition to clean energy.', detail: 'We support the project through requirement assessment, site evaluation, system planning, installation, testing, and commissioning.', benefits: ['Potential reduction in electricity costs', 'Efficient use of available rooftop space', 'Grid-connected system options', 'Customized system sizing', 'Professional installation and commissioning', 'Long-term solar energy generation', 'Support for applicable net-metering requirements'], applications: 'Offices, shopping centres, hospitals, hotels, educational institutions, and commercial buildings.', image: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1400&q=88' },
-  { number: '02', title: 'Residential solar installation', text: 'Reliable rooftop solar solutions for homes, planned according to household electricity requirements, available roof area, and applicable solar program requirements.', detail: 'We support customers from initial consultation and site assessment through system installation and commissioning.', benefits: ['Clean and renewable electricity generation', 'Potential reduction in household electricity bills', 'Effective rooftop utilization', 'Grid-connected rooftop solutions', 'Customized system planning', 'Support for applicable government schemes', 'Low-maintenance energy solution'], applications: 'Individual homes, apartments, residential buildings, villas, and housing communities.', image: 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?auto=format&fit=crop&w=1400&q=88' },
-  { number: '03', title: 'Industrial solar installation', text: 'Solar solutions designed for industrial facilities with larger energy requirements and more complex site and electrical conditions.', detail: 'Our approach considers the facility, energy requirement, available installation area, electrical infrastructure, and project scope before implementation.', benefits: ['Supports large energy requirements', 'Potential reduction in electricity expenditure', 'Efficient use of industrial rooftops or available land', 'Customized system design', 'Professional installation and commissioning', 'Suitable for larger solar capacities', 'Ongoing maintenance support'], applications: 'Factories, manufacturing units, warehouses, processing facilities, and industrial campuses.', image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1400&q=88' },
-]
 
 const servicesProcess = [
   ['01', 'Consultation & requirement assessment', 'Understand energy requirements, project objectives, site needs, and expectations.'],
@@ -1017,12 +1012,6 @@ const productItems = ['Solar PV panels', 'Solar inverters', 'Earth pits', 'Light
 
 const productCategories = ['Solar Panels', 'Solar Inverters', 'Earth Pits & Lightning Arrestors', 'Accessories']
 
-const productCategoryImages = {
-  'Solar Panels': 'https://tse2.mm.bing.net/th/id/OIP.Uk-gBBAPNXoTYcLKUea27QHaEo?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
-  'Solar Inverters': 'https://www.livemint.com/lm-img/img/2023/10/26/1600x900/2-0-753746399-solar-0_1680330329680_1698338750055.jpg',
-  'Earth Pits & Lightning Arrestors': 'https://tse3.mm.bing.net/th/id/OIP.NnEW42ljKQbA0343soSdwgHaEJ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
-  'Accessories': 'https://tse1.mm.bing.net/th/id/OIP.MXONou_5bkxe7B-FmrD9AgHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'
-}
 
 function displayProductCategory(category = '') {
   const value = category.toLowerCase()
@@ -1069,8 +1058,8 @@ function SiteHeader({ activePath = '' }) {
   const items = ['Home', 'About', 'Services', 'Projects', 'Products', 'Media', 'Careers', 'Contact']
   return <header className={`site-header`} style={{background:'#ffffff'}}>
     <a className="brand" href="/" onClick={(e) => handleNav(e, '/')} aria-label="N Solutions home"><img className="brand-logo" src="/logo.png" alt="N Solutions" /></a>
-    <button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-    <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
+    <button type="button" className="menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-controls="site-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
+    <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
       {items.map((item) => {
         const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`
         const isCurrent = activePath === path || (path === '/' && activePath === '')
@@ -1195,7 +1184,7 @@ function AboutPage() {
           <div className="about-overview-right">
             <Reveal className="about-overview-visual">
               <img
-                src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=85"
+                src="/local/photo-5.jpg"
                 alt="N Solutions solar energy infrastructure"
                 className="about-overview-image"
                 loading="eager"
@@ -1400,7 +1389,7 @@ function AboutPage() {
             const num = cap.number || cap[0]
             const title = cap.title || cap[1]
             const text = cap.text || cap[2]
-            const image = cap.image || 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1000&q=85'
+            const image = cap.image || '/local/photo-5.jpg'
             const tag = cap.tag || 'Solar Capability'
             const icon = getCapabilityIcon(num)
             return (
@@ -1731,17 +1720,7 @@ function App() {
         <div className="hero-content wrap"><p className="eyebrow light"><span /> 16+ years of solar experience</p><h1>Built on <em>experience.</em><br />Driven by solar.</h1><p className="hero-copy">N Solutions delivers customized solar solutions through engineering, procurement, installation, commissioning, and ongoing support.</p><div className="hero-actions"><a className="button button-accent" href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact') }}>Talk to N Solutions <Arrow /></a><a className="button button-ghost" href="/projects" onClick={(e) => { e.preventDefault(); navigate('/projects') }}>Explore our projects <Arrow /></a></div></div>
         <div className="hero-note"><span>01</span><div><strong>Solar, engineered.</strong><small>Residential to MW-scale projects</small></div></div>
       </section>
-      <section className="home-video-section" aria-labelledby="home-video-title">
-        <div className="home-video-content">
-          <h2 id="home-video-title">Our Work in Action</h2>
-          <p>Discover how we turn solar energy into reliable power through expertise, innovation, and precision.</p>
-          <div className="home-video-frame">
-            <video className="hero-video" autoPlay muted loop playsInline aria-hidden="true">
-              <source src="/about/solar-video.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-      </section>
+      
 
       <section className="proof" id="proof"><div className="wrap proof-grid"><p className="eyebrow"><span /> Experience that speaks for itself</p><div className="proof-intro"><h2>Built on experience.<br /><em>Driven by solar.</em></h2><p>N Solutions is an Engineering, Procurement and Construction solar company with 16+ years of experience across 9 states in India.</p><p>We combine engineering expertise, reliable solar technology, and professional project execution to help customers move towards cleaner energy, improved efficiency, and sustainable growth.</p></div><div className="proof-aside proof-aside-video"><video className="proof-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/proof-solar.mp4" type="video/mp4" /></video><span className="proof-aside-mark">16+</span><div><strong>Years of solar operations</strong><p>From MW-scale solar power projects to residential rooftop installations under PM Surya Ghar.</p></div><span className="proof-aside-line" /></div><div className="stats"><AnimatedMetric value={16} suffix="+" label="Years of experience" /><AnimatedMetric value={9} label="States across India" /><AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" /><AnimatedMetric value={500} suffix="+" label="PM Surya Ghar sites" /></div></div></section>
 

@@ -567,7 +567,9 @@ export default function CareersPage() {
     />
 
     <span>
-      Upload your CV or resume in PDF, DOC, or DOCX format.
+      {resumeFile
+        ? `Selected: ${resumeFile.name} (${(resumeFile.size / (1024 * 1024)).toFixed(1)} MB)`
+        : 'Upload your CV or resume in PDF, DOC, or DOCX format. Maximum size: 5 MB.'}
     </span>
   </div>
 

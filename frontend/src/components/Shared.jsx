@@ -97,16 +97,19 @@ export function SiteHeader({ activePath = '' }) {
     </a>
 
     <button
+      type="button"
       className="menu-toggle"
-      aria-label="Toggle navigation"
+      aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+      aria-controls="site-navigation"
       aria-expanded={menuOpen}
       onClick={() => setMenuOpen(!menuOpen)}
     >
       <span />
       <span />
+      <span />
     </button>
 
-    <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
+    <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
       {items.map((item) => {
         const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`
         const isCurrent =

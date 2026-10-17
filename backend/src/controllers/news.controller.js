@@ -1,4 +1,4 @@
-import { deleteMediaImage, uploadMediaImage } from '../config/cloudinary.js';
+import { deleteMediaImage, uploadMediaImage } from '../services/media-storage.service.js';
 import { createNews, deleteNews, getNews, listNews, updateNews } from '../services/news.service.js';
 import { sendSuccess } from '../utils/response.js';
 
@@ -40,7 +40,7 @@ export const create = async (request, response) => {
   if (Object.keys(details).length) throw validationError(details);
   let image = { url: '', publicId: '' };
   if (request.file) {
-    image = await uploadMediaImage(request.file.buffer);
+    image = await uploadMediaImage(request.file, 'news');
   }
   try {
     return sendSuccess(response, 201, 'News publication created successfully.', await createNews({ ...input, image }));
@@ -59,7 +59,7 @@ export const update = async (request, response) => {
   if (!request.file && Object.keys(input).length === 0) details.news = 'At least one field is required.';
   if (Object.keys(details).length) throw validationError(details);
   let image;
-  if (request.file) { image = await uploadMediaImage(request.file.buffer); input.image = image; }
+  if (request.file) { image = await uploadMediaImage(request.file, 'news'); input.image = image; }
   try {
     const result = await updateNews(request.params.id, input);
     if (result.previousImage) await cleanup(result.previousImage);

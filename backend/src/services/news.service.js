@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { deleteMediaImage } from '../config/cloudinary.js';
+import { deleteMediaImage } from './media-storage.service.js';
 import { News } from '../models/News.js';
 
 const invalidId = () => { const error = new Error('Invalid news ID.'); error.statusCode = 400; return error; };

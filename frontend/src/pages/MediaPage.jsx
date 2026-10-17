@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, navigate } from '../components/Shared'
-import { apiGet } from '../utils/api'
+import { apiGet, resolveMediaUrl } from '../utils/api'
 import { useSEO } from '../utils/useSEO'
 import {
   FiPlay, FiX, FiArrowRight, FiCamera, FiVideo,
@@ -57,13 +57,13 @@ export default function MediaPage() {
           id: video.id || video._id,
           title: video.title || '',
           description: video.description || '',
-          videoUrl: video.videoUrl || ''
+          videoUrl: resolveMediaUrl(video.videoUrl || '')
         })))
         setTeamPhotos((data.gallery || [])
           .filter(item => item.category === 'Company' && item.image?.url)
           .map(item => ({
             id: item.id || item._id,
-            img: item.image.url,
+            img: resolveMediaUrl(item.image.url),
             label: item.title || '',
             description: item.description || ''
           })))
@@ -76,7 +76,7 @@ export default function MediaPage() {
         setClients((data.clients || []).map(item => ({
           id: item.id || item._id,
           name: item.name || '',
-          image: item.image?.url || '',
+          image: resolveMediaUrl(item.image?.url || ''),
           description: item.description || item.quote || ''
         })))
       } catch (err) {
@@ -341,9 +341,9 @@ export default function MediaPage() {
                     <div className="mg-case-step-img">
                       <img
                         src={[
-                          'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80',
-                          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=300&q=80',
-                          'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=300&q=80'
+                          'service/service16.png',
+                          'assets/services/operation-and-maintenance.png',
+                          'assets/services/on-site-power-solutions.jpg'
                         ][i]}
                         alt={s.title}
                         loading="lazy"
@@ -380,7 +380,7 @@ export default function MediaPage() {
               playsInline
               className="mg-video-player"
             >
-              <source src={playingVideo.videoUrl} type="video/mp4" />
+              <source src={playingVideo.videoUrl} />
             </video>
           </div>
         </div>

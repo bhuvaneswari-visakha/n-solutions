@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { adminLogout } from './adminAuth'
 import { navigate } from '../components/Shared'
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete, apiRequest, apiUpload  } from '../utils/api'
+import { API_BASE_URL, apiGet, apiPost, apiPut, apiPatch, apiDelete, apiRequest, apiUpload, resolveMediaUrl } from '../utils/api'
 import {
   FiGrid,
   FiTrendingUp,
@@ -38,6 +38,25 @@ import {
 import { FaSun } from 'react-icons/fa'
 import './admin.css'
 
+function SelectedFilePreview({ file, video = false }) {
+  const [previewUrl, setPreviewUrl] = useState('')
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl('')
+      return undefined
+    }
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
+
+  if (!previewUrl) return null
+  const style = { display: 'block', maxWidth: '100%', maxHeight: '180px', marginTop: '8px', borderRadius: '8px' }
+  return video
+    ? <video src={previewUrl} controls style={style} />
+    : <img src={previewUrl} alt={`Preview of ${file.name}`} style={style} />
+}
 
 export default function AdminPanel({ adminUser, onLogout }) {
   
@@ -1342,9 +1361,14 @@ const handleCreateMedia = async (e) => {
     showToast(`Downloading ${candidateName}'s resume...`, 'info')
 
     try {
-      // 1. Attempt blob fetch for direct browser file save with candidate filename
-      const response = await fetch(app.resumeUrl)
-      if (!response.ok) throw new Error('Fetch failed')
+      const token = localStorage.getItem('nsolutions_admin_token')
+      const response = await fetch(`${API_BASE_URL}/job-applications/${app.id}/resume/download`, {
+        headers: { Authorization: `Bearer ${token || ''}` }
+      })
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}))
+        throw new Error(errorBody.message || 'Resume download failed.')
+      }
       const blob = await response.blob()
       const blobUrl = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -1353,35 +1377,16 @@ const handleCreateMedia = async (e) => {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(blobUrl)
+      window.setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000)
       showToast(`Downloaded ${filename} successfully!`, 'success')
-    } catch (fetchErr) {
-      // 2. Fallback: Use Cloudinary fl_attachment or backend download endpoint
-      let downloadUrl = app.resumeUrl
-      if (downloadUrl.includes('cloudinary.com') && downloadUrl.includes('/upload/')) {
-        downloadUrl = downloadUrl.replace(
-          '/upload/',
-          `/upload/fl_attachment:${encodeURIComponent(safeName + '_Resume')}/`
-        )
-      } else if (app.id) {
-        const token = localStorage.getItem('nsolutions_admin_token')
-        const apiBase = import.meta.env.VITE_API_BASE_URL || '/api'
-        downloadUrl = `${apiBase}/job-applications/${app.id}/resume/download?token=${encodeURIComponent(token || '')}`
-      }
-      const link = document.createElement('a')
-      link.href = downloadUrl
-      link.target = '_blank'
-      link.rel = 'noopener noreferrer'
-      link.download = filename
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      showToast(`Resume download started for ${candidateName}!`, 'success')
+    } catch (error) {
+      console.error('Resume download failed:', error)
+      showToast(error.message || 'Resume download failed.', 'error')
     }
   }
 
   // Resume Preview Handler
-  const handleViewResume = (app, e) => {
+  const handleViewResume = async (app, e) => {
     if (e) {
       e.stopPropagation()
       e.preventDefault()
@@ -1390,7 +1395,28 @@ const handleCreateMedia = async (e) => {
       showToast('No resume file attached to this application.', 'error')
       return
     }
-    window.open(app.resumeUrl, '_blank', 'noopener,noreferrer')
+    const viewer = window.open('about:blank', '_blank')
+    if (!viewer) {
+      showToast('Allow pop-ups to view the resume.', 'error')
+      return
+    }
+    viewer.opener = null
+    try {
+      const token = localStorage.getItem('nsolutions_admin_token')
+      const response = await fetch(`${API_BASE_URL}/job-applications/${app.id}/resume/download?inline=1`, {
+        headers: { Authorization: `Bearer ${token || ''}` }
+      })
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}))
+        throw new Error(errorBody.message || 'Resume preview failed.')
+      }
+      const previewUrl = window.URL.createObjectURL(await response.blob())
+      viewer.location.replace(previewUrl)
+      window.setTimeout(() => window.URL.revokeObjectURL(previewUrl), 60_000)
+    } catch (error) {
+      viewer.close()
+      showToast(error.message || 'Resume preview failed.', 'error')
+    }
   }
 
 const handleDeleteMedia = async (id) => {
@@ -1453,7 +1479,7 @@ const loadMedia = async () => {
             title: item.title || '',
             description: item.description || '',
             location: item.location || '',
-            imageUrl: item.image?.url || '',
+            imageUrl: resolveMediaUrl(item.image?.url || ''),
             date: item.createdAt || '',
             category: item.category || ''
           }))
@@ -1466,8 +1492,8 @@ const loadMedia = async () => {
             type: 'video',
             title: item.title || '',
             description: item.description || '',
-            imageUrl: item.thumbnail?.url || '',
-            videoUrl: item.videoUrl || '',
+            imageUrl: resolveMediaUrl(item.thumbnail?.url || ''),
+            videoUrl: resolveMediaUrl(item.videoUrl || ''),
             date: item.createdAt || '',
             category: item.category || ''
           }))
@@ -1481,7 +1507,7 @@ const loadMedia = async () => {
             title: item.title || '',
             description: item.summary || '',
             source: item.source || '',
-            imageUrl: item.image?.url || '',
+            imageUrl: resolveMediaUrl(item.image?.url || ''),
             date: item.publicationDate || item.createdAt || '',
             category: item.source || 'Press & News',
             articleUrl: item.articleUrl || ''
@@ -1499,7 +1525,7 @@ const loadMedia = async () => {
             location: item.location || '',
             company: item.company || '',
             description: item.quote || item.description || '',
-            imageUrl: item.image?.url || item.imageUrl || '',
+            imageUrl: resolveMediaUrl(item.image?.url || item.imageUrl || ''),
             date: item.createdAt || '',
             category: item.role || 'Client'
           }))
@@ -2357,7 +2383,7 @@ const loadMedia = async () => {
                 <td>
                   {prod.image?.url ? (
                     <img
-                      src={prod.image.url}
+                      src={resolveMediaUrl(prod.image.url)}
                       alt={prod.name}
                       style={{
                         width: '55px',
@@ -3908,7 +3934,7 @@ const loadMedia = async () => {
                   <input
                     type="file"
                     required={!newProject.images.some((item) => item.file) && index === 0}
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
                     className="adm-search-input"
                     style={{ width: '100%' }}
                     onChange={(e) => {
@@ -3934,6 +3960,7 @@ const loadMedia = async () => {
                   >
                     <FiTrash2 />
                   </button>
+                  <SelectedFilePreview file={image.file} />
                 </div>
               ))}
               <button
@@ -4154,7 +4181,7 @@ const loadMedia = async () => {
             <input
               type="file"
               required
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               className="adm-search-input"
               style={{ width: '100%' }}
               onChange={(e) =>
@@ -4165,6 +4192,7 @@ const loadMedia = async () => {
               }
             />
 
+            <SelectedFilePreview file={newProduct.image} />
             {newProduct.image && (
               <div
                 style={{
@@ -4279,7 +4307,7 @@ const loadMedia = async () => {
                 <input
                   type="file"
                   required
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
                   onChange={(e) =>
                     setNewMedia({
                       ...newMedia,
@@ -4287,6 +4315,7 @@ const loadMedia = async () => {
                     })
                   }
                 />
+                <SelectedFilePreview file={newMedia.photo} />
                 {newMedia.photo && (
                   <small style={{ color: 'var(--adm-text-muted)' }}>
                     Selected: {newMedia.photo.name}
@@ -4345,7 +4374,7 @@ const loadMedia = async () => {
                 <input
                   type="file"
                   required
-                  accept="video/*"
+                  accept="video/mp4,video/quicktime,video/webm"
                   onChange={(e) =>
                     setNewMedia({
                       ...newMedia,
@@ -4353,6 +4382,7 @@ const loadMedia = async () => {
                     })
                   }
                 />
+                <SelectedFilePreview file={newMedia.video} video />
                 {newMedia.video && (
                   <small style={{ color: 'var(--adm-text-muted)' }}>
                     Selected: {newMedia.video.name}
@@ -4402,7 +4432,7 @@ const loadMedia = async () => {
                 <input
                   type="file"
                   required
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
                   onChange={(e) =>
                     setNewMedia({
                       ...newMedia,
@@ -4410,6 +4440,7 @@ const loadMedia = async () => {
                     })
                   }
                 />
+                <SelectedFilePreview file={newMedia.photo} />
                 {newMedia.photo && (
                   <small style={{ color: 'var(--adm-text-muted)' }}>
                     Selected: {newMedia.photo.name}
