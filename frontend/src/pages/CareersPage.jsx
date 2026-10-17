@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal, navigate } from '../components/Shared'
 import { apiGet, apiPost } from '../utils/api'
@@ -68,6 +69,8 @@ export default function CareersPage() {
   const [resumeFile, setResumeFile] = useState(null)
   const [applicationSubmitting, setApplicationSubmitting] = useState(false)
   const [applicationError, setApplicationError] = useState('')
+
+  const modalRoot = document.getElementById('modal-root')
 
   const loadJobs = async () => {
   setJobsStatus('loading')
@@ -344,7 +347,7 @@ export default function CareersPage() {
         </section>
 
         {/* JOB DETAILS MODAL */}
-        {selectedJob && !isApplying && (
+        {selectedJob && !isApplying && createPortal(
           <div className="job-modal-backdrop" onClick={() => setSelectedJob(null)}>
             <div className="job-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -411,11 +414,12 @@ export default function CareersPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </div>,
+          modalRoot
         )}
 
         {/* APPLICATION FORM MODAL */}
-        {isApplying && (
+        {isApplying && createPortal(
           <div className="job-modal-backdrop" onClick={() => setIsApplying(false)}>
             <div className="job-modal-card apply-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -611,7 +615,8 @@ export default function CareersPage() {
 </form>
               )}
             </div>
-          </div>
+          </div>,
+          modalRoot
         )}
       </main>
 
