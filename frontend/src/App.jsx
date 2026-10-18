@@ -363,14 +363,20 @@ function AnimatedMetric({ value, suffix = '', label }) {
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return
       const start = performance.now()
+      const duration = 1200
       const update = (now) => {
-        const progress = Math.min((now - start) / 900, 1)
-        setCount(Math.round(value * (1 - Math.pow(1 - progress, 3))))
-        if (progress < 1) requestAnimationFrame(update)
+        const progress = Math.min((now - start) / duration, 1)
+        const ease = 1 - Math.pow(1 - progress, 3)
+        setCount(Math.round(value * ease))
+        if (progress < 1) {
+          requestAnimationFrame(update)
+        } else {
+          setCount(value)
+        }
       }
       requestAnimationFrame(update)
       observer.disconnect()
-    }, { threshold: .4 })
+    }, { threshold: 0.15 })
     if (ref.current) observer.observe(ref.current)
     return () => observer.disconnect()
   }, [value])
@@ -1723,7 +1729,20 @@ function App() {
       </section>
       
 
-      <section className="proof" id="proof"><div className="wrap proof-grid"><p className="eyebrow"><span /> Experience that speaks for itself</p><div className="proof-intro"><h2>Built on experience.<br /><em>Driven by solar.</em></h2><p>N Solutions is an Engineering, Procurement and Construction solar company with 16+ years of experience across 9 states in India.</p><p>We combine engineering expertise, reliable solar technology, and professional project execution to help customers move towards cleaner energy, improved efficiency, and sustainable growth.</p></div><div className="proof-aside proof-aside-video"><video className="proof-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/proof-solar.mp4" type="video/mp4" /></video><span className="proof-aside-mark">16+</span><div><strong>Years of solar operations</strong><p>From MW-scale solar power projects to residential rooftop installations under PM Surya Ghar.</p></div><span className="proof-aside-line" /></div><div className="stats"><AnimatedMetric value={16} suffix="+" label="Years of experience" /><AnimatedMetric value={9} label="States across India" /><AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" /><AnimatedMetric value={500} suffix="+" label="PM Surya Ghar sites" /></div></div></section>
+      {/* HERO MILESTONES STATS SECTION */}
+      <section className="hero-stats-banner" id="project-stats" aria-label="Project Milestones">
+        <div className="wrap">
+          <div className="hero-stats-grid">
+            <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar" />
+            <AnimatedMetric value={140} suffix="+" label="Residential Projects" />
+            <AnimatedMetric value={120} suffix="+" label="Government Projects" />
+            <AnimatedMetric value={200} suffix="+" label="Commercial Projects" />
+            <AnimatedMetric value={60} suffix="+" label="Industrial Projects" />
+          </div>
+        </div>
+      </section>
+
+      <section className="proof" id="proof"><div className="wrap proof-grid"><p className="eyebrow"><span /> Experience that speaks for itself</p><div className="proof-intro"><h2>Built on experience.<br /><em>Driven by solar.</em></h2><p>N Solutions is an Engineering, Procurement and Construction solar company with 16+ years of experience across 9 states in India.</p><p>We combine engineering expertise, reliable solar technology, and professional project execution to help customers move towards cleaner energy, improved efficiency, and sustainable growth.</p></div><div className="proof-aside proof-aside-video"><video className="proof-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/proof-solar.mp4" type="video/mp4" /></video><span className="proof-aside-mark">16+</span><div><strong>Years of solar operations</strong><p>From MW-scale solar power projects to residential rooftop installations under PM Surya Ghar.</p></div><span className="proof-aside-line" /></div></div></section>
 
       <section className="who wrap" id="who-we-are">
         <Reveal className="who-image">
@@ -1756,6 +1775,7 @@ function App() {
         <a className="section-cta text-link" href="/services" onClick={(e) => { e.preventDefault(); navigate('/services') }}>Explore Our Services <Arrow /></a>
       </section>
 
+<<<<<<< HEAD
       <section className="chairman wrap">
         <Reveal className="chairman-copy">
           <p className="eyebrow"><span /> {homeContent.chairmanMessage.eyebrow}</p>
@@ -1769,6 +1789,36 @@ function App() {
           <div className="signature">
             <strong>{homeContent.chairmanMessage.author}</strong>
             <small>{homeContent.chairmanMessage.role}</small>
+=======
+      {/* HOW WE WORK SECTION */}
+      <section className="services-process" id="how-we-work">
+        <div className="wrap">
+          <Reveal className="section-heading">
+            <div>
+              <p className="eyebrow light"><span /> 03 — HOW WE WORK</p>
+              <h2>From requirement<br /><em>to support.</em></h2>
+            </div>
+            <p className="heading-note">A structured project journey carefully planned and executed across every milestone.</p>
+          </Reveal>
+          <div className="services-process-line">
+            {servicesProcess.map(([number, title, text]) => (
+              <Reveal className="services-process-step" key={number} tabIndex="0">
+                <span>{number}</span>
+                <strong>{title}</strong>
+                <small>{text}</small>
+              </Reveal>
+            ))}
+          </div>
+          <p className="process-flow light-flow">Requirement <i><FiChevronRight style={{ verticalAlign: 'middle' }} /></i> Design <i><FiChevronRight style={{ verticalAlign: 'middle' }} /></i> Execution <i><FiChevronRight style={{ verticalAlign: 'middle' }} /></i> Support</p>
+        </div>
+      </section>
+
+      <section className="home-leadership wrap" id="leadership">
+        <Reveal className="section-heading">
+          <div>
+            <p className="eyebrow"><span /> {homeContent.leadership?.eyebrow || "04 — Our Leadership"}</p>
+            <h2>{homeContent.leadership?.title || "Visionary leadership,"}<br /><em>{homeContent.leadership?.subtitle || "grounded in experience."}</em></h2>
+>>>>>>> origin/main
           </div>
         </Reveal>
         <Reveal>

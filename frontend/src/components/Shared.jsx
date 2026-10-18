@@ -24,14 +24,20 @@ export function AnimatedMetric({ value, suffix = '', label }) {
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return
       const start = performance.now()
+      const duration = 1200
       const update = (now) => {
-        const progress = Math.min((now - start) / 900, 1)
-        setCount(Math.round(value * (1 - Math.pow(1 - progress, 3))))
-        if (progress < 1) requestAnimationFrame(update)
+        const progress = Math.min((now - start) / duration, 1)
+        const ease = 1 - Math.pow(1 - progress, 3)
+        setCount(Math.round(value * ease))
+        if (progress < 1) {
+          requestAnimationFrame(update)
+        } else {
+          setCount(value)
+        }
       }
       requestAnimationFrame(update)
       observer.disconnect()
-    }, { threshold: 0.3 })
+    }, { threshold: 0.15 })
     if (ref.current) observer.observe(ref.current)
     return () => observer.disconnect()
   }, [value])
