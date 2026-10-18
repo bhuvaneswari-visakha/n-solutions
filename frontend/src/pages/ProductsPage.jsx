@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate } from '../components/Shared'
+import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate, scrollToHeaderOffset } from '../components/Shared'
 import { apiGet, resolveMediaUrl } from '../utils/api'
 import SEO from "../components/SEO/SEO";
 import { useSEO } from '../utils/useSEO'
@@ -486,12 +486,32 @@ export const productsCatalog = [
 ]
 
 export default function ProductsPage() {
-  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const category = new URLSearchParams(window.location.search).get('category')
+    return ['ALL', 'modules', 'inverters', 'pumps', 'structures', 'cables-bos', 'protection'].includes(category)
+      ? category
+      : 'ALL'
+  })
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [products, setProducts] = useState([])
   const [catalogStatus, setCatalogStatus] = useState('loading')
   const [catalogError, setCatalogError] = useState('')
+
+  useEffect(() => {
+    const syncCategoryFromUrl = () => {
+      const category = new URLSearchParams(window.location.search).get('category')
+      const validCategories = ['ALL', 'modules', 'inverters', 'pumps', 'structures', 'cables-bos', 'protection']
+      setActiveCategory(validCategories.includes(category) ? category : 'ALL')
+    }
+    syncCategoryFromUrl()
+    window.addEventListener('popstate', syncCategoryFromUrl)
+    window.addEventListener('nsolutions-route-change', syncCategoryFromUrl)
+    return () => {
+      window.removeEventListener('popstate', syncCategoryFromUrl)
+      window.removeEventListener('nsolutions-route-change', syncCategoryFromUrl)
+    }
+  }, [])
 
   const loadProducts = async () => {
     setCatalogStatus('loading')
@@ -518,9 +538,17 @@ export default function ProductsPage() {
   })
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!new URLSearchParams(window.location.search).has('category')) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
     loadProducts()
   }, [])
+
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has('category')) return
+    const frame = window.requestAnimationFrame(() => scrollToHeaderOffset('#catalog-view'))
+    return () => window.cancelAnimationFrame(frame)
+  }, [activeCategory])
 
   const isProductModalOpen = selectedProduct !== null
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import SEO from "../components/SEO/SEO";
-import { SiteHeader, SiteFooter, Arrow, navigate } from '../components/Shared'
+import { SiteHeader, SiteFooter, Arrow, navigate, scrollToHeaderOffset } from '../components/Shared'
 import { apiGet, resolveMediaUrl } from '../utils/api'
 import { useSEO } from '../utils/useSEO'
 import {
@@ -29,7 +29,10 @@ const TABS = [
    MAIN COMPONENT
 ───────────────────────────────────────────── */
 export default function MediaPage() {
-  const [activeTab, setActiveTab]       = useState('all')
+  const [activeTab, setActiveTab]       = useState(() => {
+    const category = new URLSearchParams(window.location.search).get('category')
+    return TABS.some((tab) => tab.id === category) ? category : 'all'
+  })
   const [playingVideo, setPlayingVideo] = useState(null)
   const [lightbox, setLightbox]         = useState(null)
   const [videos, setVideos]             = useState([])
@@ -37,6 +40,19 @@ export default function MediaPage() {
   const [press, setPress]               = useState([])
   const [teamPhotos, setTeamPhotos]     = useState([])
   const videoRef = useRef(null)
+  useEffect(() => {
+    const syncTabFromUrl = () => {
+      const category = new URLSearchParams(window.location.search).get('category')
+      setActiveTab(TABS.some((tab) => tab.id === category) ? category : 'all')
+    }
+    syncTabFromUrl()
+    window.addEventListener('popstate', syncTabFromUrl)
+    window.addEventListener('nsolutions-route-change', syncTabFromUrl)
+    return () => {
+      window.removeEventListener('popstate', syncTabFromUrl)
+      window.removeEventListener('nsolutions-route-change', syncTabFromUrl)
+    }
+  }, [])
   useSEO({
     title: 'Media & Gallery – Solar Projects, Videos, Press & Team',
     description: "Explore N Solutions' media gallery: project photos, installation videos, client stories, team moments and press coverage of our solar EPC work across India.",
@@ -45,7 +61,9 @@ export default function MediaPage() {
   })
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!new URLSearchParams(window.location.search).has('category')) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
 
     const loadMedia = async () => {
       try {
@@ -86,6 +104,13 @@ export default function MediaPage() {
     loadMedia()
   }, [])
 
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has('category')) return
+    const target = activeTab === 'all' ? '#mg-tabs-bar' : `#media-${activeTab}`
+    const frame = window.requestAnimationFrame(() => scrollToHeaderOffset(target))
+    return () => window.cancelAnimationFrame(frame)
+  }, [activeTab])
+
   const show = (tab) => activeTab === 'all' || activeTab === tab
 
   return (
@@ -119,7 +144,7 @@ export default function MediaPage() {
         </section>
 
         {/* ── TABS ── */}
-        <div className="mg-tabs-bar">
+        <div className="mg-tabs-bar" id="mg-tabs-bar">
           <div className="mg-tabs-inner wrap">
             {TABS.map(t => (
               <button
@@ -136,7 +161,7 @@ export default function MediaPage() {
 
         {/* ── VIDEOS ── */}
         {show('videos') && (
-          <section className="mg-section wrap">
+          <section className="mg-section wrap" id="media-videos">
             <div className="mg-section-head">
               <div>
                 <p className="mg-sec-eyebrow"><span className="mg-eyebrow-line" /> VIDEOS</p>
@@ -186,7 +211,7 @@ export default function MediaPage() {
         )}
 
         {show('clients') && (
-          <section className="mg-section wrap">
+          <section className="mg-section wrap" id="media-clients">
             <div className="mg-section-head">
               <div>
                 <p className="mg-sec-eyebrow"><span className="mg-eyebrow-line" /> OUR CLIENTS</p>
@@ -241,7 +266,7 @@ export default function MediaPage() {
 
         {/* ── TEAM ── */}
         {show('team') && (
-          <section className="mg-section mg-section-alt">
+          <section className="mg-section mg-section-alt" id="media-team">
             <div className="wrap">
               <div className="mg-section-head">
                 <div>
@@ -271,7 +296,7 @@ export default function MediaPage() {
 
         {/* ── PRESS & NEWS ── */}
         {show('press') && (
-          <section className="mg-section wrap">
+          <section className="mg-section wrap" id="media-press">
             <div className="mg-section-head">
               <div>
                 <p className="mg-sec-eyebrow"><span className="mg-eyebrow-line" /> PRESS &amp; NEWS</p>

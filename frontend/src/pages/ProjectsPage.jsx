@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate } from '../components/Shared'
+import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate, scrollToHeaderOffset } from '../components/Shared'
 import { apiGet, resolveMediaUrl } from '../utils/api'
 import { useSEO } from '../utils/useSEO'
 import SEO from "../components/SEO/SEO";
@@ -470,7 +470,12 @@ export const clientList = [
 ]
 
 export default function ProjectsPage() {
-  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const category = new URLSearchParams(window.location.search).get('category')
+    return ['ALL', 'ground-mount', 'carport', 'industrial', 'residential', 'commercial'].includes(category)
+      ? category
+      : 'ALL'
+  })
   const [selectedProject, setSelectedProject] = useState(null)
   const [activeModalImg, setActiveModalImg] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -479,6 +484,21 @@ export default function ProjectsPage() {
   const [catalogError, setCatalogError] = useState('')
   const [detailStatus, setDetailStatus] = useState('idle')
   const [detailError, setDetailError] = useState('')
+
+  useEffect(() => {
+    const syncCategoryFromUrl = () => {
+      const category = new URLSearchParams(window.location.search).get('category')
+      const validCategories = ['ALL', 'ground-mount', 'carport', 'industrial', 'residential', 'commercial']
+      setActiveCategory(validCategories.includes(category) ? category : 'ALL')
+    }
+    syncCategoryFromUrl()
+    window.addEventListener('popstate', syncCategoryFromUrl)
+    window.addEventListener('nsolutions-route-change', syncCategoryFromUrl)
+    return () => {
+      window.removeEventListener('popstate', syncCategoryFromUrl)
+      window.removeEventListener('nsolutions-route-change', syncCategoryFromUrl)
+    }
+  }, [])
 
   const [cockpitMode, setCockpitMode] = useState('telemetry')
   const [activeSchematicNode, setActiveSchematicNode] = useState(0)
@@ -611,9 +631,17 @@ export default function ProjectsPage() {
   })
 
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-  loadProjects()
-}, [])
+    if (!new URLSearchParams(window.location.search).has('category')) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+    loadProjects()
+  }, [])
+
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has('category')) return
+    const frame = window.requestAnimationFrame(() => scrollToHeaderOffset('#all-projects'))
+    return () => window.cancelAnimationFrame(frame)
+  }, [activeCategory])
 
   const isProjectModalOpen = selectedProject !== null
 

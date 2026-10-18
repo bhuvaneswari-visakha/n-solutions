@@ -1,6 +1,36 @@
 import { useEffect, useRef, useState } from 'react'
-import { FiArrowUpRight} from 'react-icons/fi';
+import { createPortal } from 'react-dom'
+import {
+  FiArrowUpRight,
+  FiBriefcase,
+  FiChevronDown,
+  FiGrid,
+  FiHome,
+  FiImage,
+  FiMail,
+  FiMapPin,
+  FiPackage,
+  FiPhone,
+  FiSearch,
+  FiSettings,
+  FiSun,
+  FiUsers,
+  FiX,
+} from 'react-icons/fi'
+import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa'
 import LeadQuoteModal from '../pages/LeadQuoteModel.jsx';
+import WhatsAppWidget from './WhatsAppWidget'
+
+const searchablePages = [
+  { label: 'Home', path: '/', keywords: 'solar energy solar company renewable sustainable rooftop solar epc' },
+  { label: 'About Us', path: '/about', keywords: 'company about experience leadership mission vision history n solutions' },
+  { label: 'Services', path: '/services', keywords: 'solar services installation commercial residential industrial government epc maintenance battery lighting subsidy' },
+  { label: 'Projects', path: '/projects', keywords: 'solar projects portfolio case study capacity installations rooftop industrial commercial' },
+  { label: 'Products', path: '/products', keywords: 'solar products panels modules inverter accessories earth pits cables' },
+  { label: 'Media', path: '/media', keywords: 'news videos gallery media press updates' },
+  { label: 'Careers', path: '/careers', keywords: 'careers jobs hiring opportunities employment' },
+  { label: 'Contact', path: '/contact', keywords: 'contact quote enquiry phone email address location consultation' },
+]
 
 
 export function Arrow() {
@@ -8,13 +38,24 @@ export function Arrow() {
 }
 
 export function navigate(path) {
+  const categoryNavigation = new URL(path, window.location.href).searchParams.has('category')
   if (window.location.pathname === path) {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!categoryNavigation) window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
   window.history.pushState({}, '', path)
   window.dispatchEvent(new Event('nsolutions-route-change'))
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  if (!categoryNavigation) window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+export function scrollToHeaderOffset(selector) {
+  const target = document.querySelector(selector)
+  if (!target) return false
+
+  const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height || 0
+  const top = window.scrollY + target.getBoundingClientRect().top - headerHeight - 12
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+  return true
 }
 
 export function AnimatedMetric({ value, suffix = '', label }) {
@@ -74,86 +115,308 @@ export function EmptyState({ label, text }) {
 export function SiteHeader({ activePath = '' }) {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchMessage, setSearchMessage] = useState('')
+  const [openDropdown, setOpenDropdown] = useState('')
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-  const closeMenu = () => setMenuOpen(false)
+    if (!openDropdown && !menuOpen) return undefined
+    const closeOnOutsideClick = (event) => {
+      if (!event.target.closest('.nav-dropdown')) setOpenDropdown('')
+    }
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setOpenDropdown('')
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [menuOpen, openDropdown])
+  const searchQuery = searchTerm.trim().toLowerCase()
+  const searchResults = searchQuery
+    ? searchablePages.filter(({ label, keywords }) => {
+        const searchableText = `${label} ${keywords}`.toLowerCase()
+        return searchableText.includes(searchQuery) ||
+          searchQuery.split(/\s+/).every((word) => searchableText.includes(word))
+      }).slice(0, 6)
+    : []
+  const closeMenu = () => {
+    setMenuOpen(false)
+    setOpenDropdown('')
+  }
   const handleNav = (e, path) => {
     e.preventDefault()
     closeMenu()
     navigate(path)
   }
-  const items = ['Home', 'About', 'Services', 'Projects', 'Products', 'Media', 'Careers', 'Contact']
+  const items = [
+    { label: 'Home', icon: <FiHome aria-hidden="true" /> },
+    { label: 'About', icon: <FiUsers aria-hidden="true" /> },
+    { label: 'Services', icon: <FiSettings aria-hidden="true" /> },
+    {
+      label: 'Projects',
+      icon: <FiBriefcase aria-hidden="true" />,
+      categories: [
+        ['All', 'ALL'],
+        ['Ground Mount & Utility', 'ground-mount'],
+        ['Solar Carports', 'carport'],
+        ['Industrial Rooftops & Sheds', 'industrial'],
+        ['PM Surya Ghar Residential', 'residential'],
+        ['Commercial & Institutional', 'commercial'],
+      ],
+    },
+    {
+      label: 'Products',
+      icon: <FiPackage aria-hidden="true" />,
+      categories: [
+        ['All Products', 'ALL'],
+        ['Solar PV Modules', 'modules'],
+        ['Grid Inverters', 'inverters'],
+        ['Solar Agri Pumps', 'pumps'],
+        ['Mounting Structures', 'structures'],
+        ['Cabling & BOS', 'cables-bos'],
+        ['Safety & Protection', 'protection'],
+      ],
+    },
+    {
+      label: 'Media',
+      icon: <FiImage aria-hidden="true" />,
+      categories: [
+        ['All', 'all'],
+        ['Videos', 'videos'],
+        ['Clients', 'clients'],
+        ['Team / Photos', 'team'],
+        ['Press & News', 'press'],
+      ],
+    },
+    { label: 'Careers', icon: <FiGrid aria-hidden="true" /> },
+    { label: 'Contact', icon: <FiMail aria-hidden="true" /> },
+  ]
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (!searchResults.length) {
+      setSearchMessage(searchQuery ? 'No matching pages found.' : 'Enter a page or topic to search.')
+      return
+    }
+    navigate(searchResults[0].path)
+    setSearchOpen(false)
+    setSearchTerm('')
+    setSearchMessage('')
+  }
+  const goToSearchResult = (path) => {
+    navigate(path)
+    setSearchOpen(false)
+    setSearchTerm('')
+    setSearchMessage('')
+  }
   return (
   <header
     className={`site-header ${
       activePath ? 'site-header-page' : ''
-    }`}
-   style={{background:'#ffffff'}}>
-    <a
-      className="brand"
-      href="/"
-      onClick={(e) => handleNav(e, '/')}
-      aria-label="N Solutions home"
-    >
-      <img className="brand-logo" src="/logo.png" alt="N Solutions" />
-    </a>
-
-    <button
-      type="button"
-      className="menu-toggle"
-      aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
-      aria-controls="site-navigation"
-      aria-expanded={menuOpen}
-      onClick={() => setMenuOpen(!menuOpen)}
-    >
-      <span />
-      <span />
-      <span />
-    </button>
-
-    <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
-      {items.map((item) => {
-        const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`
-        const isCurrent =
-          activePath === path || (path === '/' && activePath === '')
-
-        return (
-          <a
-            className={isCurrent ? 'active' : ''}
-            key={item}
-            href={path}
-            onClick={(e) => handleNav(e, path)}
-          >
-            {item}
+    }`}>
+    <div className="header-contact-bar">
+      <a className="header-address" href="/contact">
+        <FiMapPin aria-hidden="true" />
+        <span className="header-address-full">#27-23-27, MIG-214, APHB Colony, Babametta, Vizianagaram – 535002, Andhra Pradesh, India</span>
+        <span className="header-address-tablet">Vizianagaram, Andhra Pradesh, India</span>
+      </a>
+      <div className="header-contact-links">
+        <a href="tel:+919492731212"><FiPhone aria-hidden="true" /><span>+91 9492731212</span></a>
+        <span className="header-contact-separator" aria-hidden="true">|</span>
+        <a href="tel:+919494703452"><span>+91 9494703452</span></a>
+        <span className="header-contact-separator" aria-hidden="true">|</span>
+        <a href="mailto:info@nsol.in"><FiMail aria-hidden="true" /><span>info@nsol.in</span></a>
+        <span className="header-contact-separator" aria-hidden="true">|</span>
+        <a href="mailto:nsolutions@live.com"><span>nsolutions@live.com</span></a>
+        <div className="header-social-links" aria-label="Social media">
+          <a href="https://www.facebook.com/share/1a4JyMgMob/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <FaFacebookF aria-hidden="true" />
           </a>
-        )
-      })}
-
-      {/* Mobile / tablet CTA */}
-     <button
-        type="button"
-        className="nav-cta nav-cta-mobile"
-        onClick={() => {
-          closeMenu()
-          setQuoteModalOpen(true)
-        }}
+          <a href="https://www.instagram.com/nsol.in?mdxt=MWplbWhxbDkwcDNoNg==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <FaInstagram aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </div>
+    <div className="site-header-main">
+      <a
+        className="brand"
+        href="/"
+        onClick={(e) => handleNav(e, '/')}
+        aria-label="N Solutions home"
       >
-        Get a Quote <Arrow />
-      </button>
-    </nav>
+        <img className="brand-logo" src="/logo.png" alt="N Solutions" />
+      </a>
 
-    {/* Desktop CTA */}
-    <button
-      type="button"
-      className="nav-cta nav-cta-desktop"
-      onClick={() => setQuoteModalOpen(true)}
-    >
-      Get a Quote <Arrow />
-    </button>
+      {menuOpen && (
+        <button
+          type="button"
+          className="nav-backdrop"
+          aria-label="Close navigation menu"
+          onClick={closeMenu}
+        />
+      )}
+      <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
+        <div className="nav-drawer-header">
+          <img src="/logo.png" alt="N Solutions" />
+          <button type="button" className="nav-drawer-close" aria-label="Close navigation" onClick={closeMenu}>
+            <FiX aria-hidden="true" />
+          </button>
+        </div>
+        {items.map(({ label, icon, categories }) => {
+          const path = label === 'Home' ? '/' : `/${label.toLowerCase()}`
+          const isCurrent =
+            activePath === path || (path === '/' && activePath === '')
+
+          if (categories) {
+            const dropdownOpen = openDropdown === label
+            return (
+              <div
+                className={`nav-dropdown${dropdownOpen ? ' is-open' : ''}`}
+                key={label}
+                onMouseEnter={() => {
+                  if (window.matchMedia('(min-width: 1203px)').matches) setOpenDropdown(label)
+                }}
+                onMouseLeave={() => {
+                  if (window.matchMedia('(min-width: 1203px)').matches) setOpenDropdown('')
+                }}
+              >
+                <button
+                  type="button"
+                  className={`nav-dropdown-toggle${isCurrent ? ' active' : ''}`}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="true"
+                  onClick={() => setOpenDropdown(dropdownOpen ? '' : label)}
+                >
+                  <span className="nav-item-icon">{icon}</span>
+                  <span>{label}</span>
+                  <FiChevronDown className="nav-dropdown-chevron" aria-hidden="true" />
+                </button>
+                <div className="nav-dropdown-menu">
+                  {categories.map(([categoryLabel, categoryId]) => (
+                    <a
+                      key={categoryId}
+                      href={`${path}?category=${encodeURIComponent(categoryId)}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        closeMenu()
+                        navigate(`${path}?category=${encodeURIComponent(categoryId)}`)
+                      }}
+                    >
+                      {categoryLabel}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+
+          return (
+            <a
+              className={isCurrent ? 'active' : ''}
+              key={label}
+              href={path}
+              onClick={(e) => handleNav(e, path)}
+            >
+              <span className="nav-item-icon">{icon}</span>
+              <span>{label === 'About' ? 'About Us' : label}</span>
+            </a>
+          )
+        })}
+
+        <button
+          type="button"
+          className="nav-cta nav-cta-mobile"
+          onClick={() => {
+            closeMenu()
+            setQuoteModalOpen(true)
+          }}
+        >
+          Get a Quote <Arrow />
+        </button>
+        <div className="nav-quick-contacts">
+          <a href="tel:+919492731212"><FiPhone aria-hidden="true" /><span>Call</span></a>
+          <a href="https://wa.me/917993836424" target="_blank" rel="noopener noreferrer"><FaWhatsapp aria-hidden="true" /><span>WhatsApp</span></a>
+          <a href="mailto:info@nsol.in"><FiMail aria-hidden="true" /><span>Email</span></a>
+          <a href="https://maps.google.com/?q=Vizianagaram,+Andhra+Pradesh,+India" target="_blank" rel="noopener noreferrer"><FiMapPin aria-hidden="true" /><span>Location</span></a>
+        </div>
+      </nav>
+
+      <div className="header-actions">
+        <button
+          type="button"
+          className="header-search-toggle"
+          aria-label={searchOpen ? 'Close page search' : 'Search pages'}
+          aria-expanded={searchOpen}
+          aria-controls="header-page-search"
+          onClick={() => {
+            setSearchOpen(!searchOpen)
+            setSearchMessage('')
+          }}
+        >
+          <FiSearch aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="menu-toggle"
+          aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+          aria-controls="site-navigation"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+        <button
+          type="button"
+          className="nav-cta nav-cta-desktop"
+          onClick={() => setQuoteModalOpen(true)}
+        >
+          <FiSun aria-hidden="true" />
+          Get a Quote <Arrow />
+        </button>
+      </div>
+      {searchOpen && (
+        <form id="header-page-search" className="header-page-search" role="search" onSubmit={handleSearch}>
+          <label className="visually-hidden" htmlFor="header-search-input">Search pages</label>
+          <input
+            id="header-search-input"
+            type="search"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setSearchMessage('')
+            }}
+            placeholder="Search pages"
+            autoFocus
+          />
+          <button type="submit">Search</button>
+          {searchMessage && <span className="header-search-message" role="status">{searchMessage}</span>}
+          {searchResults.length > 0 && (
+            <div className="header-search-results" role="listbox" aria-label="Search results">
+              {searchResults.map((result) => (
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected="false"
+                  key={result.path}
+                  onClick={() => goToSearchResult(result.path)}
+                >
+                  {result.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </form>
+      )}
+    </div>
+    {createPortal(menuOpen ? null : <WhatsAppWidget />, document.body)}
     {quoteModalOpen && (
       <LeadQuoteModal
       onClose={() => setQuoteModalOpen(false)}

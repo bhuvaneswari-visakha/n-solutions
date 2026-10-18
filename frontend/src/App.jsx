@@ -4,14 +4,12 @@ import ProjectsPage, { projectsData } from './pages/ProjectsPage'
 import ProductsPage from './pages/ProductsPage'
 import MediaPage from './pages/MediaPage'
 import CareersPage from './pages/CareersPage'
-import LeadQuoteModal from './pages/LeadQuoteModel.jsx'
 import ContactPage from './pages/ContactPage'
 import AdminPortal from './admin/AdminPortal'
-import { navigate, SiteFooter } from './components/Shared'
+import { navigate, SiteFooter, SiteHeader } from './components/Shared'
 import { homeContent, aboutContent, servicesAndSolutionsContent } from './content/siteContent'
 import { apiGet } from './utils/api'
 import { useSEO } from './utils/useSEO'
-import WhatsAppWidget from "./components/WhatsAppWidget";
 import {
   FiArrowUpRight, FiArrowDown, FiCheck, FiChevronRight, FiChevronLeft,
   FiZap, FiSun, FiShield, FiTarget, FiTrendingUp, FiGlobe,
@@ -1046,66 +1044,6 @@ const solutionCatalog = [
   ['14', 'Solar lighting solutions', 'Solar-powered lighting solutions planned for suitable outdoor and infrastructure applications.'],
   ['15', 'Solar battery solutions', 'Battery-based solar solutions for energy storage, backup, and greater flexibility in energy usage.'],
 ]
-
-function SiteHeader({ activePath = '' }) {
-  const [quoteModalOpen, setQuoteModalOpen] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-  const closeMenu = () => setMenuOpen(false)
-  const handleNav = (e, path) => {
-    e.preventDefault()
-    closeMenu()
-    navigate(path)
-  }
-  const items = ['Home', 'About', 'Services', 'Projects', 'Products', 'Media', 'Careers', 'Contact']
-  return <header className={`site-header`} style={{background:'#ffffff'}}>
-    <a className="brand" href="/" onClick={(e) => handleNav(e, '/')} aria-label="N Solutions home"><img className="brand-logo" src="/logo.png" alt="N Solutions" /></a>
-    <button type="button" className="menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-controls="site-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
-    <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
-      {items.map((item) => {
-        const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`
-        const isCurrent = activePath === path || (path === '/' && activePath === '')
-        return <a className={isCurrent ? 'active' : ''} key={item} href={path} onClick={(e) => handleNav(e, path)} style={{fontSize:'14px'}}>{item}</a>
-      })}
-
-      {/* Mobile / tablet CTA */}
-      
-     <button
-        type="button"
-        className="nav-cta nav-cta-mobile"
-        onClick={() => {
-          closeMenu()
-          setQuoteModalOpen(true)
-        }}
-      >
-        Get a Quote <Arrow />
-      </button>
-    </nav>
-
-    {/* Desktop CTA */}
-    <div className='nav-cta-con'>
-    <button
-      type="button"
-      className="nav-cta nav-cta-desktop"
-      onClick={() => setQuoteModalOpen(true)}
-      style={{transform:'none'}}
-    >
-      Get a Quote <Arrow />
-    </button></div>
-    {quoteModalOpen && (
-      <LeadQuoteModal
-      onClose={() => setQuoteModalOpen(false)}
-  />
-
-)}
-  </header>
-}
-
 
 function AboutPage() {
   const [horizonTab, setHorizonTab] = useState('vision')
