@@ -9799,7 +9799,7 @@ button:focus-visible {
 .careers-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=2200&q=88') center/cover;
+  background: url('/careers-hero-team.jpg') center 25% / cover no-repeat;
   transform: scale(1.02);
 }
 
