@@ -1,0 +1,283 @@
+
+.wa-widget {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  font-family: inherit;
+}
+
+.wa-toggle {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.wa-toggle:hover {
+  background: #1fba59;
+  transform: scale(1.06);
+}
+
+.wa-panel {
+  position: absolute;
+  right: 0;
+  bottom: 76px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid #e7ece8;
+  animation: wa-slide-up 0.2s ease-out;
+}
+
+.wa-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #075e54;
+  color: #fff;
+}
+
+.wa-header-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 27px;
+}
+
+.wa-panel-header h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.wa-panel-header p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.wa-options {
+  padding: 8px;
+}
+
+.wa-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  color: #25352d;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.2s ease;
+}
+
+.wa-option:hover {
+  background: #effaf2;
+}
+
+.wa-option-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #e8f9ed;
+  color: #128c4a;
+  font-size: 19px;
+}
+
+.wa-option-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.wa-chevron {
+  color: #8a9a90;
+  font-size: 16px;
+}
+
+.wa-footer-text {
+  margin: 0;
+  padding: 0 16px 16px;
+  color: #728078;
+  font-size: 11px;
+  text-align: center;
+}
+
+@keyframes wa-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .wa-widget {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .wa-toggle {
+    width: 54px;
+    height: 54px;
+    font-size: 29px;
+  }
+
+  .wa-panel {
+    width: min(320px, calc(100vw - 32px));
+    bottom: 68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-panel {
+    animation: none;
+  }
+
+  .wa-toggle {
+    transition: none;
+  }
+}
+
+.wa-welcome {
+  padding: 16px 16px 8px;
+  background: #f7fbf8;
+}
+
+.wa-welcome h4 {
+  margin: 0 0 8px;
+  color: #183b2a;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.wa-welcome p {
+  margin: 0 0 10px;
+  color: #5d6c63;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.wa-welcome .wa-welcome-question {
+  margin-bottom: 4px;
+  color: #075e54;
+  font-weight: 600;
+}
+
+.wa-custom-form {
+  padding: 18px;
+  background: #fff;
+}
+
+.wa-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #087f4b;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.wa-custom-form h4 {
+  margin: 0 0 8px;
+  color: #183b2a;
+  font-size: 16px;
+}
+
+.wa-custom-form > p {
+  margin: 0 0 14px;
+  color: #66746b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.wa-custom-textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 110px;
+  padding: 12px;
+  border: 1px solid #d9e5dc;
+  border-radius: 10px;
+  outline: none;
+  resize: vertical;
+  background: #f9fcfa;
+  color: #24352a;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.wa-custom-textarea:focus {
+  border-color: #25d366;
+  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.12);
+}
+
+.wa-character-count {
+  margin: 6px 0 14px;
+  color: #829087;
+  font-size: 11px;
+  text-align: right;
+}
+
+.wa-send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 9px;
+  background: #25d366;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.wa-send-button:hover:not(:disabled) {
+  background: #1eaf55;
+}
+
+.wa-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

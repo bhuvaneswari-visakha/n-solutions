@@ -11,6 +11,7 @@ import { navigate, SiteFooter } from './components/Shared'
 import { homeContent, aboutContent, servicesAndSolutionsContent } from './content/siteContent'
 import { apiGet } from './utils/api'
 import { useSEO } from './utils/useSEO'
+import WhatsAppWidget from "./components/WhatsAppWidget";
 import {
   FiArrowUpRight, FiArrowDown, FiCheck, FiChevronRight, FiChevronLeft,
   FiZap, FiSun, FiShield, FiTarget, FiTrendingUp, FiGlobe,
@@ -1691,15 +1692,15 @@ function App() {
     }
   }, [])
 
-  if (currentPath === '/about') return <AboutPage />
-  if (currentPath === '/services') return <ServicesPage />
-  if (currentPath === '/projects') return <ProjectsPage />
-  if (currentPath === '/products') return <ProductsPage />
-  if (currentPath === '/media') return <MediaPage />
-  if (currentPath === '/careers') return <CareersPage />
-  if (currentPath === '/contact') return <ContactPage />
+  if (currentPath === '/about') return <><AboutPage /><WhatsAppWidget /></>
+  if (currentPath === '/services') return <><ServicesPage /><WhatsAppWidget /></>
+  if (currentPath === '/projects') return <><ProjectsPage /><WhatsAppWidget /></>
+  if (currentPath === '/products') return <><ProductsPage /><WhatsAppWidget /></>
+  if (currentPath === '/media') return <><MediaPage /><WhatsAppWidget /></>
+  if (currentPath === '/careers') return <><CareersPage /><WhatsAppWidget /></>
+  if (currentPath === '/contact') return <><ContactPage /><WhatsAppWidget /></>
   if (currentPath === '/admin' || currentPath.startsWith('/admin')) return <AdminPortal />
-  if (currentPath !== '/') return <RouteShell />
+  if (currentPath !== '/') return <><RouteShell /><WhatsAppWidget /></>
 
 
   return (
@@ -1869,11 +1870,12 @@ function App() {
             <a className="button button-accent" href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact') }}>Talk to N Solutions <Arrow /></a>
         </div>
       </section>
-
+     
     </main>
-
+          
     <SiteFooter />
   </div>
+  <WhatsAppWidget />
   </>
   )
 }
