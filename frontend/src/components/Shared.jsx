@@ -27,28 +27,22 @@ export function GoogleIcon({ size = 16, className = '' }) {
 
 export function JustdialIcon({ size = 18, className = '' }) {
   return (
-    <span
+    <img
+      src="/justdial-jd-icon.png"
+      alt="Justdial"
       className={`justdial-icon-badge ${className}`}
+      width={size}
+      height={size}
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: 'inline-block',
+        verticalAlign: 'middle',
         width: `${size}px`,
         height: `${size}px`,
-        borderRadius: '4px',
-        background: '#ff6c00',
-        color: '#ffffff',
-        fontFamily: "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-        fontWeight: 800,
-        fontSize: `${Math.max(10, Math.round(size * 0.65))}px`,
-        lineHeight: 1,
-        letterSpacing: '-0.5px',
+        objectFit: 'contain',
         flexShrink: 0
       }}
-      aria-hidden="true"
-    >
-      jd
-    </span>
+      loading="lazy"
+    />
   )
 }
 

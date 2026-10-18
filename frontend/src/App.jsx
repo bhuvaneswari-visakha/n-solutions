@@ -641,12 +641,6 @@ function TestimonialsShowcase({ theme = 'light' }) {
                     {t.role ? `${t.role} · ` : ''}{t.company}
                   </span>
                 </div>
-
-                {t.metric && (
-                  <span className="testimonial-metric-chip">
-                    {t.metric}
-                  </span>
-                )}
               </div>
             </Reveal>
           ))}
