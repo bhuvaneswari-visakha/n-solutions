@@ -454,7 +454,7 @@ export function SiteHeader({ activePath = '' }) {
             setSearchMessage('')
           }}
         >
-          <FiSearch aria-hidden="true" />
+          {searchOpen ? <FiX aria-hidden="true" /> : <FiSearch aria-hidden="true" />}
         </button>
         <button
           type="button"
