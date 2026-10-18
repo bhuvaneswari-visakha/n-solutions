@@ -358,31 +358,91 @@ function getServiceIcon(num) {
 
 function Arrow() { return <FiArrowUpRight aria-hidden="true" style={{ display: 'inline', verticalAlign: 'middle', strokeWidth: 2.5 }} /> }
 
-function AnimatedMetric({ value, suffix = '', label }) {
+function AnimatedMetric({ value, suffix = '', label, delay = 0, duration }) {
   const [count, setCount] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
   const ref = useRef(null)
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      const start = performance.now()
-      const duration = 1200
-      const update = (now) => {
-        const progress = Math.min((now - start) / duration, 1)
-        const ease = 1 - Math.pow(1 - progress, 3)
-        setCount(Math.round(value * ease))
-        if (progress < 1) {
-          requestAnimationFrame(update)
-        } else {
-          setCount(value)
-        }
+  const animRef = useRef(null)
+  const isRunningRef = useRef(false)
+
+  const defaultDuration = value > 500 ? 1800 : value > 100 ? 1500 : 1200
+  const animDuration = duration || defaultDuration
+
+  const startAnimation = (dur = animDuration) => {
+    if (isRunningRef.current) return
+    isRunningRef.current = true
+    setIsComplete(false)
+    setHasStarted(true)
+    const startTime = performance.now()
+
+    const update = (now) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / dur, 1)
+      // Ease out curve for perceptible count-up and gentle deceleration
+      const ease = 1 - Math.pow(1 - progress, 2.2)
+      setCount(Math.round(value * ease))
+
+      if (progress < 1) {
+        animRef.current = requestAnimationFrame(update)
+      } else {
+        setCount(value)
+        setIsComplete(true)
+        isRunningRef.current = false
       }
-      requestAnimationFrame(update)
-      observer.disconnect()
-    }, { threshold: 0.15 })
+    }
+    animRef.current = requestAnimationFrame(update)
+  }
+
+  useEffect(() => {
+    let timeoutId = null
+    let hasAnimated = false
+
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(value)
+      setIsComplete(true)
+      setHasStarted(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true
+        timeoutId = setTimeout(() => {
+          startAnimation(animDuration)
+        }, delay)
+        observer.disconnect()
+      }
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' })
+
     if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [value])
-  return <div ref={ref}><strong>{count}<span>{suffix}</span></strong><small>{label}</small></div>
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      if (animRef.current) cancelAnimationFrame(animRef.current)
+      observer.disconnect()
+    }
+  }, [value, delay, animDuration])
+
+  const handleReplay = () => {
+    if (!isRunningRef.current) {
+      startAnimation(Math.min(animDuration, 1100))
+    }
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={`animated-metric-wrap ${hasStarted ? 'is-animating' : ''} ${isComplete ? 'is-complete' : ''}`}
+      onMouseEnter={handleReplay}
+    >
+      <strong className="metric-number-display">
+        {count.toLocaleString()}
+        <span>{suffix}</span>
+      </strong>
+      {label && <small>{label}</small>}
+    </div>
+  )
 }
 
 function Reveal({ children, className = '' }) {
@@ -1309,7 +1369,7 @@ function AboutPage() {
               <span className="milestone-sector-tag">Rooftop Solar</span>
             </div>
             <div className="milestone-card-metric">
-              <AnimatedMetric value={750} suffix="+" label="Sites Completed" />
+              <AnimatedMetric value={750} suffix="+" label="Sites Completed" delay={120} />
             </div>
             <h3>PM Surya Ghar</h3>
             <p>Subsidized residential solar installations delivering clean energy across Andhra Pradesh and nationwide.</p>
@@ -1321,7 +1381,7 @@ function AboutPage() {
               <span className="milestone-sector-tag">Residential</span>
             </div>
             <div className="milestone-card-metric">
-              <AnimatedMetric value={140} suffix="+" label="Rooftops Commissioned" />
+              <AnimatedMetric value={140} suffix="+" label="Rooftops Commissioned" delay={220} />
             </div>
             <h3>Residential Projects</h3>
             <p>Custom rooftop systems engineered for independent homes, luxury villas, and multi-family residential clusters.</p>
@@ -1333,7 +1393,7 @@ function AboutPage() {
               <span className="milestone-sector-tag">Government</span>
             </div>
             <div className="milestone-card-metric">
-              <AnimatedMetric value={120} suffix="+" label="Institutional Sites" />
+              <AnimatedMetric value={120} suffix="+" label="Institutional Sites" delay={320} />
             </div>
             <h3>Government Projects</h3>
             <p>High-standard solar installations for civic administrative buildings, educational institutions, and public utilities.</p>
@@ -1345,7 +1405,7 @@ function AboutPage() {
               <span className="milestone-sector-tag">Commercial</span>
             </div>
             <div className="milestone-card-metric">
-              <AnimatedMetric value={200} suffix="+" label="Enterprises Powered" />
+              <AnimatedMetric value={200} suffix="+" label="Enterprises Powered" delay={420} />
             </div>
             <h3>Commercial Projects</h3>
             <p>Turnkey grid-connected solar installations for hospitals, IT offices, colleges, hotels, and retail complexes.</p>
@@ -1357,7 +1417,7 @@ function AboutPage() {
               <span className="milestone-sector-tag">High-Voltage</span>
             </div>
             <div className="milestone-card-metric">
-              <AnimatedMetric value={60} suffix="+" label="MW-Scale & Plants" />
+              <AnimatedMetric value={60} suffix="+" label="MW-Scale & Plants" delay={520} />
             </div>
             <h3>Industrial Projects</h3>
             <p>Multi-megawatt and heavy rooftop solar plants engineered for factories, manufacturing units, and warehouses.</p>
@@ -1366,8 +1426,7 @@ function AboutPage() {
 
         <Reveal className="milestones-summary-strip">
           <div className="summary-stat">
-            <strong>1,270<span>+</span></strong>
-            <small>Total Installations Across 9 States</small>
+            <AnimatedMetric value={1270} suffix="+" label="Total Installations Across 9 States" delay={250} />
           </div>
           <div className="summary-divider" aria-hidden="true" />
           <div className="summary-text">
@@ -1907,10 +1966,10 @@ function App() {
       <section className="hero-stats-banner" id="project-stats" aria-label="Company Statistics">
         <div className="wrap">
           <div className="hero-stats-grid">
-            <AnimatedMetric value={16} suffix="+" label="Years of experience" />
-            <AnimatedMetric value={9} label="States across India" />
-            <AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" />
-            <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar sites" />
+            <AnimatedMetric value={16} suffix="+" label="Years of experience" delay={80} />
+            <AnimatedMetric value={9} label="States across India" delay={180} />
+            <AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" delay={280} />
+            <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar sites" delay={380} />
           </div>
         </div>
       </section>

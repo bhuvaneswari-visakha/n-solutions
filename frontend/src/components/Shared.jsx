@@ -65,34 +65,88 @@ export function navigate(path) {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-export function AnimatedMetric({ value, suffix = '', label }) {
+export function AnimatedMetric({ value, suffix = '', label, delay = 0, duration }) {
   const [count, setCount] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
   const ref = useRef(null)
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      const start = performance.now()
-      const duration = 1200
-      const update = (now) => {
-        const progress = Math.min((now - start) / duration, 1)
-        const ease = 1 - Math.pow(1 - progress, 3)
-        setCount(Math.round(value * ease))
-        if (progress < 1) {
-          requestAnimationFrame(update)
-        } else {
-          setCount(value)
-        }
+  const animRef = useRef(null)
+  const isRunningRef = useRef(false)
+
+  const defaultDuration = value > 500 ? 1800 : value > 100 ? 1500 : 1200
+  const animDuration = duration || defaultDuration
+
+  const startAnimation = (dur = animDuration) => {
+    if (isRunningRef.current) return
+    isRunningRef.current = true
+    setIsComplete(false)
+    setHasStarted(true)
+    const startTime = performance.now()
+
+    const update = (now) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / dur, 1)
+      const ease = 1 - Math.pow(1 - progress, 2.2)
+      setCount(Math.round(value * ease))
+
+      if (progress < 1) {
+        animRef.current = requestAnimationFrame(update)
+      } else {
+        setCount(value)
+        setIsComplete(true)
+        isRunningRef.current = false
       }
-      requestAnimationFrame(update)
-      observer.disconnect()
-    }, { threshold: 0.15 })
+    }
+    animRef.current = requestAnimationFrame(update)
+  }
+
+  useEffect(() => {
+    let timeoutId = null
+    let hasAnimated = false
+
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(value)
+      setIsComplete(true)
+      setHasStarted(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true
+        timeoutId = setTimeout(() => {
+          startAnimation(animDuration)
+        }, delay)
+        observer.disconnect()
+      }
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' })
+
     if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [value])
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      if (animRef.current) cancelAnimationFrame(animRef.current)
+      observer.disconnect()
+    }
+  }, [value, delay, animDuration])
+
+  const handleReplay = () => {
+    if (!isRunningRef.current) {
+      startAnimation(Math.min(animDuration, 1100))
+    }
+  }
+
   return (
-    <div ref={ref}>
-      <strong>{count}<span>{suffix}</span></strong>
-      <small>{label}</small>
+    <div
+      ref={ref}
+      className={`animated-metric-wrap ${hasStarted ? 'is-animating' : ''} ${isComplete ? 'is-complete' : ''}`}
+      onMouseEnter={handleReplay}
+    >
+      <strong className="metric-number-display">
+        {count.toLocaleString()}
+        <span>{suffix}</span>
+      </strong>
+      {label && <small>{label}</small>}
     </div>
   )
 }
