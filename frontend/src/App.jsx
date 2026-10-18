@@ -2014,6 +2014,39 @@ function App() {
         </div>
       </section>
 
+      {/* SECTOR MILESTONES SHOWCASE — SIMPLE LIGHT DESIGN WITH WHO WE ARE HEADING */}
+      <section className="home-milestones-highlight" id="sector-milestones" aria-labelledby="sector-milestones-heading">
+        <div className="wrap">
+          <Reveal className="section-heading">
+            <div>
+              <p className="eyebrow"><span /> {homeContent.whoWeAre.eyebrow}</p>
+              <h2 id="sector-milestones-heading">{homeContent.whoWeAre.title}<br /><em>{homeContent.whoWeAre.subtitle}</em></h2>
+            </div>
+            <p className="heading-note">
+              Over 16+ years of disciplined solar EPC operations across 9 states in India — verified delivery across residential, government, commercial, and industrial sectors.
+            </p>
+          </Reveal>
+
+          <div className="home-milestones-grid">
+            <div className="home-milestone-col">
+              <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar" delay={80} />
+            </div>
+            <div className="home-milestone-col">
+              <AnimatedMetric value={140} suffix="+" label="Residential Projects" delay={160} />
+            </div>
+            <div className="home-milestone-col">
+              <AnimatedMetric value={120} suffix="+" label="Government Projects" delay={240} />
+            </div>
+            <div className="home-milestone-col">
+              <AnimatedMetric value={200} suffix="+" label="Commercial Projects" delay={320} />
+            </div>
+            <div className="home-milestone-col">
+              <AnimatedMetric value={60} suffix="+" label="Industrial Projects" delay={400} />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="proof" id="proof"><div className="wrap proof-grid"><p className="eyebrow"><span /> Experience that speaks for itself</p><div className="proof-intro"><h2>Built on experience.<br /><em>Driven by solar.</em></h2><p>N Solutions is an Engineering, Procurement and Construction solar company with 16+ years of experience across 9 states in India.</p><p>We combine engineering expertise, reliable solar technology, and professional project execution to help customers move towards cleaner energy, improved efficiency, and sustainable growth.</p></div><div className="proof-aside proof-aside-video"><video className="proof-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/proof-solar.mp4" type="video/mp4" /></video><span className="proof-aside-mark">16+</span><div><strong>Years of solar operations</strong><p>From MW-scale solar power projects to residential rooftop installations under PM Surya Ghar.</p></div><span className="proof-aside-line" /></div></div></section>
 
       <section className="who wrap" id="who-we-are">
