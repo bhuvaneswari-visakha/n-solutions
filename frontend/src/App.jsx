@@ -467,6 +467,66 @@ function Reveal({ children, className = '' }) {
   return <div ref={ref} className={`reveal ${className}`}>{children}</div>
 }
 
+function IndustryIcon({ type }) {
+  const drawings = {
+    factory: <><path d="M5 54V29l13-8v9l13-9v9l15-9v33H5Z" /><rect x="11" y="39" width="7" height="7" fill="#eaf4fc" /><rect x="24" y="39" width="7" height="7" fill="#eaf4fc" /><rect x="38" y="39" width="7" height="7" fill="#eaf4fc" /><path d="M10 24V10h8v9z" /></>,
+    home: <><path d="m4 29 28-24 28 24-5 6-5-4v25H14V31l-5 4z" /><rect x="27" y="39" width="10" height="17" rx="1" fill="#eaf4fc" /><rect x="17" y="33" width="7" height="7" fill="#eaf4fc" /><rect x="41" y="33" width="7" height="7" fill="#eaf4fc" /></>,
+    hospital: <><path d="M11 56V20h42v36z" /><path d="M24 20V9h16v11z" /><rect x="28" y="12" width="8" height="3" fill="#eaf4fc" /><rect x="30.5" y="9.5" width="3" height="8" fill="#eaf4fc" /><g fill="#eaf4fc"><rect x="17" y="27" width="6" height="6"/><rect x="29" y="27" width="6" height="6"/><rect x="41" y="27" width="6" height="6"/><rect x="17" y="39" width="6" height="6"/><rect x="41" y="39" width="6" height="6"/></g><path d="M28 56V43h8v13z" /></>,
+    school: <><path d="M17 18h31v38H17z" /><path d="M12 18 32 5l20 13z" /><rect x="28" y="25" width="8" height="9" rx="4" fill="#eaf4fc" /><path d="M32 5V1h16v8H32z" /><path d="M6 34h9v22H6zM49 34h9v22h-9z" /><g fill="#eaf4fc"><rect x="22" y="39" width="5" height="5"/><rect x="39" y="39" width="5" height="5"/></g></>,
+    retail: <><path d="M10 19h43l5 12H6z" /><path d="M10 31h43v25H10z" /><path d="M7 19 12 9h38l5 10z" /><path d="M18 32v24h7V32zM31 38h15v10H31z" fill="#eaf4fc" /><path d="M13 18h8l-2 13h-8zM23 18h9v13h-9zM34 18h9v13h-9zM45 18h8l2 13h-8z" opacity=".75" /></>,
+    offices: <><path d="M7 56V22h19v34zM27 56V8h20v48zM49 56V28h10v28z" /><g fill="#eaf4fc"><path d="M12 27h5v5h-5zM19 27h4v5h-4zM12 36h5v5h-5zM19 36h4v5h-4zM32 14h5v5h-5zM40 14h4v5h-4zM32 23h5v5h-5zM40 23h4v5h-4zM32 32h5v5h-5zM40 32h4v5h-4zM32 41h5v5h-5zM40 41h4v5h-4z" /></g></>,
+    warehouse: <><path d="m5 28 27-19 27 19v28H5z" /><path d="M12 31h40v25H12z" fill="#eaf4fc" /><path d="M17 36h30v20H17z" /><path d="M22 42h20v14H22z" fill="#eaf4fc" /><path d="M26 44h12v12H26z" /></>,
+    agriculture: <><path d="M6 50c12-8 24-8 52-1v6C35 48 21 50 7 58z"/><path d="M9 40c13-7 26-7 45-3v5c-19-5-32-3-44 4z"/><path d="M31 42V18" stroke="#0755a4" strokeWidth="4"/><path d="M31 25C17 25 13 17 14 10c11 0 18 5 17 15zM32 19c0-10 8-15 18-14 0 9-6 17-18 17z" /></>,
+    fuel: <><path d="M12 8h28v48H12z"/><rect x="17" y="14" width="18" height="15" rx="2" fill="#eaf4fc"/><path d="M40 18h5l7 8v20c0 5-8 5-8 0V34h-4z"/><path d="M45 21v9h6" fill="none" stroke="#0755a4" strokeWidth="3"/><path d="M9 56h34" stroke="#0755a4" strokeWidth="4"/></>,
+    hotel: <><path d="M11 56V18h42v38z"/><path d="M7 18 32 7l25 11z"/><path d="M18 25h5v5h-5zM29 25h5v5h-5zM40 25h5v5h-5zM18 35h5v5h-5zM29 35h5v5h-5zM40 35h5v5h-5z" fill="#eaf4fc"/><path d="M28 45h9v11h-9z" fill="#eaf4fc"/><path d="m16 10 2-6 2 6 6 1-5 3 1 6-4-4-5 4 2-6-5-3zM34 9l2-6 2 6 6 1-5 3 1 6-4-4-5 4 2-6-5-3z"/></>,
+    government: <><path d="m5 23 27-17 27 17z"/><path d="M9 25h46v5H9zM8 53h48v5H8zM4 59h56v4H4z"/><path d="M13 31h6v20h-6zM24 31h6v20h-6zM35 31h6v20h-6zM46 31h6v20h-6z"/></>,
+    grain: <><path d="M8 56V25l15-11v42zM27 56V18l14-10v48zM44 56V31l12-8v33z"/><path d="M17 23c-2-8 2-12 8-14 1 7-1 12-8 14zM17 28c-7-2-9-7-8-13 6 2 9 6 8 13zM35 28c-2-8 2-12 8-14 1 7-1 12-8 14zM35 33c-7-2-9-7-8-13 6 2 9 6 8 13z" fill="#eaf4fc"/></>,
+    construction: <><path d="M8 56V34h15v22zM27 56V24h15v32z"/><path d="M6 17h48v5H6zM16 17V9h4v8M16 9h25v4H16zM40 9v8h-4V9zM50 22 42 38h-3l7-16z"/><path d="M14 30h3v4h-3zM19 30h3v4h-3zM32 30h4v5h-4zM32 39h4v5h-4z" fill="#eaf4fc"/></>,
+    streetlight: <><path d="M30 20h4v38h-4zM32 20 19 8l3-4 16 14z"/><path d="M16 6h15v5H16z"/><path d="M16 11c0 7 4 11 10 11v-4c-4 0-6-2-6-7z"/><path d="M7 59h50v4H7z"/><path d="M9 34c5-4 9-4 14 0M5 29c8-7 16-7 24 0M39 34c5-4 9-4 14 0M35 29c8-7 16-7 24 0" fill="none" stroke="#0755a4" strokeWidth="3" strokeLinecap="round"/></>,
+  }
+
+  return <svg className="industry-pictogram" viewBox="0 0 64 64" aria-hidden="true">{drawings[type]}</svg>
+}
+
+function IndustriesSection() {
+  const industries = [
+    { title: 'Commercial & Industrial Units', icon: 'factory' },
+    { title: 'Residential Buildings', icon: 'home' },
+    { title: 'Hospitals & Healthcare Facilities', icon: 'hospital' },
+    { title: 'Educational Institutions', icon: 'school' },
+    { title: 'Shopping Malls & Retail Stores', icon: 'retail' },
+    { title: 'IT Parks & Corporate Offices', icon: 'offices' },
+    { title: 'Warehouses & Tin Sheds', icon: 'warehouse' },
+    { title: 'Agriculture & Farming', icon: 'agriculture' },
+    { title: 'Petrol Bunks & Fuel Stations', icon: 'fuel' },
+    { title: 'Hotels, Resorts & Hospitality', icon: 'hotel' },
+    { title: 'Government Institutions', icon: 'government' },
+    { title: 'Rice Mills & Agro Processing Units', icon: 'grain' },
+    { title: 'Construction Sites', icon: 'construction' },
+    { title: 'Street Lighting & Smart Cities', icon: 'streetlight' },
+  ]
+
+  return (
+    <section className="industries-section" aria-labelledby="industries-title">
+      <div className="wrap">
+        <Reveal className="industries-heading">
+          <p className="eyebrow"><span /> Industries We Serve</p>
+          <h2 id="industries-title">Solar Solutions for <em>Every Industry</em></h2>
+          <p>Delivering reliable, efficient and sustainable solar solutions across diverse sectors.</p>
+        </Reveal>
+        <div className="industries-grid">
+          {industries.map(({ title, icon }) => (
+            <Reveal className="industry-card" key={title}>
+              <span className="industry-icon"><IndustryIcon type={icon} /></span>
+              <h3>{title}</h3>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ScrollProgressBar() {
   const [width, setWidth] = useState(0)
   useEffect(() => {
@@ -1296,6 +1356,8 @@ function AboutPage() {
       </div>
     </section>
 
+    <IndustriesSection />
+
     {/* Proven Execution Scale & Sector Milestones */}
     <section className="about-milestones-showcase" id="project-scale">
       <div className="wrap">
@@ -1941,6 +2003,8 @@ function App() {
           <a className="text-link" href="/about" onClick={(e) => { e.preventDefault(); navigate('/about') }}>About N Solutions <Arrow /></a>
         </Reveal>
       </section>
+
+      <IndustriesSection />
 
       <section className="services wrap" id="services">
         <Reveal className="section-heading">

@@ -238,7 +238,6 @@ export default function ContactPage() {
                   </p>
                   <div className="hub-links">
                     <span><FiClock size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Office Hours:</strong> Mon – Sat &nbsp;|&nbsp; 9:00 AM – 6:30 PM IST</span>
-                    <span><FiZap size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>O&M Emergency:</strong> emergency-om@nsolutions.in</span>
                   </div>
                 </div>
               </div>

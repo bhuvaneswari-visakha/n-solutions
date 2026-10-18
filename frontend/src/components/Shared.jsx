@@ -445,19 +445,6 @@ export function SiteHeader({ activePath = '' }) {
       <div className="header-actions">
         <button
           type="button"
-          className="header-search-toggle"
-          aria-label={searchOpen ? 'Close page search' : 'Search pages'}
-          aria-expanded={searchOpen}
-          aria-controls="header-page-search"
-          onClick={() => {
-            setSearchOpen(!searchOpen)
-            setSearchMessage('')
-          }}
-        >
-          {searchOpen ? <FiX aria-hidden="true" /> : <FiSearch aria-hidden="true" />}
-        </button>
-        <button
-          type="button"
           className="menu-toggle"
           aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
           aria-controls="site-navigation"
@@ -473,7 +460,6 @@ export function SiteHeader({ activePath = '' }) {
           className="nav-cta nav-cta-desktop"
           onClick={() => setQuoteModalOpen(true)}
         >
-          <FiSun aria-hidden="true" />
           Get a Quote <Arrow />
         </button>
       </div>
