@@ -27,28 +27,22 @@ export function GoogleIcon({ size = 16, className = '' }) {
 
 export function JustdialIcon({ size = 18, className = '' }) {
   return (
-    <span
+    <img
+      src="/justdial-jd-icon.png"
+      alt="Justdial"
       className={`justdial-icon-badge ${className}`}
+      width={size}
+      height={size}
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: 'inline-block',
+        verticalAlign: 'middle',
         width: `${size}px`,
         height: `${size}px`,
-        borderRadius: '4px',
-        background: '#ff6c00',
-        color: '#ffffff',
-        fontFamily: "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-        fontWeight: 800,
-        fontSize: `${Math.max(10, Math.round(size * 0.65))}px`,
-        lineHeight: 1,
-        letterSpacing: '-0.5px',
+        objectFit: 'contain',
         flexShrink: 0
       }}
-      aria-hidden="true"
-    >
-      jd
-    </span>
+      loading="lazy"
+    />
   )
 }
 
@@ -972,63 +966,31 @@ export function SiteFooter() {
     </svg>
   </a>
 
-              <a
-                href="https://share.google/9B4OC1mWUc2h4to0T"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Google Reviews - 5.0 Star Rating"
-                className="footer-platform-icon-btn footer-google-btn"
-                title="Google Reviews (5.0 ★ Rating)"
-              >
-                <GoogleIcon size={18} />
-              </a>
-
-              <a
-                href="https://jsdl.in/RSL-ZYP1792307440"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Justdial - 5.0 Star Rating (275+ Reviews)"
-                className="footer-platform-icon-btn footer-justdial-btn"
-                title="Justdial (5.0 ★ from 275+ Ratings)"
-              >
-                <JustdialIcon size={18} />
-              </a>
-            </div>
-
-            {/* Google & Justdial Rating Badges next to social icons */}
-            <div className="footer-rating-badges">
-              <a
-                href="https://share.google/9B4OC1mWUc2h4to0T"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-rating-pill google-pill"
-                title="N Solutions on Google Reviews"
-              >
-                <GoogleIcon size={13} />
-                <span><strong>5.0 ★</strong> Google</span>
-              </a>
-
-              <a
-                href="https://jsdl.in/RSL-ZYP1792307440"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-rating-pill justdial-pill"
-                title="N Solutions on Justdial (275+ Reviews)"
-              >
-                <JustdialIcon size={13} />
-                <span><strong>5.0 ★</strong> Justdial</span>
-              </a>
-            </div>
+            <a
+              href="https://jsdl.in/RSL-ZYP1792307440"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Justdial - 5.0 Star Rating (275+ Reviews)"
+              title="Justdial (5.0 ★ Rating)"
+            >
+              <JustdialIcon size={18} />
+            </a>
 
             <span className="footer-social-divider" />
 
             <span className="footer-developed">
-              Designed &amp; Developed by
-              <strong> Multivisiontrendz</strong>
+              Designed &amp; Developed by{' '}
+              <a
+                href="https://multivisiontrendz.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <strong>Multivisiontrendz</strong>
+              </a>
             </span>
 
           </div>
-
+      </div>
       </section>
 
     </footer>

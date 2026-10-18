@@ -8,6 +8,7 @@ import LeadQuoteModal from './pages/LeadQuoteModel.jsx'
 import ContactPage from './pages/ContactPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsConditionsPage from './pages/TermsConditionsPage'
+import NotFoundPage from './pages/NotFoundPage'
 import AdminPortal from './admin/AdminPortal'
 import { navigate, SiteFooter, GoogleIcon, JustdialIcon, JustdialSvgLogo } from './components/Shared'
 import { homeContent, aboutContent, servicesAndSolutionsContent } from './content/siteContent'
@@ -640,12 +641,6 @@ function TestimonialsShowcase({ theme = 'light' }) {
                     {t.role ? `${t.role} · ` : ''}{t.company}
                   </span>
                 </div>
-
-                {t.metric && (
-                  <span className="testimonial-metric-chip">
-                    {t.metric}
-                  </span>
-                )}
               </div>
             </Reveal>
           ))}
@@ -1807,10 +1802,12 @@ function App() {
   if (currentPath === '/media') return <><MediaPage /><WhatsAppWidget /></>
   if (currentPath === '/careers') return <><CareersPage /><WhatsAppWidget /></>
   if (currentPath === '/contact') return <><ContactPage /><WhatsAppWidget /></>
+  if (currentPath === '/privacy' || currentPath === '/privacy-policy') return <><PrivacyPolicyPage /><WhatsAppWidget /></>
+  if (currentPath === '/terms' || currentPath === '/terms-and-conditions') return <><TermsConditionsPage /><WhatsAppWidget /></>
   if (currentPath === '/admin' || currentPath.startsWith('/admin')) {
     return <><SEO title="Admin | N Solutions" description="N Solutions administrator portal." path="/admin" noIndex /><AdminPortal /></>
   }
-  if (currentPath !== '/') return <><RouteShell /><WhatsAppWidget /></>
+  if (currentPath !== '/') return <><NotFoundPage /><WhatsAppWidget /></>
 
 
   return (
