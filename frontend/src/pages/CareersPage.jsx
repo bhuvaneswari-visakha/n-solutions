@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal, navigate } from '../components/Shared'
 import { apiGet, apiPost } from '../utils/api'
-import { useSEO } from '../utils/useSEO'
 import { 
   FiMapPin, 
   FiClock, 
@@ -91,13 +90,6 @@ export default function CareersPage() {
   setJobs(apiJobs)
   setJobsStatus(apiJobs.length ? 'ready' : 'empty')
 }
-
-  useSEO({
-    title: 'Careers at N Solutions – Join Our Solar EPC Team',
-    description: 'Explore career opportunities at N Solutions – a leading Solar EPC company in India. We hire solar engineers, project managers, sales professionals, and more. Apply today.',
-    keywords: 'solar jobs India, solar engineer jobs, EPC careers, solar company jobs Andhra Pradesh, N Solutions careers, solar project manager, renewable energy jobs',
-    canonical: 'https://nsolutions.in/careers',
-  })
 
   useEffect(() => {
   window.scrollTo({ top: 0, behavior: 'smooth' })

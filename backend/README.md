@@ -73,6 +73,15 @@ The API listens on `http://localhost:5000` by default. MongoDB connection failur
 | `DASHBOARD_DEFAULT_LIMIT` | Default recent-list size, default `10` |
 | `DASHBOARD_MAX_LIMIT` | Maximum recent-list size, default `50` |
 
+## Production Security and Operations
+
+- Set `NODE_ENV=production` and set `CORS_ORIGIN` in Render to the exact HTTPS origin(s) used by the deployed frontend, comma-separated (for example `https://nsolutions.in,https://www.nsolutions.in`). Production startup rejects wildcard and non-HTTPS origins. Add a Vercel deployment origin only if it is intentionally used by administrators or visitors.
+- Keep `MONGODB_URI`, `JWT_SECRET`, `ADMIN_REGISTRATION_KEY`, mail credentials, and other secrets only in Render's backend environment settings or the ignored `backend/.env` file. Never create `VITE_*` variables for backend secrets. Disable admin registration after provisioning and use a unique, randomly generated JWT secret.
+- The Express API sends restrictive content, framing, referrer, and permissions headers. It sends HSTS when the request reaches the app over HTTPS. `frontend/vercel.json` adds browser security headers and HSTS for the frontend. Vercel and Render provide managed TLS; after deployment, verify HTTP requests redirect to HTTPS and both deployed domains present valid certificates.
+- Configure the Render service health check to use `/health`, monitor Render service/database logs and deployment alerts, and add an external uptime/error-monitoring provider through its dashboard if required. `/health` confirms that the API process responds; monitor Atlas availability separately. No third-party analytics or monitoring account has been configured in this repository.
+- Configure Atlas automated snapshots or continuous cloud backups according to the current Atlas plan. Confirm retention, restrict backup access, and periodically test restoration into a separate non-production database. No backup or restore was run against production data as part of this change.
+- Set the frontend production API base URL in Vercel to the HTTPS backend `/api` URL. Verify the value in the deployed build without adding credentials to frontend configuration.
+
 ## Local Upload Storage
 
 Uploads use Multer `diskStorage` and are staged under `UPLOAD_DIR/.staging` before being moved to their final location. By default, public images and videos are stored in `backend/uploads/public/<category>/`; resumes are stored in `backend/uploads/private/resumes/`. Each filename is generated uniquely. Express serves only the public tree under `/uploads/public/`; private resume files are streamed only from `GET /api/job-applications/:id/resume/download` after admin authentication. The private directory is never mounted as static content.

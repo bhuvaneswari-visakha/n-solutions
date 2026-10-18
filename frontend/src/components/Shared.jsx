@@ -901,7 +901,7 @@ export function SiteFooter() {
             </svg>
           </a>
   <a  aria-label="Instagram"  href="https://www.instagram.com/nsol.in?mdxt=MWplbWhxbDkwcDNoNg=="
-      target="_blank" >
+      target="_blank" rel="noopener noreferrer">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <rect
         x="3.5"

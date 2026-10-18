@@ -10,7 +10,6 @@ import AdminPortal from './admin/AdminPortal'
 import { navigate, SiteFooter } from './components/Shared'
 import { homeContent, aboutContent, servicesAndSolutionsContent } from './content/siteContent'
 import { apiGet } from './utils/api'
-import { useSEO } from './utils/useSEO'
 import WhatsAppWidget from "./components/WhatsAppWidget";
 import {
   FiArrowUpRight, FiArrowDown, FiCheck, FiChevronRight, FiChevronLeft,
@@ -1105,13 +1104,6 @@ function AboutPage() {
   const [horizonTab, setHorizonTab] = useState('vision')
   const { companyOverview, chairmanMessage, visionAndMission, journey, whatWeDo, howWeWork } = aboutContent
 
-  useSEO({
-    title: 'About Us – Solar EPC Company with 16+ Years Experience',
-    description: 'Learn about N Solutions – an ISO 9001:2015 certified Solar EPC company with 16+ years of experience delivering commercial, industrial, and residential solar projects across 9 states in India.',
-    keywords: 'about N Solutions, solar EPC company, solar company India, ISO certified solar, MNRE empanelled, NREDCAP registered, solar experience India',
-    canonical: 'https://nsolutions.in/about',
-  })
-
   return (
     <>
      <SEO
@@ -1461,13 +1453,6 @@ function AboutPage() {
 function ServicesPage() {
   const { header, services, cta } = servicesAndSolutionsContent
 
-  useSEO({
-    title: 'Solar Services & Solutions – EPC, O&M, Subsidy & Net Metering',
-    description: 'N Solutions offers end-to-end solar services: commercial & industrial EPC, residential rooftop installation, PM Surya Ghar subsidy assistance, net metering, operation & maintenance across Andhra Pradesh and 9 states.',
-    keywords: 'solar EPC services, commercial solar installation, industrial solar, residential solar, PM Surya Ghar subsidy, net metering, solar O&M, solar solutions India',
-    canonical: 'https://nsolutions.in/services',
-  })
-
   return (
     <>
     <SEO
@@ -1646,18 +1631,25 @@ function ServicesPage() {
 
 
 function RouteShell() {
-  return <div className="route-shell"><SiteHeader activePath={window.location.pathname} /><main><p className="eyebrow"><span /> N Solutions Solar EPC</p><h1>This page is being prepared.</h1><p>Return to the Home page while the next section is connected.</p><a className="button button-accent" href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>Back to Home <Arrow /></a></main></div>
+  return (
+    <>
+      <SEO title="Page Not Found | N Solutions" description="The page you requested could not be found." path={window.location.pathname} noIndex />
+      <div className="route-shell">
+        <SiteHeader activePath={window.location.pathname} />
+        <main>
+          <p className="eyebrow"><span /> N Solutions Solar EPC</p>
+          <h1>Page not found</h1>
+          <p>The page may have moved or the address may be incorrect.</p>
+          <a className="button button-accent" href="/" onClick={(event) => { event.preventDefault(); navigate('/') }}>Back to Home <Arrow /></a>
+        </main>
+        <SiteFooter />
+      </div>
+    </>
+  )
 }
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname)
-
-  useSEO({
-    title: 'N Solutions – Solar EPC Company | Built on Experience, Driven by Solar',
-    description: 'N Solutions is an ISO 9001:2015 certified Solar EPC company with 16+ years delivering residential, commercial & industrial solar projects across 9 states in India. MNRE empanelled. PM Surya Ghar registered.',
-    keywords: 'N Solutions solar, solar EPC India, solar installation Vizianagaram, solar company Andhra Pradesh, residential solar, commercial solar EPC, PM Surya Ghar, APEPDCL empanelled',
-    canonical: 'https://nsolutions.in/',
-  })
 
   useEffect(() => {
     const onPopState = () => setCurrentPath(window.location.pathname)
@@ -1699,7 +1691,9 @@ function App() {
   if (currentPath === '/media') return <><MediaPage /><WhatsAppWidget /></>
   if (currentPath === '/careers') return <><CareersPage /><WhatsAppWidget /></>
   if (currentPath === '/contact') return <><ContactPage /><WhatsAppWidget /></>
-  if (currentPath === '/admin' || currentPath.startsWith('/admin')) return <AdminPortal />
+  if (currentPath === '/admin' || currentPath.startsWith('/admin')) {
+    return <><SEO title="Admin | N Solutions" description="N Solutions administrator portal." path="/admin" noIndex /><AdminPortal /></>
+  }
   if (currentPath !== '/') return <><RouteShell /><WhatsAppWidget /></>
 
 

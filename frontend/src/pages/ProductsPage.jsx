@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom'
 import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate } from '../components/Shared'
 import { apiGet, resolveMediaUrl } from '../utils/api'
 import SEO from "../components/SEO/SEO";
-import { useSEO } from '../utils/useSEO'
 import {
   FiArrowDown,
   FiX,
@@ -509,13 +508,6 @@ export default function ProductsPage() {
     setProducts(nextProducts)
     setCatalogStatus(nextProducts.length ? 'ready' : 'empty')
   }
-
-  useSEO({
-    title: 'Solar Products & Engineering Hardware – Panels, Inverters & More',
-    description: 'Explore N Solutions\u2019 range of Tier-1 solar products: ALMM bifacial solar panels, string inverters, earth pits, lightning arrestors, and solar accessories. Serving commercial, industrial & residential projects.',
-    keywords: 'solar panels India, solar inverters, ALMM solar panels, bifacial solar modules, solar earth pits, lightning arrestors, solar accessories, buy solar products',
-    canonical: 'https://nsolutions.in/products',
-  })
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })

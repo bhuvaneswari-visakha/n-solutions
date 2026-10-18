@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate } from '../components/Shared'
 import { apiGet, resolveMediaUrl } from '../utils/api'
-import { useSEO } from '../utils/useSEO'
 import SEO from "../components/SEO/SEO";
 import { 
   FiMapPin, FiX, FiArrowDown, FiChevronRight, FiChevronLeft,
@@ -602,13 +601,6 @@ export default function ProjectsPage() {
         'Comprehensive electrical containment protecting inverter, panels, and connected building loads against high-voltage surges and atmospheric strikes.'
     }
   ]
-
-  useSEO({
-    title: 'Solar Projects Showcase – Commercial, Industrial & Residential Installations',
-    description: 'Browse N Solutions\u2019 portfolio of completed solar EPC projects – commercial rooftop, industrial ground-mount, residential, and government installations across Andhra Pradesh and 9 states in India.',
-    keywords: 'solar projects India, solar EPC portfolio, commercial solar projects, industrial solar installation, ground mount solar, rooftop solar projects, N Solutions projects',
-    canonical: 'https://nsolutions.in/projects',
-  })
 
   useEffect(() => {
   window.scrollTo({ top: 0, behavior: 'smooth' })

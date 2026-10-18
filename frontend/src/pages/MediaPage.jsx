@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, navigate } from '../components/Shared'
 import { apiGet, resolveMediaUrl } from '../utils/api'
-import { useSEO } from '../utils/useSEO'
 import {
   FiPlay, FiX, FiArrowRight, FiCamera, FiVideo,
   FiBriefcase, FiUsers, FiFileText, FiChevronRight, FiEye,
@@ -37,12 +36,6 @@ export default function MediaPage() {
   const [press, setPress]               = useState([])
   const [teamPhotos, setTeamPhotos]     = useState([])
   const videoRef = useRef(null)
-  useSEO({
-    title: 'Media & Gallery – Solar Projects, Videos, Press & Team',
-    description: "Explore N Solutions' media gallery: project photos, installation videos, client stories, team moments and press coverage of our solar EPC work across India.",
-    keywords: 'N Solutions media, solar project gallery, solar videos, solar press, client testimonials, solar team, solar EPC gallery India',
-    canonical: 'https://nsolutions.in/media',
-  })
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal } from '../components/Shared'
 import { apiPost } from '../utils/api'
-import { useSEO } from '../utils/useSEO'
 import {
   FiPhone,
   FiSmartphone,
@@ -76,13 +75,6 @@ export default function ContactPage() {
   const [submitError, setSubmitError] = useState('')
   const [activeFaq, setActiveFaq] = useState(null)
   const submittingRef = useRef(false)
-
-  useSEO({
-    title: 'Contact Us & Project Consultation – Get a Free Solar Quote',
-    description: 'Contact N Solutions for a free solar feasibility study or project consultation. We serve commercial, industrial and residential solar customers across Andhra Pradesh and 9 states in India.',
-    keywords: 'contact N Solutions, solar quote India, solar feasibility study, solar consultation, solar company contact, solar EPC enquiry, N Solutions phone',
-    canonical: 'https://nsolutions.in/contact',
-  })
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })

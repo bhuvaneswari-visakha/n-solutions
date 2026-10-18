@@ -7,13 +7,12 @@ const SEO = ({
   description,
   keywords,
   path = "/",
-  image = "/images/og-default.jpg",
+  image = "/og-image.png",
   type = "website",
+  noIndex = false,
 }) => {
-  const canonicalUrl = `SITEURL{path}`;
-  const imageUrl = image.startsWith("http")
-    ? image
-    : `SITEURL{image}`;
+  const canonicalUrl = new URL(path, SITE_URL).toString();
+  const imageUrl = new URL(image, SITE_URL).toString();
 
   return (
     <Helmet>
@@ -34,13 +33,10 @@ const SEO = ({
 
       <meta
         name="robots"
-        content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
       />
 
-      <link
-        rel="canonical"
-        href={canonicalUrl}
-      />
+      {!noIndex && <link rel="canonical" href={canonicalUrl} />}
 
       {/* ================= LANGUAGE ================= */}
 
@@ -152,6 +148,5 @@ const SEO = ({
 };
 
 export default SEO;
-
 
 

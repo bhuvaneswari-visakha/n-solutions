@@ -26,6 +26,17 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware.js'
 const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
+app.use((request, response, next) => {
+  response.setHeader('X-Content-Type-Options', 'nosniff');
+  response.setHeader('X-Frame-Options', 'DENY');
+  response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.setHeader('Permissions-Policy', 'camera=(), geolocation=(), microphone=()');
+  response.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+  if (env.nodeEnv === 'production' && request.secure) {
+    response.setHeader('Strict-Transport-Security', 'max-age=31536000');
+  }
+  next();
+});
 app.use(cors({
   origin: env.corsOrigin,
   credentials: env.corsOrigin !== '*'
@@ -38,7 +49,6 @@ app.use('/uploads/public', express.static(join(env.uploadDirectory, 'public'), {
   redirect: false,
   setHeaders: (response) => {
     response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    response.setHeader('X-Content-Type-Options', 'nosniff');
   }
 }));
 

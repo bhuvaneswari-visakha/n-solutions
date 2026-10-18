@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 dotenv.config();
 
 const backendRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const nodeEnv = process.env.NODE_ENV || 'development';
 const registrationMode = (process.env.ADMIN_REGISTRATION_MODE || 'key').toLowerCase();
 const supportedModes = new Set(['bootstrap', 'key', 'disabled']);
 
@@ -29,12 +30,38 @@ const parseInteger = (value, fallback) => {
 };
 
 const parseCorsOrigins = (value) => {
-  if (!value || value === '*') return '*';
-  return value.split(',').map((origin) => origin.trim()).filter(Boolean);
+  const configuredOrigins = value || (
+    nodeEnv === 'production'
+      ? 'https://nsolutions.in,https://www.nsolutions.in'
+      : '*'
+  );
+  if (configuredOrigins.trim() === '*') {
+    if (nodeEnv === 'production') {
+      throw new Error('CORS_ORIGIN must list trusted HTTPS frontend origins in production.');
+    }
+    return '*';
+  }
+
+  const origins = configuredOrigins.split(',').map((origin) => origin.trim()).filter(Boolean);
+  if (origins.length === 0) {
+    throw new Error('CORS_ORIGIN must contain at least one trusted origin.');
+  }
+  for (const origin of origins) {
+    let parsedOrigin;
+    try {
+      parsedOrigin = new URL(origin);
+    } catch {
+      throw new Error(`Invalid CORS_ORIGIN value: ${origin}. Each value must be an origin URL.`);
+    }
+    if (parsedOrigin.origin !== origin || (nodeEnv === 'production' && parsedOrigin.protocol !== 'https:')) {
+      throw new Error(`Invalid CORS_ORIGIN value: ${origin}. Production origins must use HTTPS and contain no path.`);
+    }
+  }
+  return origins;
 };
 
 export const env = Object.freeze({
-  nodeEnv: process.env.NODE_ENV || 'development',
+  nodeEnv,
   port: parseInteger(process.env.PORT, 5000),
   mongoUri: process.env.MONGODB_URI,
   jwtSecret: process.env.JWT_SECRET,

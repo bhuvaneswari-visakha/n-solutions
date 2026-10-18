@@ -1796,7 +1796,7 @@ const loadMedia = async () => {
           <a
             href="/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="adm-nav-item adm-sidebar-action"
           >
             <span className="adm-nav-icon"><FiArrowUpRight /></span>
@@ -1836,7 +1836,7 @@ const loadMedia = async () => {
             <a
               href="/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="adm-website-btn"
               title="Open public website in new tab"
             >
