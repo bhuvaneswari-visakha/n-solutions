@@ -907,19 +907,19 @@ export function SiteFooter() {
 
           <div className="footer-bottom-links">
 
-            <a href="/privacy">
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy') }}>
               Privacy Policy
             </a>
 
             <span>|</span>
 
-            <a href="/terms">
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms') }}>
               Terms &amp; Conditions
             </a>
 
             <span>|</span>
 
-            <a href="/">
+            <a href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>
               Sitemap
             </a>
 
