@@ -1286,29 +1286,6 @@ function AboutPage() {
             </div>
           ))}
         </Reveal>
-
-        <div className="about-tagline-band">
-          {companyOverview.tagline}
-        </div>
-
-        {/* Statistics Strip */}
-        <Reveal className="about-overview-statistics" aria-label="N Solutions company statistics">
-          <div className="stat-block stat-exp">
-            <AnimatedMetric value={16} suffix="+" label="Years of experience" />
-          </div>
-          <div className="stat-block stat-states">
-            <AnimatedMetric value={9} suffix="+" label="States across India" />
-          </div>
-          <div className="stat-block stat-sectors">
-            <span className="sectors-heading">Project Verticals</span>
-            <div className="sectors-grid">
-              <span>Residential</span>
-              <span>Commercial</span>
-              <span>Industrial</span>
-              <span>Government</span>
-            </div>
-          </div>
-        </Reveal>
       </div>
     </section>
 
