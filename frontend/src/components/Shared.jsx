@@ -886,15 +886,22 @@ export function SiteFooter() {
 
           <div className="footer-socials">
 
-            <a href="#" aria-label="LinkedIn">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M6.5 8.5A1.5 1.5 0 1 0 6.5 5.5a1.5 1.5 0 0 0 0 3ZM5 10h3v9H5v-9Zm5 0h3v1.23c.43-.73 1.35-1.53 2.93-1.53 3.13 0 3.07 2.91 3.07 4.5V19h-3v-4.27c0-1.02-.02-2.33-1.42-2.33-1.42 0-1.64 1.1-1.64 2.25V19h-3v-9Z"
-      />
-    </svg>
-  </a>
-  <a href="#" aria-label="Instagram">
+            <a
+            aria-label="Facebook"
+            href="https://www.facebook.com/share/1a4JyMgMob/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              fill="currentColor"
+            >
+              <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.019 4.388 11.003 10.125 11.927v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.49 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.076 24 18.092 24 12.073Z" />
+            </svg>
+          </a>
+  <a  aria-label="Instagram"  href="https://www.instagram.com/nsol.in?mdxt=MWplbWhxbDkwcDNoNg=="
+      target="_blank" >
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <rect
         x="3.5"
@@ -923,22 +930,19 @@ export function SiteFooter() {
     </svg>
   </a>
 
-  <a href="#" aria-label="YouTube">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.8 2.8 0 0 0-2 2C2 9 2 12 2 12s0 3 .4 4.8a2.8 2.8 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.8.4-4.8.4-4.8s0-3-.4-4.8ZM10 15.3V8.7l5.5 3.3-5.5 3.3Z"
-      />
-    </svg>
-  </a>
-
-            <span className="footer-social-divider" />
-
-            <span className="footer-developed">
-              Designed &amp; Developed by
-              <strong> Multivisiontrendz</strong>
-            </span>
-
+            <span className="footer-social-divider" />     
+          <span className="footer-developed">
+            Designed &amp; Developed by{" "}
+            <strong>
+              <a
+                href="https://www.multivisiontrendz.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Multivisiontrendz
+              </a>
+            </strong>
+          </span>
           </div>
 
         </div>

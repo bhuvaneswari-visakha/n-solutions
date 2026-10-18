@@ -14754,3 +14754,11 @@ button:focus-visible {
     max-height: calc(100dvh - 88px);
   }
 }
+.footer-developed a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-developed a:hover {
+  text-decoration: underline;
+}
