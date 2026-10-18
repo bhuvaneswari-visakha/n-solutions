@@ -9799,11 +9799,7 @@ button:focus-visible {
 .careers-hero-bg {
   position: absolute;
   inset: 0;
-<<<<<<< HEAD
-  background: url('/local/photo-9.jpg') center/cover;
-=======
   background: url('/careers-team-hero.jpg') center 25%/cover no-repeat;
->>>>>>> origin/main
   transform: scale(1.02);
 }
 
@@ -14709,9 +14705,6 @@ button:focus-visible {
 
 .home-page .hero {
   overflow: hidden;
-<<<<<<< HEAD
-}
-=======
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -15428,4 +15421,3 @@ button:focus-visible {
   }
 }
 
->>>>>>> origin/main
