@@ -7,12 +7,10 @@ import { Product } from './models/Product.js';
 import { Project } from './models/Project.js';
 import { Job } from './models/Job.js';
 import { registerDashboardModels } from './config/dashboardModels.js';
-import { cleanupStagedUploads } from './services/media-storage.service.js';
 
 registerDashboardModels({ Lead, Project, Product, Enquiry, Position: Job });
 
 const startServer = async () => {
-  await cleanupStagedUploads();
   await connectDatabase();
   const server = app.listen(env.port, () => {
     console.log(`NSolutions Solar API listening on port ${env.port}.`);

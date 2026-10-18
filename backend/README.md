@@ -31,18 +31,6 @@ Edit `.env` and set a long random `JWT_SECRET` and a reachable `MONGODB_URI`. On
 
 The default `ADMIN_REGISTRATION_MODE=bootstrap` permits the first admin registration only. After an admin exists, registration returns `403` unless the caller also supplies `X-Admin-Registration-Key` matching `ADMIN_REGISTRATION_KEY`. For a production deployment, use `ADMIN_REGISTRATION_MODE=disabled` after provisioning, or use `key` with a strong secret managed outside source control.
 
-## Connect MongoDB Compass to the Existing Atlas Database
-
-MongoDB Compass is a desktop client for viewing and managing MongoDB. It does not replace Atlas or the backend's database connection. The backend continues to use the existing Atlas cluster configured by `MONGODB_URI`; Compass connects directly to that same cluster.
-
-1. In MongoDB Atlas, open the existing project and cluster, then go to **Connect** → **Compass**. Copy the connection string Atlas provides. Do not create a new cluster or database.
-2. In Atlas **Network Access**, allow the current computer's public IP address so Compass can reach the cluster. Do not use `0.0.0.0/0` for convenience.
-3. Use an Atlas database user for Compass. Prefer a separate user with read-only access to the existing application database if you only need to inspect it. Grant broader access only if you need to make changes.
-4. Open Compass, paste the Atlas connection string, enter the database user's credentials when prompted, and connect. Browse the existing database and collections; avoid database or collection creation, drops, or edits unless intended.
-5. Keep the connection string and password private. The backend's `MONGODB_URI` belongs only in the ignored `backend/.env` for local development and in the backend service's environment variables on Render. Never put it in Vercel/frontend variables, frontend source, or Git.
-
-When connecting with Compass, select the same database named in the existing backend `MONGODB_URI` (or browse the databases available to that database user). Connecting with Compass does not alter the backend, API, authentication, admin panel, or deployment configuration. Changes made through Compass directly affect the live Atlas data, so use the least-privileged database role appropriate to your task.
-
 ## Run
 
 ```bash
@@ -69,40 +57,8 @@ The API listens on `http://localhost:5000` by default. MongoDB connection failur
 | `CORS_ORIGIN` | Comma-separated allowed origins; `*` is supported for local development |
 | `ADMIN_REGISTRATION_MODE` | `bootstrap`, `key`, or `disabled` |
 | `ADMIN_REGISTRATION_KEY` | Secret required by `key` mode or to reopen bootstrap registration |
-| `UPLOAD_DIR` | Local upload root; defaults to `backend/uploads` (relative paths resolve from `backend/`) |
 | `DASHBOARD_DEFAULT_LIMIT` | Default recent-list size, default `10` |
 | `DASHBOARD_MAX_LIMIT` | Maximum recent-list size, default `50` |
-
-## Local Upload Storage
-
-Uploads use Multer `diskStorage` and are staged under `UPLOAD_DIR/.staging` before being moved to their final location. By default, public images and videos are stored in `backend/uploads/public/<category>/`; resumes are stored in `backend/uploads/private/resumes/`. Each filename is generated uniquely. Express serves only the public tree under `/uploads/public/`; private resume files are streamed only from `GET /api/job-applications/:id/resume/download` after admin authentication. The private directory is never mounted as static content.
-
-The API accepts JPEG, PNG, WebP, and GIF images (10 MB per image), MP4/MOV/WebM videos (80 MB), and PDF/DOC/DOCX resumes (5 MB). Project image batches are capped at 80 MB total; video and thumbnail batches at 90 MB total. MIME type, extension, and file signature are checked. Temporary staging files are cleaned up after each response and stale files older than 24 hours are removed at backend startup.
-
-This setup is intended for local development. Files live on the backend host's filesystem and are not automatically shared with other instances.
-
-Render deployment:
-
-Render's normal service filesystem is ephemeral. To retain uploaded files across redeployments and restarts, provision a Render Persistent Disk and mount it at the backend upload directory, then set `UPLOAD_DIR` to that mount path. Without this disk configuration, local uploads can be lost. Production persistence on Render has not been verified by this project.
-
-For a separately hosted frontend, set `VITE_API_BASE_URL` to the backend `/api` URL at build time. Local Vite development uses `VITE_PROXY_TARGET` (default `http://localhost:5000`) to proxy both API and uploaded-media paths.
-
-### Existing asset migration
-
-Existing records can continue to reference their legacy URLs until migrated. To copy legacy Cloudinary-hosted assets into local storage, back up MongoDB, set `UPLOAD_DIR` to the intended backend upload directory, and run:
-
-```bash
-cd backend
-npm run migrate:media
-```
-
-The default is a read-only dry run. Apply after reviewing the identified record counts:
-
-```bash
-npm run migrate:media -- --apply
-```
-
-The default is a read-only dry run. Applying downloads eligible old assets, validates and writes them into local public/private folders, verifies byte lengths, and updates MongoDB only after storage succeeds. Failed downloads or writes leave the record unchanged and are reported; the source asset is not deleted. The migration is optional; ensure the destination disk has sufficient space and remains available while migrating.
 
 ## API Endpoints
 
@@ -217,7 +173,7 @@ Lead types are `residential`, `commercial`, `industrial`, and `other`. Lead stat
 
 All project routes require `Authorization: Bearer <token returned by login>`.
 
-`POST /api/projects` accepts `multipart/form-data` with these fields: `title`, `category`, `location`, `description`, `services`, `status`, and image fields named `images` (up to 20) or `image`. `services` may be a JSON array string such as `["Solar Installation","System Design"]`. Uploaded images are saved on local disk; MongoDB retains the image `url` and `publicId` asset fields.
+`POST /api/projects` accepts `multipart/form-data` with these fields: `title`, `category`, `location`, `description`, `services`, `status`, and an image field named `image`. `services` may be a JSON array string such as `["Solar Installation","System Design"]`. The image is uploaded to Cloudinary and only its `secure_url` and `public_id` are stored in MongoDB.
 
 `GET /api/projects` lists all projects newest first.
 
@@ -233,7 +189,15 @@ All project routes require `Authorization: Bearer <token returned by login>`.
 
 Allowed project categories are `residential`, `commercial`, and `industrial`. Allowed statuses are `completed` and `in_progress`; new projects default to `in_progress`.
 
-`DELETE /api/projects/:id` removes the project and its local image files.
+`DELETE /api/projects/:id` removes the project and attempts to remove its Cloudinary image. A Cloudinary cleanup failure is logged without undoing the database deletion.
+
+Set these variables in `.env` before using project creation:
+
+```text
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
 
 The dashboard `activeProjects` value counts projects whose status is `in_progress`.
 
@@ -242,8 +206,6 @@ The dashboard `activeProjects` value counts projects whose status is `in_progres
 `POST /api/job-applications` is public and accepts a resume upload with the applicant details.
 
 `GET /api/job-applications` requires `Authorization: Bearer <token returned by login>` and returns all submitted applications newest first, including applicant details, application status, job title, and the resume URL.
-
-`GET /api/job-applications/:id/resume/download` requires an authenticated admin token and streams the private file; legacy external resumes must be migrated into `UPLOAD_DIR/private/resumes/` before they can be downloaded through the admin UI.
 
 ### Testimonial routes
 

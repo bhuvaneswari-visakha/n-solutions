@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Product } from '../models/Product.js';
-import { deleteProductImage } from './media-storage.service.js';
+import { deleteProductImage } from '../config/cloudinary.js';
 
 const productResponse = (product) => ({
   id: product._id.toString(),

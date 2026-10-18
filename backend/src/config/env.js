@@ -1,10 +1,7 @@
 import dotenv from 'dotenv';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 dotenv.config();
 
-const backendRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const registrationMode = (process.env.ADMIN_REGISTRATION_MODE || 'key').toLowerCase();
 const supportedModes = new Set(['bootstrap', 'key', 'disabled']);
 
@@ -42,7 +39,9 @@ export const env = Object.freeze({
   corsOrigin: parseCorsOrigins(process.env.CORS_ORIGIN),
   adminRegistrationMode: registrationMode,
   adminRegistrationKey: process.env.ADMIN_REGISTRATION_KEY || '',
-  uploadDirectory: resolve(backendRoot, process.env.UPLOAD_DIR || 'uploads'),
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || '',
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || '',
   dashboardDefaultLimit: parseInteger(process.env.DASHBOARD_DEFAULT_LIMIT, 10),
   dashboardMaxLimit: parseInteger(process.env.DASHBOARD_MAX_LIMIT, 50),
   gmailUser: process.env.GMAIL_USER || '',

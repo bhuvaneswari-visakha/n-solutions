@@ -40,9 +40,7 @@ const applicationResponse = (application) => ({
   positionAppliedFor: application.positionAppliedFor,
   yearsOfExperience: application.yearsOfExperience ?? null,
   message: application.message || '',
-  resumeUrl: application.resume?.publicId?.startsWith('private/resumes/')
-    ? `/api/job-applications/${application._id.toString()}/resume/download`
-    : application.resume?.url || application.resumeUrl || (typeof application.resume === 'string' ? application.resume : ''),
+  resumeUrl: application.resume?.url || application.resumeUrl || (typeof application.resume === 'string' ? application.resume : ''),
   applicationStatus: application.applicationStatus,
   appliedDate: application.appliedDate,
   createdAt: application.createdAt,

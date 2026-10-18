@@ -104,8 +104,32 @@ export const homeContent = {
     flow: 'From Requirement → Design → Execution → Support'
   },
 
+  leadership: {
+    eyebrow: '04 — Our Leadership',
+    title: 'Visionary leadership,',
+    subtitle: 'grounded in experience.',
+    quote: '“Our journey is driven by a simple belief — solar energy can create a cleaner, smarter, and more sustainable future.”',
+    description: 'N Solutions is guided by experienced leadership with over 16 years of solar industry operations across 9 states, uniting ethical vision with engineering excellence.',
+    leaders: [
+      {
+        name: 'Smt. R. Lakshmi Bai',
+        role: 'Founder & Mentor',
+        badge: 'Founder & Mentor',
+        image: '/leadership/smt-r-lakshmi-bai.png',
+        bio: 'Providing foundational vision, ethical guidance, and strategic mentorship to steer N Solutions towards sustainable and trustworthy growth.'
+      },
+      {
+        name: 'Sri Ch. C. S. V. Raju',
+        role: 'Managing Partner',
+        badge: 'Managing Partner',
+        image: '/leadership/sri-ch-csv-raju.jpg',
+        bio: 'Spearheading strategic execution, technical engineering, and nationwide solar EPC expansion across commercial, industrial, and government sectors.'
+      }
+    ]
+  },
+
   chairmanMessage: {
-    eyebrow: "04 — Chairman's message",
+    eyebrow: "04 — Our Leadership",
     title: 'Shaping the future',
     subtitle: 'through solar energy.',
     quote: '“Our journey is driven by a simple belief — solar energy can create a cleaner, smarter, and more sustainable future.”',
@@ -117,7 +141,7 @@ export const homeContent = {
       'At N Solutions, we are committed to delivering reliable solar solutions through experience, engineering, and responsible execution. Our focus is to understand every customer’s energy needs and create solutions that deliver meaningful value.',
       'With 16+ years of experience, we continue to grow with a clear purpose: to power businesses, industries, homes, and communities through dependable solar energy.'
     ],
-    author: 'Ch. C.S.V. Raju',
+    author: 'Sri Ch. C. S. V. Raju',
     role: 'Managing Partner, N Solutions'
   },
 
@@ -170,8 +194,40 @@ export const aboutContent = {
     tagline: 'N Solutions — Built on Experience. Driven by Solar.'
   },
 
+  leadership: {
+    eyebrow: '02 — Our Leadership',
+    title: 'Pioneering Vision.',
+    subtitle: 'Responsible Execution.',
+    lead: 'At N Solutions, we believe the future of energy must be clean, efficient, and responsibly engineered. Our leadership combines decades of experience, continuous learning, and an unwavering commitment to delivering practical solar energy solutions.',
+    leaders: [
+      {
+        name: 'Smt. R. Lakshmi Bai',
+        role: 'Founder & Mentor',
+        badge: 'Founder & Mentor',
+        image: '/leadership/smt-r-lakshmi-bai.png',
+        bio: 'Serving as the foundation and guiding force of N Solutions, infusing the organization with ethical leadership, values, and strategic mentorship.'
+      },
+      {
+        name: 'Sri Ch. C. S. V. Raju',
+        role: 'Managing Partner',
+        badge: 'Managing Partner',
+        image: '/leadership/sri-ch-csv-raju.jpg',
+        bio: 'Overseeing turnkey EPC operations, technical engineering, and nationwide solar project implementation with 16+ years of proven industry leadership.'
+      }
+    ],
+    paragraphs: [
+      'With 16+ years of experience and project operations across 9 states in India, we have worked across residential, commercial, industrial, and government solar requirements. Every project has strengthened our understanding of what it takes to transform a solar concept into a professionally executed system.',
+      'Our philosophy is simple: understand the requirement, engineer the right solution, execute it responsibly, and remain committed beyond commissioning.',
+      'As solar technology continues to evolve, our focus remains on combining engineering capability, quality, safety, and customer-focused execution to create meaningful long-term value.',
+      "We are proud of the journey so far, but our vision extends further. We aim to continue contributing to India's clean-energy transition by making solar energy more practical, accessible, and dependable for businesses, industries, homes, and communities."
+    ],
+    quote: '“The future of energy is not only about generating power — it is about generating it smarter.”',
+    author: 'Sri Ch. C. S. V. Raju',
+    role: 'Managing Partner, N Solutions'
+  },
+
   chairmanMessage: {
-    eyebrow: "02 — Chairman's message",
+    eyebrow: "02 — Our Leadership",
     title: 'Shaping the future',
     subtitle: 'through solar energy.',
     lead: 'At N Solutions, we believe the future of energy must be clean, efficient, and responsibly engineered. Our journey in solar has been shaped by experience, continuous learning, and a commitment to delivering solutions that address real energy requirements.',
@@ -182,7 +238,7 @@ export const aboutContent = {
       "We are proud of the journey so far, but our vision extends further. We aim to continue contributing to India's clean-energy transition by making solar energy more practical, accessible, and dependable for businesses, industries, homes, and communities."
     ],
     quote: '“The future of energy is not only about generating power — it is about generating it smarter.”',
-    author: 'Ch. C.S.V. Raju',
+    author: 'Sri Ch. C. S. V. Raju',
     role: 'Managing Partner, N Solutions'
   },
 

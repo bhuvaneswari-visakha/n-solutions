@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { deleteMediaImage, deleteMediaVideo } from './media-storage.service.js';
+import { deleteMediaImage, deleteMediaVideo } from '../config/cloudinary.js';
 import { Video } from '../models/Video.js';
 
 const invalidId = () => { const error = new Error('Invalid video ID.'); error.statusCode = 400; return error; };

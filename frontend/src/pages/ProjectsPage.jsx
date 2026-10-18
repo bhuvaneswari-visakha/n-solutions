@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate } from '../components/Shared'
-import { apiGet, resolveMediaUrl } from '../utils/api'
+import { apiGet } from '../utils/api'
 import { useSEO } from '../utils/useSEO'
 import SEO from "../components/SEO/SEO";
 import { 
@@ -34,9 +34,9 @@ function mapPublicProject(project) {
         .map((item) => item.trim())
     : []
 
-  const image = resolveMediaUrl(project?.image?.url || project?.images?.[0]?.url || '')
+  const image = project?.image?.url || project?.images?.[0]?.url || ''
   const gallery = Array.isArray(project?.images)
-    ? project.images.map((item) => resolveMediaUrl(item?.url)).filter(Boolean)
+    ? project.images.map((item) => item?.url).filter(Boolean)
     : []
   const createdAt = project?.createdAt ? new Date(project.createdAt) : null
   const year =
@@ -1247,9 +1247,9 @@ const filteredProjects = projects.filter((project) => {
                 </a>
                 <a 
                   className="button button-ghost" 
-                  href="tel:+917993836424"
+                  href="tel:+919492731212"
                 >
-                  Call Engineering Desk (+91 7993836424)
+                  Call Engineering Desk (9492731212)
                 </a>
               </div>
             </Reveal>

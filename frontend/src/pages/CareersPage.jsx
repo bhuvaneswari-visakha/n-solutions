@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { createPortal } from 'react-dom'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal, navigate } from '../components/Shared'
 import { apiGet, apiPost } from '../utils/api'
@@ -69,8 +68,6 @@ export default function CareersPage() {
   const [resumeFile, setResumeFile] = useState(null)
   const [applicationSubmitting, setApplicationSubmitting] = useState(false)
   const [applicationError, setApplicationError] = useState('')
-
-  const modalRoot = document.getElementById('modal-root')
 
   const loadJobs = async () => {
   setJobsStatus('loading')
@@ -347,7 +344,7 @@ export default function CareersPage() {
         </section>
 
         {/* JOB DETAILS MODAL */}
-        {selectedJob && !isApplying && createPortal(
+        {selectedJob && !isApplying && (
           <div className="job-modal-backdrop" onClick={() => setSelectedJob(null)}>
             <div className="job-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -414,12 +411,11 @@ export default function CareersPage() {
                 </button>
               </div>
             </div>
-          </div>,
-          modalRoot
+          </div>
         )}
 
         {/* APPLICATION FORM MODAL */}
-        {isApplying && createPortal(
+        {isApplying && (
           <div className="job-modal-backdrop" onClick={() => setIsApplying(false)}>
             <div className="job-modal-card apply-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -571,9 +567,7 @@ export default function CareersPage() {
     />
 
     <span>
-      {resumeFile
-        ? `Selected: ${resumeFile.name} (${(resumeFile.size / (1024 * 1024)).toFixed(1)} MB)`
-        : 'Upload your CV or resume in PDF, DOC, or DOCX format. Maximum size: 5 MB.'}
+      Upload your CV or resume in PDF, DOC, or DOCX format.
     </span>
   </div>
 
@@ -615,8 +609,7 @@ export default function CareersPage() {
 </form>
               )}
             </div>
-          </div>,
-          modalRoot
+          </div>
         )}
       </main>
 
