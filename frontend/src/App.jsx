@@ -1862,6 +1862,29 @@ function App() {
         <a className="section-cta text-link" href="/services" onClick={(e) => { e.preventDefault(); navigate('/services') }}>Explore Our Services <Arrow /></a>
       </section>
 
+      {/* HOW WE WORK SECTION */}
+      <section className="services-process" id="how-we-work">
+        <div className="wrap">
+          <Reveal className="section-heading">
+            <div>
+              <p className="eyebrow light"><span /> 03 — HOW WE WORK</p>
+              <h2>From requirement<br /><em>to support.</em></h2>
+            </div>
+            <p className="heading-note">A structured project journey carefully planned and executed across every milestone.</p>
+          </Reveal>
+          <div className="services-process-line">
+            {servicesProcess.map(([number, title, text]) => (
+              <Reveal className="services-process-step" key={number} tabIndex="0">
+                <span>{number}</span>
+                <strong>{title}</strong>
+                <small>{text}</small>
+              </Reveal>
+            ))}
+          </div>
+          <p className="process-flow light-flow">Requirement <i><FiChevronRight style={{ verticalAlign: 'middle' }} /></i> Design <i><FiChevronRight style={{ verticalAlign: 'middle' }} /></i> Execution <i><FiChevronRight style={{ verticalAlign: 'middle' }} /></i> Support</p>
+        </div>
+      </section>
+
       <section className="home-leadership wrap" id="leadership">
         <Reveal className="section-heading">
           <div>
