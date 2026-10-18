@@ -8,6 +8,7 @@ import LeadQuoteModal from './pages/LeadQuoteModel.jsx'
 import ContactPage from './pages/ContactPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsConditionsPage from './pages/TermsConditionsPage'
+import NotFoundPage from './pages/NotFoundPage'
 import AdminPortal from './admin/AdminPortal'
 import { navigate, SiteFooter, GoogleIcon, JustdialIcon, JustdialSvgLogo } from './components/Shared'
 import { homeContent, aboutContent, servicesAndSolutionsContent } from './content/siteContent'
@@ -1817,7 +1818,7 @@ function App() {
   if (currentPath === '/privacy' || currentPath === '/privacy-policy') return <PrivacyPolicyPage />
   if (currentPath === '/terms' || currentPath === '/terms-and-conditions') return <TermsConditionsPage />
   if (currentPath === '/admin' || currentPath.startsWith('/admin')) return <AdminPortal />
-  if (currentPath !== '/') return <RouteShell />
+  if (currentPath !== '/') return <NotFoundPage />
 
 
   return (
