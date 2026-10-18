@@ -9798,14 +9798,15 @@ button:focus-visible {
 .careers-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=2200&q=88') center/cover;
+  background: url('/careers-team-hero.jpg') center 25%/cover no-repeat;
   transform: scale(1.02);
 }
 
 .careers-hero-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(7, 18, 31, 0.96) 0%, rgba(7, 18, 31, 0.8) 52%, rgba(7, 18, 31, 0.45) 100%);
+  background: linear-gradient(90deg, rgba(7, 18, 31, 0.94) 0%, rgba(7, 18, 31, 0.75) 48%, rgba(7, 18, 31, 0.35) 100%),
+              linear-gradient(0deg, rgba(7, 18, 31, 0.65) 0%, transparent 40%);
 }
 
 .careers-hero-content {
