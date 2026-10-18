@@ -1312,12 +1312,103 @@ function AboutPage() {
       </div>
     </section>
 
+    {/* Proven Execution Scale & Sector Milestones */}
+    <section className="about-milestones-showcase" id="project-scale">
+      <div className="wrap">
+        <Reveal className="section-heading">
+          <div>
+            <p className="eyebrow light"><span /> 02 — Proven Execution Scale</p>
+            <h2>Proven delivery.<br /><em>Tangible impact.</em></h2>
+          </div>
+          <p className="heading-note">
+            Over 1,270+ turnkey solar installations engineered and commissioned across residential clusters, public sector infrastructure, commercial hubs, and industrial plants.
+          </p>
+        </Reveal>
+
+        <div className="milestones-cards-grid">
+          <Reveal className="milestone-feature-card milestone-card-pm">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiSun /></span>
+              <span className="milestone-sector-tag">Rooftop Solar</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={750} suffix="+" label="Sites Completed" />
+            </div>
+            <h3>PM Surya Ghar</h3>
+            <p>Subsidized residential solar installations delivering clean energy across Andhra Pradesh and nationwide.</p>
+          </Reveal>
+
+          <Reveal className="milestone-feature-card milestone-card-residential">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiHome /></span>
+              <span className="milestone-sector-tag">Residential</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={140} suffix="+" label="Rooftops Commissioned" />
+            </div>
+            <h3>Residential Projects</h3>
+            <p>Custom rooftop systems engineered for independent homes, luxury villas, and multi-family residential clusters.</p>
+          </Reveal>
+
+          <Reveal className="milestone-feature-card milestone-card-govt">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiShield /></span>
+              <span className="milestone-sector-tag">Government</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={120} suffix="+" label="Institutional Sites" />
+            </div>
+            <h3>Government Projects</h3>
+            <p>High-standard solar installations for civic administrative buildings, educational institutions, and public utilities.</p>
+          </Reveal>
+
+          <Reveal className="milestone-feature-card milestone-card-commercial">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiBriefcase /></span>
+              <span className="milestone-sector-tag">Commercial</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={200} suffix="+" label="Enterprises Powered" />
+            </div>
+            <h3>Commercial Projects</h3>
+            <p>Turnkey grid-connected solar installations for hospitals, IT offices, colleges, hotels, and retail complexes.</p>
+          </Reveal>
+
+          <Reveal className="milestone-feature-card milestone-card-industrial">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiZap /></span>
+              <span className="milestone-sector-tag">High-Voltage</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={60} suffix="+" label="MW-Scale & Plants" />
+            </div>
+            <h3>Industrial Projects</h3>
+            <p>Multi-megawatt and heavy rooftop solar plants engineered for factories, manufacturing units, and warehouses.</p>
+          </Reveal>
+        </div>
+
+        <Reveal className="milestones-summary-strip">
+          <div className="summary-stat">
+            <strong>1,270<span>+</span></strong>
+            <small>Total Installations Across 9 States</small>
+          </div>
+          <div className="summary-divider" aria-hidden="true" />
+          <div className="summary-text">
+            <p>Engineering excellence grounded in 16+ years of specialized solar EPC operations throughout India.</p>
+          </div>
+          <a className="button button-accent" href="/projects" onClick={(e) => { e.preventDefault(); navigate('/projects') }}>
+            Explore Our Projects <Arrow />
+          </a>
+        </Reveal>
+      </div>
+    </section>
+
     {/* Our Leadership & Vision */}
     <section className="about-leadership-section" id="leadership">
       <div className="wrap">
         <Reveal className="section-heading">
           <div>
-            <p className="eyebrow"><span /> {leadership?.eyebrow || "02 — Our Leadership"}</p>
+            <p className="eyebrow"><span /> {leadership?.eyebrow || "03 — Our Leadership"}</p>
             <h2>{leadership?.title || "Pioneering Vision."}<br /><em>{leadership?.subtitle || "Responsible Execution."}</em></h2>
           </div>
           <p className="heading-note">{leadership?.lead || chairmanMessage.lead}</p>
