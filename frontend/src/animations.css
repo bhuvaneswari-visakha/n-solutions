@@ -4060,6 +4060,27 @@ h2 em {
   border-radius: 6px;
 }
 
+@media (max-width: 1024px) {
+  .home-project-capacity-pill,
+  .home-project-category-pill {
+    right: auto;
+    left: 10px;
+    max-width: calc(100% - 20px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .home-project-capacity-pill {
+    top: 10px;
+  }
+
+  .home-project-category-pill {
+    top: auto;
+    bottom: 10px;
+  }
+}
+
 .home-project-body {
   padding: 22px 22px 20px;
   display: flex;

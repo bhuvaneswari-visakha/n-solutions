@@ -113,29 +113,9 @@ export default function MediaPage() {
             <p className="mg-hero-sub">
               A glimpse of our projects, people, clients and milestones in building a cleaner and sustainable tomorrow.
             </p>
-            <button
-              type="button"
-              className="mg-hero-play-btn"
-              onClick={() => {
-                const firstVideo = videos?.[0] || videoItems?.[0];
-                if (firstVideo) setPlayingVideo(firstVideo);
-              }}
-            >
-              <span className="mg-play-circle"><FiPlay size={18} /></span>
-              <span>
-                <strong>Watch Our Story</strong>
-                <small>1:48 · Company Overview</small>
-              </span>
-            </button>
           </div>
 
-          {/* stats strip */}
-          <div className="mg-stats-strip">
-            <div className="mg-stat"><FiCamera size={16}/><strong>150+</strong><small>Project Photos</small></div>
-            <div className="mg-stat"><FiVideo size={16}/><strong>50+</strong><small>Video Highlights</small></div>
-            <div className="mg-stat"><FiUsers size={16}/><strong>25+</strong><small>Clients with Projects</small></div>
-            <div className="mg-stat"><FiFileText size={16}/><strong>20+</strong><small>Press Mentions</small></div>
-          </div>
+         
         </section>
 
         {/* ── TABS ── */}

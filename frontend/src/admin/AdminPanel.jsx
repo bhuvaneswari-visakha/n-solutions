@@ -157,6 +157,7 @@ const [mediaTab, setMediaTab] = useState('all');
   const [testimonialFilter, setTestimonialFilter] = useState('all')
 
   // Admin Profile state
+  const [profileCurrentPassword, setProfileCurrentPassword] = useState('')
   const [profilePassword, setProfilePassword] = useState('')
   const [profileConfirmPassword, setProfileConfirmPassword] = useState('')
   const [submittingForms, setSubmittingForms] = useState({})
@@ -1623,18 +1624,37 @@ const loadMedia = async () => {
   }
 }
   // Admin Profile handler
-  const handleUpdateProfilePassword = (e) => {
-    e.preventDefault()
-    if (!profilePassword) return
+  const handleUpdateProfilePassword = async () => {
+    if (!profileCurrentPassword) {
+      showToast('Enter your current password')
+      return
+    }
     if (profilePassword !== profileConfirmPassword) {
       showToast('Passwords do not match')
       return
     }
-    if (profilePassword.length < 6) {
-      showToast('Password must be at least 6 characters')
+    if (
+      profilePassword.length < 8
+      || profilePassword.length > 72
+      || !/[A-Za-z]/.test(profilePassword)
+      || !/\d/.test(profilePassword)
+    ) {
+      showToast('New password must be 8-72 characters and include at least one letter and one number.')
       return
     }
-    showToast('Administrator password updated successfully')
+
+    const result = await apiPatch('/auth/profile/password', {
+      currentPassword: profileCurrentPassword,
+      newPassword: profilePassword
+    })
+
+    if (!result.success) {
+      showToast(result.message || 'Failed to update administrator password')
+      return
+    }
+
+    showToast(result.raw?.message || 'Administrator password updated successfully')
+    setProfileCurrentPassword('')
     setProfilePassword('')
     setProfileConfirmPassword('')
   }
@@ -2296,7 +2316,7 @@ const loadMedia = async () => {
     </div>
 
     <div className="adm-table-wrap">
-      <table className="adm-table">
+      <table className="adm-table adm-products-table">
         <thead>
           <tr>
             <th>Product</th>
@@ -2341,42 +2361,42 @@ const loadMedia = async () => {
 
                 {/* Product */}
                 <td>
-                  <strong>{prod.name}</strong>
+                  <strong className="adm-table-truncate" title={prod.name}>{prod.name}</strong>
                 </td>
 
                 {/* Category */}
                 <td>
-                  <span className="adm-type-badge">
+                  <span className="adm-type-badge adm-table-truncate" title={prod.category}>
                     {prod.category}
                   </span>
                 </td>
 
                 {/* Brand */}
                 <td>
-                  {prod.brand || '—'}
+                  <span className="adm-table-truncate" title={prod.brand || '—'}>
+                    {prod.brand || '—'}
+                  </span>
                 </td>
 
                 {/* Description */}
-                <td
-                  style={{
-                    maxWidth: '260px',
-                    whiteSpace: 'normal',
-                    lineHeight: '1.4'
-                  }}
-                >
-                  {prod.description || '—'}
+                <td>
+                  <span className="adm-table-truncate" title={prod.description || '—'}>
+                    {prod.description || '—'}
+                  </span>
                 </td>
 
                 {/* Applications */}
-                <td
-                  style={{
-                    maxWidth: '220px',
-                    whiteSpace: 'normal'
-                  }}
-                >
-                  {Array.isArray(prod.applications)
+                <td>
+                  <span
+                    className="adm-table-truncate"
+                    title={Array.isArray(prod.applications)
+                      ? prod.applications.join(', ')
+                      : prod.applications || '—'}
+                  >
+                    {Array.isArray(prod.applications)
                     ? prod.applications.join(', ')
                     : prod.applications || '—'}
+                  </span>
                 </td>
 
                 {/* Image */}
@@ -2630,6 +2650,7 @@ const loadMedia = async () => {
                 </div>
 
                 <div className="adm-app-toolbar">
+                  
                   <div className="adm-search-box">
                     <FiSearch size={14} className="adm-search-icon" />
                     <input
@@ -3435,13 +3456,13 @@ const loadMedia = async () => {
               </div>
 
               <div className="adm-table-wrap">
-                <table className="adm-table">
+                <table className="adm-table adm-testimonials-table">
                   <thead>
                     <tr>
                       <th>Client Name</th>
                       <th>Company / Location</th>
                       <th>Rating</th>
-                      <th style={{ width: '40%' }}>Review Quote</th>
+                      <th>Review Quote</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
@@ -3451,18 +3472,25 @@ const loadMedia = async () => {
                       .filter((t) => testimonialFilter === 'all' || t.status === testimonialFilter)
                       .map((t) => (
                         <tr key={t.id}>
-                          <td style={{ fontWeight: 600 }}>{t.clientName}</td>
+                          <td style={{ fontWeight: 600 }}>
+                            <span className="adm-table-truncate" title={t.clientName}>{t.clientName}</span>
+                          </td>
                           <td>
-                            <div>{t.company}</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--adm-text-dim)' }}>{t.location}</div>
+                            <div className="adm-table-truncate" title={t.company}>{t.company}</div>
+                            <div className="adm-table-truncate" style={{ fontSize: '0.75rem', color: 'var(--adm-text-dim)' }} title={t.location}>{t.location}</div>
                           </td>
                           <td>
                             <div style={{ color: '#f59e0b', fontSize: '0.88rem', letterSpacing: '2px' }}>
                               {'★'.repeat(t.rating || 5)}
                             </div>
                           </td>
-                          <td style={{ fontSize: '0.85rem', color: 'var(--adm-text-muted)', fontStyle: 'italic' }}>
-                            "{t.comment}"
+                          <td>
+                            <span
+                              className="adm-table-truncate adm-testimonial-quote"
+                              title={t.comment}
+                            >
+                              "{t.comment}"
+                            </span>
                           </td>
                           <td>
                             <select
@@ -3538,11 +3566,29 @@ const loadMedia = async () => {
                 </div>
                 <form onSubmit={(e) => handleAdminFormSubmit('profile', handleUpdateProfilePassword, e)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div className="adm-form-group" style={{ margin: 0 }}>
-                    <label>New Password</label>
+                    <label htmlFor="profile-current-password">Current Password</label>
                     <input
+                      id="profile-current-password"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      placeholder="Enter current password"
+                      value={profileCurrentPassword}
+                      onChange={(e) => setProfileCurrentPassword(e.target.value)}
+                      className="adm-search-input"
+                      style={{ width: '100%' }}
+                    />
+                  </div>
+                  <div className="adm-form-group" style={{ margin: 0 }}>
+                    <label htmlFor="profile-new-password">New Password</label>
+                    <input
+                      id="profile-new-password"
                       type="password"
                       required
-                      placeholder="Minimum 6 characters"
+                      minLength={8}
+                      maxLength={72}
+                      autoComplete="new-password"
+                      placeholder="8-72 characters, include a letter and number"
                       value={profilePassword}
                       onChange={(e) => setProfilePassword(e.target.value)}
                       className="adm-search-input"
@@ -3550,11 +3596,13 @@ const loadMedia = async () => {
                     />
                   </div>
                   <div className="adm-form-group" style={{ margin: 0 }}>
-                    <label>Confirm New Password</label>
+                    <label htmlFor="profile-confirm-password">Confirm New Password</label>
                     <input
+                      id="profile-confirm-password"
                       type="password"
                       required
                       placeholder="Re-enter password"
+                      autoComplete="new-password"
                       value={profileConfirmPassword}
                       onChange={(e) => setProfileConfirmPassword(e.target.value)}
                       className="adm-search-input"

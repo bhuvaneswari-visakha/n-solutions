@@ -31,6 +31,18 @@ Edit `.env` and set a long random `JWT_SECRET` and a reachable `MONGODB_URI`. On
 
 The default `ADMIN_REGISTRATION_MODE=bootstrap` permits the first admin registration only. After an admin exists, registration returns `403` unless the caller also supplies `X-Admin-Registration-Key` matching `ADMIN_REGISTRATION_KEY`. For a production deployment, use `ADMIN_REGISTRATION_MODE=disabled` after provisioning, or use `key` with a strong secret managed outside source control.
 
+## Connect MongoDB Compass to the Existing Atlas Database
+
+MongoDB Compass is a desktop client for viewing and managing MongoDB. It does not replace Atlas or the backend's database connection. The backend continues to use the existing Atlas cluster configured by `MONGODB_URI`; Compass connects directly to that same cluster.
+
+1. In MongoDB Atlas, open the existing project and cluster, then go to **Connect** → **Compass**. Copy the connection string Atlas provides. Do not create a new cluster or database.
+2. In Atlas **Network Access**, allow the current computer's public IP address so Compass can reach the cluster. Do not use `0.0.0.0/0` for convenience.
+3. Use an Atlas database user for Compass. Prefer a separate user with read-only access to the existing application database if you only need to inspect it. Grant broader access only if you need to make changes.
+4. Open Compass, paste the Atlas connection string, enter the database user's credentials when prompted, and connect. Browse the existing database and collections; avoid database or collection creation, drops, or edits unless intended.
+5. Keep the connection string and password private. The backend's `MONGODB_URI` belongs only in the ignored `backend/.env` for local development and in the backend service's environment variables on Render. Never put it in Vercel/frontend variables, frontend source, or Git.
+
+When connecting with Compass, select the same database named in the existing backend `MONGODB_URI` (or browse the databases available to that database user). Connecting with Compass does not alter the backend, API, authentication, admin panel, or deployment configuration. Changes made through Compass directly affect the live Atlas data, so use the least-privileged database role appropriate to your task.
+
 ## Run
 
 ```bash
