@@ -527,6 +527,38 @@ function IndustriesSection() {
   )
 }
 
+function FoundationSection() {
+  const values = [
+    { title: 'Teamwork', text: 'We work across disciplines to deliver dependable solar projects.', icon: <FiUsers /> },
+    { title: 'Transparency', text: 'Clear communication and accountable project delivery at every stage.', icon: <FiShield /> },
+    { title: 'Quality', text: 'Careful engineering and installation built for lasting performance.', icon: <FiAward /> },
+    { title: 'Customer Focus', text: 'Solutions shaped around each customer’s site, needs, and goals.', icon: <FiBriefcase /> },
+    { title: 'Purposeful Goals', text: 'We measure success through safety, quality, and project outcomes.', icon: <FiTarget /> },
+    { title: 'Innovation', text: 'We apply proven technology with practical engineering.', icon: <FiCpu /> },
+  ]
+
+  return (
+    <section className="foundation-section" aria-labelledby="foundation-title">
+      <div className="wrap">
+        <Reveal className="foundation-heading">
+          <p className="eyebrow"><span /> What Guides Us</p>
+          <h2 id="foundation-title">The Foundation of <em>Our Success</em></h2>
+          <p>Shared principles shape how we engineer, deliver, and support every solar project.</p>
+        </Reveal>
+        <div className="foundation-grid">
+          {values.map(({ title, text, icon }) => (
+            <Reveal className="foundation-card" key={title}>
+              <span className="foundation-icon" aria-hidden="true">{icon}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ScrollProgressBar() {
   const [width, setWidth] = useState(0)
   useEffect(() => {
@@ -2154,7 +2186,7 @@ function App() {
           </Reveal>
         </div>
       </section>
-
+<FoundationSection />
       <section className="trust wrap">
         <Reveal className="section-heading">
           <div>
@@ -2163,7 +2195,6 @@ function App() {
           </div>
           <p className="heading-note">Real client outcomes from industrial plants, institutions, and residential rooftop clusters.</p>
         </Reveal>
-
         <TestimonialsShowcase theme="light" />
           <IndustriesSection />
 
