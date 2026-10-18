@@ -833,6 +833,22 @@ button {
   box-shadow: 0 4px 20px rgba(21, 101, 192, .25) !important;
 }
 
+
+@media (max-width: 900px) {
+  .about-page .today-beyond {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .about-page .today-beyond > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.home-page .hero {
+  overflow: hidden;
+}
 /* =====================================================
    STATS / PROOF
    ===================================================== */
@@ -11265,6 +11281,19 @@ button:focus-visible {
   .milestone-card,
   .projects-cta-box {
     padding: 24px !important;
+  }
+   .contact-cards-stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-hub-card {
+    min-width: 0;
+    padding: 24px 20px;
+  }
+
+  .contact-hub-card p,
+  .hub-links span {
+    overflow-wrap: anywhere;
   }
 }
 
