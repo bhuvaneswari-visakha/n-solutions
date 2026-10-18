@@ -1230,7 +1230,7 @@ export function SiteFooter() {
 
             <span>|</span>
 
-            <a href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>
+            <a href="/sitemap.xml">
               Sitemap
             </a>
 

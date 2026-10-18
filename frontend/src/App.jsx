@@ -1751,7 +1751,7 @@ function ServicesPage() {
       <main>
         <section className="services-hero">
           <video className="hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
-            <source src="/media/products.mp4" type="video/mp4" />
+            <source src="/media/services-hero.mp4" type="video/mp4" />
           </video>
           <div className="services-hero-shade" />
 
