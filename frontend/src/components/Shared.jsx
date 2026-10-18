@@ -316,6 +316,91 @@ export function SiteHeader({ activePath = '' }) {
     setSearchTerm('')
     setSearchMessage('')
   }
+  const navigation = (
+    <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
+      <div className="nav-drawer-header">
+        <img src="/logo.png" alt="N Solutions" />
+        <button type="button" className="nav-drawer-close" aria-label="Close navigation" onClick={closeMenu}>
+          <FiX aria-hidden="true" />
+        </button>
+      </div>
+      {items.map(({ label, icon, categories }) => {
+        const path = label === 'Home' ? '/' : `/${label.toLowerCase()}`
+        const isCurrent = activePath === path || (path === '/' && activePath === '')
+
+        if (categories) {
+          const dropdownOpen = openDropdown === label
+          return (
+            <div
+              className={`nav-dropdown${dropdownOpen ? ' is-open' : ''}`}
+              key={label}
+              onMouseEnter={() => {
+                if (window.matchMedia('(min-width: 1203px)').matches) setOpenDropdown(label)
+              }}
+              onMouseLeave={() => {
+                if (window.matchMedia('(min-width: 1203px)').matches) setOpenDropdown('')
+              }}
+            >
+              <button
+                type="button"
+                className={`nav-dropdown-toggle${isCurrent ? ' active' : ''}`}
+                aria-expanded={dropdownOpen}
+                aria-haspopup="true"
+                onClick={() => setOpenDropdown(dropdownOpen ? '' : label)}
+              >
+                <span className="nav-item-icon">{icon}</span>
+                <span>{label}</span>
+                <FiChevronDown className="nav-dropdown-chevron" aria-hidden="true" />
+              </button>
+              <div className="nav-dropdown-menu">
+                {categories.map(([categoryLabel, categoryId]) => (
+                  <a
+                    key={categoryId}
+                    href={`${path}?category=${encodeURIComponent(categoryId)}`}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      closeMenu()
+                      navigate(`${path}?category=${encodeURIComponent(categoryId)}`)
+                    }}
+                  >
+                    {categoryLabel}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        return (
+          <a
+            className={isCurrent ? 'active' : ''}
+            key={label}
+            href={path}
+            onClick={(e) => handleNav(e, path)}
+          >
+            <span className="nav-item-icon">{icon}</span>
+            <span>{label === 'About' ? 'About Us' : label}</span>
+          </a>
+        )
+      })}
+      <button
+        type="button"
+        className="nav-cta nav-cta-mobile"
+        onClick={() => {
+          closeMenu()
+          setQuoteModalOpen(true)
+        }}
+      >
+        Get a Quote <Arrow />
+      </button>
+      <div className="nav-quick-contacts">
+        <a href="tel:+919492731212"><FiPhone aria-hidden="true" /><span>Call</span></a>
+        <a href="https://wa.me/917993836424" target="_blank" rel="noopener noreferrer"><FaWhatsapp aria-hidden="true" /><span>WhatsApp</span></a>
+        <a href="mailto:info@nsol.in"><FiMail aria-hidden="true" /><span>Email</span></a>
+        <a href="https://maps.google.com/?q=Vizianagaram,+Andhra+Pradesh,+India" target="_blank" rel="noopener noreferrer"><FiMapPin aria-hidden="true" /><span>Location</span></a>
+      </div>
+    </nav>
+  )
   return (
   <header
     className={`site-header ${
@@ -355,99 +440,7 @@ export function SiteHeader({ activePath = '' }) {
         <img className="brand-logo" src="/logo.png" alt="N Solutions" />
       </a>
 
-      {menuOpen && (
-        <button
-          type="button"
-          className="nav-backdrop"
-          aria-label="Close navigation menu"
-          onClick={closeMenu}
-        />
-      )}
-      <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
-        <div className="nav-drawer-header">
-          <img src="/logo.png" alt="N Solutions" />
-          <button type="button" className="nav-drawer-close" aria-label="Close navigation" onClick={closeMenu}>
-            <FiX aria-hidden="true" />
-          </button>
-        </div>
-        {items.map(({ label, icon, categories }) => {
-          const path = label === 'Home' ? '/' : `/${label.toLowerCase()}`
-          const isCurrent =
-            activePath === path || (path === '/' && activePath === '')
-
-          if (categories) {
-            const dropdownOpen = openDropdown === label
-            return (
-              <div
-                className={`nav-dropdown${dropdownOpen ? ' is-open' : ''}`}
-                key={label}
-                onMouseEnter={() => {
-                  if (window.matchMedia('(min-width: 1203px)').matches) setOpenDropdown(label)
-                }}
-                onMouseLeave={() => {
-                  if (window.matchMedia('(min-width: 1203px)').matches) setOpenDropdown('')
-                }}
-              >
-                <button
-                  type="button"
-                  className={`nav-dropdown-toggle${isCurrent ? ' active' : ''}`}
-                  aria-expanded={dropdownOpen}
-                  aria-haspopup="true"
-                  onClick={() => setOpenDropdown(dropdownOpen ? '' : label)}
-                >
-                  <span className="nav-item-icon">{icon}</span>
-                  <span>{label}</span>
-                  <FiChevronDown className="nav-dropdown-chevron" aria-hidden="true" />
-                </button>
-                <div className="nav-dropdown-menu">
-                  {categories.map(([categoryLabel, categoryId]) => (
-                    <a
-                      key={categoryId}
-                      href={`${path}?category=${encodeURIComponent(categoryId)}`}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        closeMenu()
-                        navigate(`${path}?category=${encodeURIComponent(categoryId)}`)
-                      }}
-                    >
-                      {categoryLabel}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )
-          }
-
-          return (
-            <a
-              className={isCurrent ? 'active' : ''}
-              key={label}
-              href={path}
-              onClick={(e) => handleNav(e, path)}
-            >
-              <span className="nav-item-icon">{icon}</span>
-              <span>{label === 'About' ? 'About Us' : label}</span>
-            </a>
-          )
-        })}
-
-        <button
-          type="button"
-          className="nav-cta nav-cta-mobile"
-          onClick={() => {
-            closeMenu()
-            setQuoteModalOpen(true)
-          }}
-        >
-          Get a Quote <Arrow />
-        </button>
-        <div className="nav-quick-contacts">
-          <a href="tel:+919492731212"><FiPhone aria-hidden="true" /><span>Call</span></a>
-          <a href="https://wa.me/917993836424" target="_blank" rel="noopener noreferrer"><FaWhatsapp aria-hidden="true" /><span>WhatsApp</span></a>
-          <a href="mailto:info@nsol.in"><FiMail aria-hidden="true" /><span>Email</span></a>
-          <a href="https://maps.google.com/?q=Vizianagaram,+Andhra+Pradesh,+India" target="_blank" rel="noopener noreferrer"><FiMapPin aria-hidden="true" /><span>Location</span></a>
-        </div>
-      </nav>
+      {!menuOpen && navigation}
 
       <div className="header-actions">
         <button
@@ -518,6 +511,18 @@ export function SiteHeader({ activePath = '' }) {
         </form>
       )}
     </div>
+    {menuOpen && createPortal(
+      <div className="site-header mobile-nav-portal">
+        <button
+          type="button"
+          className="nav-backdrop"
+          aria-label="Close navigation menu"
+          onClick={closeMenu}
+        />
+        {navigation}
+      </div>,
+      document.body
+    )}
     {createPortal(menuOpen ? null : <WhatsAppWidget />, document.body)}
     {quoteModalOpen && (
       <LeadQuoteModal
