@@ -1775,21 +1775,6 @@ function App() {
         <a className="section-cta text-link" href="/services" onClick={(e) => { e.preventDefault(); navigate('/services') }}>Explore Our Services <Arrow /></a>
       </section>
 
-<<<<<<< HEAD
-      <section className="chairman wrap">
-        <Reveal className="chairman-copy">
-          <p className="eyebrow"><span /> {homeContent.chairmanMessage.eyebrow}</p>
-          <h2>{homeContent.chairmanMessage.title}<br /><em>{homeContent.chairmanMessage.subtitle}</em></h2>
-          <blockquote>“{homeContent.chairmanMessage.quote}”</blockquote>
-          <div className="message-ready">
-            {(homeContent.chairmanMessage.paragraphs || homeContent.chairmanMessage.body || []).map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
-          <div className="signature">
-            <strong>{homeContent.chairmanMessage.author}</strong>
-            <small>{homeContent.chairmanMessage.role}</small>
-=======
       {/* HOW WE WORK SECTION */}
       <section className="services-process" id="how-we-work">
         <div className="wrap">
@@ -1818,7 +1803,6 @@ function App() {
           <div>
             <p className="eyebrow"><span /> {homeContent.leadership?.eyebrow || "04 — Our Leadership"}</p>
             <h2>{homeContent.leadership?.title || "Visionary leadership,"}<br /><em>{homeContent.leadership?.subtitle || "grounded in experience."}</em></h2>
->>>>>>> origin/main
           </div>
         </Reveal>
         <Reveal>
