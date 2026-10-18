@@ -13410,6 +13410,16 @@ button:focus-visible {
   font-weight: 700;
 }
 
+.footer-developed a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-developed a:hover strong {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
 
 /* =========================================================
    LARGE TABLET
