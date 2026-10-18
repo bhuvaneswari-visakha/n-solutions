@@ -1356,7 +1356,6 @@ function AboutPage() {
       </div>
     </section>
 
-    <IndustriesSection />
 
     {/* Proven Execution Scale & Sector Milestones */}
     <section className="about-milestones-showcase" id="project-scale">
@@ -1686,7 +1685,7 @@ function AboutPage() {
       </Reveal>
       <TestimonialsShowcase theme="light" />
     </section>
-
+    <IndustriesSection />
     {/* CTA */}
     <section className="about-cta">
       <div className="wrap">
@@ -2168,7 +2167,7 @@ function App() {
         </Reveal>
 
         <TestimonialsShowcase theme="light" />
-
+          <IndustriesSection />
 
       </section>
 
