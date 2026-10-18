@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { createPortal } from 'react-dom'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal, navigate } from '../components/Shared'
 import { apiGet, apiPost } from '../utils/api'
-import { useSEO } from '../utils/useSEO'
+
 import { 
   FiMapPin, 
   FiClock, 
@@ -70,8 +69,6 @@ export default function CareersPage() {
   const [applicationSubmitting, setApplicationSubmitting] = useState(false)
   const [applicationError, setApplicationError] = useState('')
 
-  const modalRoot = document.getElementById('modal-root')
-
   const loadJobs = async () => {
   setJobsStatus('loading')
   setJobsError('')
@@ -91,13 +88,6 @@ export default function CareersPage() {
   setJobs(apiJobs)
   setJobsStatus(apiJobs.length ? 'ready' : 'empty')
 }
-
-  useSEO({
-    title: 'Careers at N Solutions – Join Our Solar EPC Team',
-    description: 'Explore career opportunities at N Solutions – a leading Solar EPC company in India. We hire solar engineers, project managers, sales professionals, and more. Apply today.',
-    keywords: 'solar jobs India, solar engineer jobs, EPC careers, solar company jobs Andhra Pradesh, N Solutions careers, solar project manager, renewable energy jobs',
-    canonical: 'https://nsolutions.in/careers',
-  })
 
   useEffect(() => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -347,7 +337,7 @@ export default function CareersPage() {
         </section>
 
         {/* JOB DETAILS MODAL */}
-        {selectedJob && !isApplying && createPortal(
+        {selectedJob && !isApplying && (
           <div className="job-modal-backdrop" onClick={() => setSelectedJob(null)}>
             <div className="job-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -414,12 +404,11 @@ export default function CareersPage() {
                 </button>
               </div>
             </div>
-          </div>,
-          modalRoot
+          </div>
         )}
 
         {/* APPLICATION FORM MODAL */}
-        {isApplying && createPortal(
+        {isApplying && (
           <div className="job-modal-backdrop" onClick={() => setIsApplying(false)}>
             <div className="job-modal-card apply-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -571,9 +560,7 @@ export default function CareersPage() {
     />
 
     <span>
-      {resumeFile
-        ? `Selected: ${resumeFile.name} (${(resumeFile.size / (1024 * 1024)).toFixed(1)} MB)`
-        : 'Upload your CV or resume in PDF, DOC, or DOCX format. Maximum size: 5 MB.'}
+      Upload your CV or resume in PDF, DOC, or DOCX format.
     </span>
   </div>
 
@@ -615,8 +602,7 @@ export default function CareersPage() {
 </form>
               )}
             </div>
-          </div>,
-          modalRoot
+          </div>
         )}
       </main>
 

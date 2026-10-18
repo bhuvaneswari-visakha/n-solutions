@@ -37,6 +37,54 @@ export function Arrow() {
   return <FiArrowUpRight aria-hidden="true" style={{ display: 'inline', verticalAlign: 'middle', strokeWidth: 2.5 }} />
 }
 
+export function GoogleIcon({ size = 16, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      aria-hidden="true"
+      style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+    >
+      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
+      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"/>
+      <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"/>
+      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+    </svg>
+  )
+}
+
+export function JustdialIcon({ size = 18, className = '' }) {
+  return (
+    <img
+      src="/justdial-jd-icon.png"
+      alt="Justdial"
+      className={`justdial-icon-badge ${className}`}
+      width={size}
+      height={size}
+      style={{
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        width: `${size}px`,
+        height: `${size}px`,
+        objectFit: 'contain',
+        flexShrink: 0
+      }}
+      loading="lazy"
+    />
+  )
+}
+
+export function JustdialSvgLogo({ width = 54, height = 14, className = '' }) {
+  return (
+    <svg width={width} height={height} viewBox="0 0 588 154" className={className} aria-hidden="true" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <path fill="#1274C0" d="M267.4,136c0,9.1,5.8,15.2,14,15.2c8.2,0,14-6.1,14-15.2V59.1h8c7.2,0,13.4-3.4,13.4-12c0-8.7-6.2-12-13.4-12h-8V18.8c0-9.1-5.8-15.2-14-15.2c-8.2,0-14,6.1-14,15.2v16.3h-6.2c-7,0-12.3,5.1-12.3,12c0,7.4,4.7,12,12.3,12h6.2V136L267.4,136z M77.1,18.5c0-9.5-6.2-14.8-14.6-14.8c-8.4,0-14.6,5.3-14.6,14.8v91.7c0,6.1,0,16-10.9,16c-8.8,0-15.6-7-23.4-7c-6.4,0-10.9,6.5-10.9,11.6c0,16.5,22.4,21.7,35.9,21.7c17.7,0,38.6-8.4,38.6-40.3V18.5L77.1,18.5z M84.9,112.4c0,24.3,16.6,39.9,46.2,39.9c29.6,0,46.2-15.6,46.2-39.9V63c0-9.1-5.8-15.2-14-15.2c-8.2,0-14,6.1-14,15.2v48.8c0,11.4-8.8,17.7-18.1,17.7c-9.4,0-18.1-6.3-18.1-17.7V63c0-9.1-5.8-15.2-14-15.2c-8.2,0-14,6.1-14,15.2V112.4L84.9,112.4z M255.9,66.5c0,6.3-4.9,12.2-11.5,12.2c-5.3,0-16-8-25.1-8c-5.1,0-9.5,2.3-9.5,7.6c0,12.7,48.7,10.8,48.7,42c0,18.2-15.8,32.2-39.9,32.2c-15.8,0-39.2-8.8-39.2-21.1c0-4.2,4.3-12.2,12.1-12.2c10.9,0,15.8,9.3,29,9.3c8.6,0,11.1-2.7,11.1-7.8c0-12.5-48.7-10.6-48.7-42c0-19,15.8-31.9,38-31.9C234.7,46.7,255.9,53,255.9,66.5z"/>
+      <path fill="#FF6C00" d="M558.7,134.9c0,9.1,5.9,15.2,14.2,15.2c8.3,0,14.2-6.1,14.2-15.2V17.8c0-9.1-5.9-15.2-14.2-15.2c-8.3,0-14.2,6.1-14.2,15.2V134.9L558.7,134.9z M409.9,17.8c0-9.1-5.9-15.2-14.2-15.2c-8.3,0-14.2,6.1-14.2,15.2V55c-7.5-6.3-17.1-9.5-27-9.5c-30.5,0-45.7,27.6-45.7,54.2c0,25.8,18.1,51.5,46.7,51.5c9.7,0,20.7-4.2,26-12.6c1.8,7.2,6.3,11.4,14.2,11.4c8.3,0,14.2-6.1,14.2-15.2V17.8L409.9,17.8z M381.5,97.6c0,13.3-6.7,28.5-22.3,28.5c-14.8,0-22.1-14.8-22.1-27.6c0-12.9,7.3-27.9,22.1-27.9C374.4,70.6,381.5,84.3,381.5,97.6L381.5,97.6z M417.7,134.9c0,9.1,5.9,15.2,14.2,15.2c8.3,0,14.2-6.1,14.2-15.2v-73c0-9.1-5.9-15.2-14.2-15.2c-8.3,0-14.2,6.1-14.2,15.2V134.9L417.7,134.9z M431.9,5.6c-8.5,0-16,7.2-16,15c0,8.4,7.5,15.8,16,15.8c8.9,0,16-7.2,16-15.8C447.9,12.7,440.4,5.6,431.9,5.6L431.9,5.6z M550.9,64.5c0-7,0-17.9-13.6-17.9c-6.9,0-12.8,4.8-13.6,11.4c-6.3-8.6-16.6-12.5-27-12.5c-26,0-46.9,23-46.9,53c0,30.8,20.3,52.7,46.9,52.7c10.8,0,19.7-4.4,27-12.8c2,7.2,5.3,11.6,13.6,11.6c13.6,0,13.6-10.9,13.6-17.9V64.5L550.9,64.5z M478.2,98.6c0-13.1,6.9-27.9,22.5-27.9c15,0,21.9,14.8,21.9,27.9s-7.1,27.6-21.9,27.6C485.3,126.1,478.2,111.7,478.2,98.6z"/>
+    </svg>
+  )
+}
+
 export function navigate(path) {
   const categoryNavigation = new URL(path, window.location.href).searchParams.has('category')
   if (window.location.pathname === path) {
@@ -58,34 +106,88 @@ export function scrollToHeaderOffset(selector) {
   return true
 }
 
-export function AnimatedMetric({ value, suffix = '', label }) {
+export function AnimatedMetric({ value, suffix = '', label, delay = 0, duration }) {
   const [count, setCount] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
   const ref = useRef(null)
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      const start = performance.now()
-      const duration = 1200
-      const update = (now) => {
-        const progress = Math.min((now - start) / duration, 1)
-        const ease = 1 - Math.pow(1 - progress, 3)
-        setCount(Math.round(value * ease))
-        if (progress < 1) {
-          requestAnimationFrame(update)
-        } else {
-          setCount(value)
-        }
+  const animRef = useRef(null)
+  const isRunningRef = useRef(false)
+
+  const defaultDuration = value > 500 ? 1800 : value > 100 ? 1500 : 1200
+  const animDuration = duration || defaultDuration
+
+  const startAnimation = (dur = animDuration) => {
+    if (isRunningRef.current) return
+    isRunningRef.current = true
+    setIsComplete(false)
+    setHasStarted(true)
+    const startTime = performance.now()
+
+    const update = (now) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / dur, 1)
+      const ease = 1 - Math.pow(1 - progress, 2.2)
+      setCount(Math.round(value * ease))
+
+      if (progress < 1) {
+        animRef.current = requestAnimationFrame(update)
+      } else {
+        setCount(value)
+        setIsComplete(true)
+        isRunningRef.current = false
       }
-      requestAnimationFrame(update)
-      observer.disconnect()
-    }, { threshold: 0.15 })
+    }
+    animRef.current = requestAnimationFrame(update)
+  }
+
+  useEffect(() => {
+    let timeoutId = null
+    let hasAnimated = false
+
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(value)
+      setIsComplete(true)
+      setHasStarted(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true
+        timeoutId = setTimeout(() => {
+          startAnimation(animDuration)
+        }, delay)
+        observer.disconnect()
+      }
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' })
+
     if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [value])
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      if (animRef.current) cancelAnimationFrame(animRef.current)
+      observer.disconnect()
+    }
+  }, [value, delay, animDuration])
+
+  const handleReplay = () => {
+    if (!isRunningRef.current) {
+      startAnimation(Math.min(animDuration, 1100))
+    }
+  }
+
   return (
-    <div ref={ref}>
-      <strong>{count}<span>{suffix}</span></strong>
-      <small>{label}</small>
+    <div
+      ref={ref}
+      className={`animated-metric-wrap ${hasStarted ? 'is-animating' : ''} ${isComplete ? 'is-complete' : ''}`}
+      onMouseEnter={handleReplay}
+    >
+      <strong className="metric-number-display">
+        {count.toLocaleString()}
+        <span>{suffix}</span>
+      </strong>
+      {label && <small>{label}</small>}
     </div>
   )
 }
@@ -975,15 +1077,21 @@ export function SiteFooter() {
                   <circle cx="12" cy="9" r="2.3" />
                 </svg>
               </span>
-
               <p>
-                <strong>HQ:</strong> Vizianagaram &amp;
-                Visakhapatnam Cluster, AP
-                <br />
-                Operations across 9 States in India
+                #27-23-27, MIG-214, APHB Colony,<br />
+                Babametta, Vizianagaram – 535002,<br />
+                Andhra Pradesh, India
               </p>
             </div>
 
+            <div className="footer-contact-item">
+              <span className="footer-contact-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 3h3l2 5-2 2a14 14 0 0 0 4 4l2-2 5 2v3c0 1.1-.9 2-2 2C10.4 19 5 13.6 5 7c0-1.1.9-2 2-2z" />
+                </svg>
+              </span>
+              <p>9492731212 &nbsp;|&nbsp; 9494703452</p>
+            </div>
 
             <div className="footer-contact-item">
               <span className="footer-contact-icon">
@@ -992,32 +1100,17 @@ export function SiteFooter() {
                   <path d="m4 7 8 6 8-6" />
                 </svg>
               </span>
-
-              <p>info@nsolutions.in</p>
+              <p>info@nsol.in &nbsp;|&nbsp; nsolutions@live.com</p>
             </div>
-
 
             <div className="footer-contact-item">
               <span className="footer-contact-icon">
                 <svg viewBox="0 0 24 24">
-                  <path d="M7 3h3l2 5-2 2a14 14 0 0 0 4 4l2-2 5 2v3c0 1.1-.9 2-2 2C10.4 19 5 13.6 5 7c0-1.1.9-2 2-2z" />
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 3c-2.5 3-4 5.5-4 9s1.5 6 4 9M12 3c2.5 3 4 5.5 4 9s-1.5 6-4 9M3 12h18" />
                 </svg>
               </span>
-
-              <p>+91 891 278 9400</p>
-            </div>
-
-
-            <div className="footer-contact-item">
-              <span className="footer-contact-icon">
-                <svg viewBox="0 0 24 24">
-                  <path d="M6 3h9l3 3v15H6z" />
-                  <path d="M15 3v4h4" />
-                  <path d="M9 12h6M9 16h6" />
-                </svg>
-              </span>
-
-              <p>projects@nsolutions.in</p>
+              <p>www.nsol.in &nbsp;|&nbsp; www.nsolar.in &nbsp;|&nbsp; www.nsolutions.in</p>
             </div>
 
 
@@ -1134,19 +1227,19 @@ export function SiteFooter() {
 
           <div className="footer-bottom-links">
 
-            <a href="/privacy">
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy') }}>
               Privacy Policy
             </a>
 
             <span>|</span>
 
-            <a href="/terms">
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms') }}>
               Terms &amp; Conditions
             </a>
 
             <span>|</span>
 
-            <a href="/">
+            <a href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>
               Sitemap
             </a>
 
@@ -1170,7 +1263,7 @@ export function SiteFooter() {
             </svg>
           </a>
   <a  aria-label="Instagram"  href="https://www.instagram.com/nsol.in?mdxt=MWplbWhxbDkwcDNoNg=="
-      target="_blank" >
+      target="_blank" rel="noopener noreferrer">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <rect
         x="3.5"
@@ -1199,23 +1292,31 @@ export function SiteFooter() {
     </svg>
   </a>
 
-            <span className="footer-social-divider" />     
-          <span className="footer-developed">
-            Designed &amp; Developed by{" "}
-            <strong>
+            <a
+              href="https://jsdl.in/RSL-ZYP1792307440"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Justdial - 5.0 Star Rating (275+ Reviews)"
+              title="Justdial (5.0 ★ Rating)"
+            >
+              <JustdialIcon size={18} />
+            </a>
+
+            <span className="footer-social-divider" />
+
+            <span className="footer-developed">
+              Designed &amp; Developed by{' '}
               <a
-                href="https://www.multivisiontrendz.com"
+                href="https://multivisiontrendz.com/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Multivisiontrendz
+                <strong>Multivisiontrendz</strong>
               </a>
-            </strong>
-          </span>
+            </span>
+
           </div>
-
-        </div>
-
+      </div>
       </section>
 
     </footer>

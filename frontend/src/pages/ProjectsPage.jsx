@@ -34,9 +34,9 @@ function mapPublicProject(project) {
         .map((item) => item.trim())
     : []
 
-  const image = resolveMediaUrl(project?.image?.url || project?.images?.[0]?.url || '')
+  const image = project?.image?.url || project?.images?.[0]?.url || ''
   const gallery = Array.isArray(project?.images)
-    ? project.images.map((item) => resolveMediaUrl(item?.url)).filter(Boolean)
+    ? project.images.map((item) => item?.url).filter(Boolean)
     : []
   const createdAt = project?.createdAt ? new Date(project.createdAt) : null
   const year =
@@ -622,13 +622,6 @@ export default function ProjectsPage() {
         'Comprehensive electrical containment protecting inverter, panels, and connected building loads against high-voltage surges and atmospheric strikes.'
     }
   ]
-
-  useSEO({
-    title: 'Solar Projects Showcase – Commercial, Industrial & Residential Installations',
-    description: 'Browse N Solutions\u2019 portfolio of completed solar EPC projects – commercial rooftop, industrial ground-mount, residential, and government installations across Andhra Pradesh and 9 states in India.',
-    keywords: 'solar projects India, solar EPC portfolio, commercial solar projects, industrial solar installation, ground mount solar, rooftop solar projects, N Solutions projects',
-    canonical: 'https://nsolutions.in/projects',
-  })
 
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).has('category')) {
@@ -1275,9 +1268,9 @@ const filteredProjects = projects.filter((project) => {
                 </a>
                 <a 
                   className="button button-ghost" 
-                  href="tel:+917993836424"
+                  href="tel:+919492731212"
                 >
-                  Call Engineering Desk (+91 7993836424)
+                  Call Engineering Desk (9492731212)
                 </a>
               </div>
             </Reveal>

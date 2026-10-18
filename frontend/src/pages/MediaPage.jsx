@@ -45,14 +45,17 @@ export default function MediaPage() {
       const category = new URLSearchParams(window.location.search).get('category')
       setActiveTab(TABS.some((tab) => tab.id === category) ? category : 'all')
     }
+
     syncTabFromUrl()
     window.addEventListener('popstate', syncTabFromUrl)
     window.addEventListener('nsolutions-route-change', syncTabFromUrl)
+
     return () => {
       window.removeEventListener('popstate', syncTabFromUrl)
       window.removeEventListener('nsolutions-route-change', syncTabFromUrl)
     }
   }, [])
+
   useSEO({
     title: 'Media & Gallery – Solar Projects, Videos, Press & Team',
     description: "Explore N Solutions' media gallery: project photos, installation videos, client stories, team moments and press coverage of our solar EPC work across India.",
@@ -75,13 +78,13 @@ export default function MediaPage() {
           id: video.id || video._id,
           title: video.title || '',
           description: video.description || '',
-          videoUrl: resolveMediaUrl(video.videoUrl || '')
+          videoUrl: video.videoUrl || ''
         })))
         setTeamPhotos((data.gallery || [])
           .filter(item => item.category === 'Company' && item.image?.url)
           .map(item => ({
             id: item.id || item._id,
-            img: resolveMediaUrl(item.image.url),
+            img: item.image.url,
             label: item.title || '',
             description: item.description || ''
           })))
@@ -94,7 +97,7 @@ export default function MediaPage() {
         setClients((data.clients || []).map(item => ({
           id: item.id || item._id,
           name: item.name || '',
-          image: resolveMediaUrl(item.image?.url || ''),
+          image: item.image?.url || '',
           description: item.description || item.quote || ''
         })))
       } catch (err) {
@@ -138,9 +141,29 @@ export default function MediaPage() {
             <p className="mg-hero-sub">
               A glimpse of our projects, people, clients and milestones in building a cleaner and sustainable tomorrow.
             </p>
+            <button
+              type="button"
+              className="mg-hero-play-btn"
+              onClick={() => {
+                const firstVideo = videos?.[0] || videoItems?.[0];
+                if (firstVideo) setPlayingVideo(firstVideo);
+              }}
+            >
+              <span className="mg-play-circle"><FiPlay size={18} /></span>
+              <span>
+                <strong>Watch Our Story</strong>
+                <small>1:48 · Company Overview</small>
+              </span>
+            </button>
           </div>
 
-         
+          {/* stats strip */}
+          <div className="mg-stats-strip">
+            <div className="mg-stat"><FiCamera size={16}/><strong>150+</strong><small>Project Photos</small></div>
+            <div className="mg-stat"><FiVideo size={16}/><strong>50+</strong><small>Video Highlights</small></div>
+            <div className="mg-stat"><FiUsers size={16}/><strong>25+</strong><small>Clients with Projects</small></div>
+            <div className="mg-stat"><FiFileText size={16}/><strong>20+</strong><small>Press Mentions</small></div>
+          </div>
         </section>
 
         {/* ── TABS ── */}
@@ -346,9 +369,9 @@ export default function MediaPage() {
                     <div className="mg-case-step-img">
                       <img
                         src={[
-                          'service/service16.png',
-                          'assets/services/operation-and-maintenance.png',
-                          'assets/services/on-site-power-solutions.jpg'
+                          '/planning-survey-rooftop.jpg',
+                          '/installation-technicians.jpg',
+                          '/completed-rooftop-project.jpg'
                         ][i]}
                         alt={s.title}
                         loading="lazy"
@@ -385,7 +408,7 @@ export default function MediaPage() {
               playsInline
               className="mg-video-player"
             >
-              <source src={playingVideo.videoUrl} />
+              <source src={playingVideo.videoUrl} type="video/mp4" />
             </video>
           </div>
         </div>
