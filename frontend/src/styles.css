@@ -17139,4 +17139,138 @@ button:focus-visible {
   }
 }
 
+/* =====================================================
+   HOME PAGE — SECTOR MILESTONES (Clean Light Design)
+   5 Columns: PM Surya Ghar, Residential, Government, Commercial, Industrial
+   ===================================================== */
+.home-milestones-highlight {
+  background: #ffffff;
+  padding: 68px 0 52px;
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(15, 43, 72, 0.08);
+  border-bottom: 1px solid rgba(15, 43, 72, 0.08);
+  box-shadow: 0 4px 20px rgba(11, 31, 58, 0.03);
+}
+
+.home-milestones-highlight .section-heading {
+  margin-bottom: 38px;
+}
+
+.home-milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid rgba(15, 43, 72, 0.12);
+  padding-top: 32px;
+}
+
+.home-milestone-col {
+  padding: 4px 24px;
+  border-right: 1px solid rgba(15, 43, 72, 0.12);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.home-milestone-col:first-child {
+  padding-left: 0;
+}
+
+.home-milestone-col:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.home-milestone-col:hover {
+  transform: translateY(-4px);
+}
+
+.home-milestone-col strong {
+  display: block;
+  color: #1565c0;
+  font: 700 clamp(32px, 3.4vw, 50px) / 1.08 'Manrope', sans-serif;
+  letter-spacing: -0.04em;
+  transition: color 0.25s ease;
+}
+
+.home-milestone-col strong span {
+  color: #0284c7;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.home-milestone-col small {
+  display: block;
+  margin-top: 10px;
+  color: #64748b;
+  font: 700 12px / 1.45 'Manrope', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.home-milestone-col:hover strong {
+  color: #0d47a1;
+}
+
+.home-milestone-col:hover small {
+  color: #0f2b48;
+}
+
+/* Tablet & Medium Screens (<= 1024px) */
+@media (max-width: 1024px) {
+  .home-milestones-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px 0;
+  }
+
+  .home-milestone-col {
+    padding: 8px 18px;
+  }
+
+  .home-milestone-col:nth-child(3n) {
+    border-right: none;
+  }
+
+  .home-milestone-col:nth-child(3n + 1) {
+    padding-left: 0;
+  }
+}
+
+/* Mobile Screens (<= 640px) */
+@media (max-width: 640px) {
+  .home-milestones-highlight {
+    padding: 26px 0;
+  }
+
+  .home-milestones-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 0;
+    padding-top: 20px;
+  }
+
+  .home-milestone-col {
+    padding: 6px 14px;
+    border-right: 1px solid rgba(15, 43, 72, 0.12);
+  }
+
+  .home-milestone-col:nth-child(even) {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .home-milestone-col:nth-child(odd) {
+    padding-left: 0;
+  }
+
+  .home-milestone-col strong {
+    font-size: 30px;
+  }
+
+  .home-milestone-col small {
+    font-size: 11px;
+    margin-top: 6px;
+  }
+}
+
+
 
