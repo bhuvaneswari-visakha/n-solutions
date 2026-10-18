@@ -2003,8 +2003,6 @@ function App() {
         </Reveal>
       </section>
 
-      <IndustriesSection />
-
       <section className="services wrap" id="services">
         <Reveal className="section-heading">
           <div>
