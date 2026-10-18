@@ -15321,3 +15321,138 @@ button:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================================================
+   HERO STATS / MILESTONES STRIP (Below Home Hero)
+   ===================================================== */
+.hero-stats-banner {
+  background: #ffffff;
+  padding: 38px 0 34px;
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid rgba(15, 43, 72, 0.08);
+  box-shadow: 0 4px 20px rgba(11, 31, 58, 0.03);
+}
+
+.hero-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid rgba(15, 43, 72, 0.12);
+  padding-top: 26px;
+}
+
+.hero-stats-grid > div {
+  padding: 4px 22px;
+  border-right: 1px solid rgba(15, 43, 72, 0.12);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.hero-stats-grid > div:first-child {
+  padding-left: 0;
+}
+
+.hero-stats-grid > div:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.hero-stats-grid > div:hover {
+  transform: translateY(-4px);
+}
+
+.hero-stats-grid strong {
+  display: block;
+  color: #1565c0;
+  font: 700 clamp(32px, 3.4vw, 48px) 'Manrope', sans-serif;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  transition: color 0.25s ease;
+}
+
+.hero-stats-grid strong span {
+  color: #0284c7;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.hero-stats-grid small {
+  display: block;
+  margin-top: 10px;
+  color: #64748b;
+  font: 700 11.5px/1.45 'Manrope', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.hero-stats-grid > div:hover strong {
+  color: #0d47a1;
+}
+
+.hero-stats-grid > div:hover small {
+  color: #0f2b48;
+}
+
+/* Tablet & Mobile Breakpoints for 5 Items */
+@media (max-width: 992px) {
+  .hero-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px 0;
+  }
+  
+  .hero-stats-grid > div {
+    padding: 8px 18px;
+  }
+
+  .hero-stats-grid > div:nth-child(3) {
+    border-right: none;
+  }
+  
+  .hero-stats-grid > div:first-child {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-stats-banner {
+    padding: 26px 0;
+  }
+
+  .hero-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 0;
+    padding-top: 20px;
+  }
+
+  .hero-stats-grid > div {
+    padding: 6px 14px;
+    border-right: 1px solid rgba(15, 43, 72, 0.12);
+  }
+
+  .hero-stats-grid > div:nth-child(even) {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .hero-stats-grid > div:nth-child(odd) {
+    padding-left: 0;
+  }
+
+  .hero-stats-grid > div:last-child {
+    grid-column: 1 / -1;
+    border-right: none;
+    padding-left: 0;
+    margin-top: 4px;
+  }
+
+  .hero-stats-grid strong {
+    font-size: clamp(28px, 7vw, 36px);
+  }
+
+  .hero-stats-grid small {
+    font-size: 11px;
+    margin-top: 6px;
+  }
+}
+
