@@ -1835,15 +1835,14 @@ function App() {
         <div className="hero-note"><span>01</span><div><strong>Solar, engineered.</strong><small>Residential to MW-scale projects</small></div></div>
       </section>
 
-      {/* HERO MILESTONES STATS SECTION */}
-      <section className="hero-stats-banner" id="project-stats" aria-label="Project Milestones">
+      {/* HERO STATS STRIP */}
+      <section className="hero-stats-banner" id="project-stats" aria-label="Company Statistics">
         <div className="wrap">
           <div className="hero-stats-grid">
-            <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar" />
-            <AnimatedMetric value={140} suffix="+" label="Residential Projects" />
-            <AnimatedMetric value={120} suffix="+" label="Government Projects" />
-            <AnimatedMetric value={200} suffix="+" label="Commercial Projects" />
-            <AnimatedMetric value={60} suffix="+" label="Industrial Projects" />
+            <AnimatedMetric value={16} suffix="+" label="Years of experience" />
+            <AnimatedMetric value={9} label="States across India" />
+            <AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" />
+            <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar sites" />
           </div>
         </div>
       </section>

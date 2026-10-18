@@ -15338,13 +15338,13 @@ button:focus-visible {
 
 .hero-stats-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid rgba(15, 43, 72, 0.12);
   padding-top: 26px;
 }
 
 .hero-stats-grid > div {
-  padding: 4px 22px;
+  padding: 4px 24px;
   border-right: 1px solid rgba(15, 43, 72, 0.12);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: default;
@@ -15366,7 +15366,7 @@ button:focus-visible {
 .hero-stats-grid strong {
   display: block;
   color: #1565c0;
-  font: 700 clamp(32px, 3.4vw, 48px) 'Manrope', sans-serif;
+  font: 700 clamp(34px, 3.8vw, 54px) 'Manrope', sans-serif;
   letter-spacing: -0.04em;
   line-height: 1.08;
   transition: color 0.25s ease;
@@ -15382,7 +15382,7 @@ button:focus-visible {
   display: block;
   margin-top: 10px;
   color: #64748b;
-  font: 700 11.5px/1.45 'Manrope', sans-serif;
+  font: 700 12px/1.45 'Manrope', sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: color 0.25s ease;
@@ -15396,10 +15396,10 @@ button:focus-visible {
   color: #0f2b48;
 }
 
-/* Tablet & Mobile Breakpoints for 5 Items */
-@media (max-width: 992px) {
+/* Tablet & Mobile Breakpoints for 4 Items (2x2 Grid) */
+@media (max-width: 900px) {
   .hero-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px 0;
   }
   
@@ -15407,11 +15407,12 @@ button:focus-visible {
     padding: 8px 18px;
   }
 
-  .hero-stats-grid > div:nth-child(3) {
+  .hero-stats-grid > div:nth-child(even) {
     border-right: none;
+    padding-right: 0;
   }
   
-  .hero-stats-grid > div:first-child {
+  .hero-stats-grid > div:nth-child(odd) {
     padding-left: 0;
   }
 }
@@ -15441,15 +15442,8 @@ button:focus-visible {
     padding-left: 0;
   }
 
-  .hero-stats-grid > div:last-child {
-    grid-column: 1 / -1;
-    border-right: none;
-    padding-left: 0;
-    margin-top: 4px;
-  }
-
   .hero-stats-grid strong {
-    font-size: clamp(28px, 7vw, 36px);
+    font-size: clamp(28px, 7vw, 38px);
   }
 
   .hero-stats-grid small {
