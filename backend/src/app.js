@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import { join } from 'node:path';
 import authRoutes from './routes/auth.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import leadRoutes from './routes/lead.routes.js';

@@ -1,5 +1,5 @@
 import { deleteProduct, createProduct, getProduct, listProducts } from '../services/product.service.js';
-import { deleteProductImage, uploadProductImage } from '../services/media-storage.service.js';
+import { deleteProductImage, uploadProductImage } from '../config/cloudinary.js';
 import { PRODUCT_CATEGORIES } from '../models/Product.js';
 import { sendSuccess } from '../utils/response.js';
 
@@ -51,7 +51,7 @@ export const create = async (request, response) => {
   if (!request.file) details.image = 'Product image is required.';
   if (Object.keys(details).length > 0) throw validationError(details);
 
-  const image = await uploadProductImage(request.file);
+  const image = await uploadProductImage(request.file.buffer);
 
   try {
     return sendSuccess(

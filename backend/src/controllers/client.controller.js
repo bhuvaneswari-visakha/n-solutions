@@ -1,4 +1,4 @@
-import { deleteMediaImage, uploadMediaImage } from '../services/media-storage.service.js';
+import { deleteMediaImage, uploadMediaImage } from '../config/cloudinary.js';
 import {
   createClient,
   deleteClient,
@@ -46,7 +46,7 @@ export const create = async (request, response) => {
 
   let image = null;
   if (request.file) {
-    image = await uploadMediaImage(request.file, 'clients');
+    image = await uploadMediaImage(request.file.buffer);
     input.image = image;
   }
 
@@ -72,7 +72,7 @@ export const update = async (request, response) => {
 
   let image;
   if (request.file) {
-    image = await uploadMediaImage(request.file, 'clients');
+    image = await uploadMediaImage(request.file.buffer);
     input.image = image;
   }
 

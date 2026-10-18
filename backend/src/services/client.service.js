@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { deleteMediaImage } from './media-storage.service.js';
+import { deleteMediaImage } from '../config/cloudinary.js';
 import { Client } from '../models/Client.js';
 
 const invalidId = () => {

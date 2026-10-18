@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SiteHeader, SiteFooter, Arrow, AnimatedMetric, Reveal, navigate } from '../components/Shared'
-import { apiGet, resolveMediaUrl } from '../utils/api'
+import { apiGet } from '../utils/api'
 import SEO from "../components/SEO/SEO";
 import {
   FiArrowDown,
@@ -40,7 +40,7 @@ function mapPublicProduct(product) {
     brand: product?.brand || '',
     category: PUBLIC_PRODUCT_CATEGORY_MAP[categoryLabel] || 'protection',
     categoryLabel,
-    image: resolveMediaUrl(product?.image?.url || ''),
+    image: product?.image?.url || '',
     badge: categoryLabel,
     summary: product?.description || '',
     applications,
@@ -101,7 +101,7 @@ export const productsCatalog = [
     brand: 'Tier-1 High-Efficiency',
     category: 'modules',
     categoryLabel: 'Solar Modules',
-    image: '/local/photo-6.jpg',
+    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=85',
     badge: '30-Year Warranty',
     warranty: '30 Years Linear Output',
     efficiency: '22.6%',
@@ -132,7 +132,7 @@ export const productsCatalog = [
     brand: 'Aesthetic Line',
     category: 'modules',
     categoryLabel: 'Solar Modules',
-    image: '/local/photo-4.jpg',
+    image: 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?auto=format&fit=crop&w=900&q=85',
     badge: 'Architectural Grade',
     warranty: '25 Years Linear Performance',
     efficiency: '21.0%',
@@ -191,7 +191,7 @@ export const productsCatalog = [
     brand: 'PM-KUSUM Approved (Shakti / Jain)',
     category: 'pumps',
     categoryLabel: 'Solar Pumps',
-    image: '/local/photo-7.jpg',
+    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=900&q=85',
     badge: 'Govt Subsidy Approved',
     warranty: '5 Years Complete Field SLA',
     efficiency: '92% Motor Efficiency',
@@ -219,7 +219,7 @@ export const productsCatalog = [
     brand: 'PM-KUSUM Series',
     category: 'pumps',
     categoryLabel: 'Solar Pumps',
-    image: '/local/photo-8.jpg',
+    image: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=900&q=85',
     badge: 'PM-KUSUM Ready',
     warranty: '5 Years Complete System',
     efficiency: '90% Efficiency',
@@ -382,7 +382,7 @@ export const productsCatalog = [
     brand: 'N Solutions Standard',
     category: 'cables-bos',
     categoryLabel: 'Cabling & BOS',
-    image: '/local/photo-9.jpg',
+    image: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=900&q=85',
     badge: 'IP66 Weatherproof',
     warranty: '5 Years Guarantee',
     efficiency: '1000V DC Protection',
@@ -852,9 +852,9 @@ export default function ProductsPage() {
                 </a>
                 <a 
                   className="button button-ghost" 
-                  href="tel:+917993836424"
+                  href="tel:+919492731212"
                 >
-                  Call Hardware Desk (+91 7993836424)
+                  Call Hardware Desk (9492731212)
                 </a>
               </div>
             </Reveal>

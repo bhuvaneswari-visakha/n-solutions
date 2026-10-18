@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import './lead-quote-modal.css'
-
 const API_BASE_URL = (
-  import.meta.env?.VITE_API_BASE_URL || import.meta.env?.VITE_API_URL || '/api'
+  import.meta.env?.VITE_API_BASE_URL || '/api'
 ).replace(/\/+$/, '')
 
 export default function LeadQuoteModal({ onClose }) {

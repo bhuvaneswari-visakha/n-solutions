@@ -1,4 +1,4 @@
-import { deleteResume, uploadResume, getStoredPrivateFile } from '../services/media-storage.service.js';
+import { deleteResume, uploadResume } from '../config/cloudinary.js';
 import {
   createJobApplication,
   findJobForApplication,
@@ -74,9 +74,12 @@ export const submit = async (request, response) => {
 
   let resume;
   try {
-    resume = await uploadResume(request.file);
+    resume = await uploadResume(
+      request.file.buffer,
+      request.file.originalname
+    );
   } catch (error) {
-    if (error.statusCode === 400) throw error;
+    if (error.statusCode === 503) throw error;
     const uploadError = new Error('Resume upload failed.');
     uploadError.statusCode = 500;
     throw uploadError;
@@ -132,7 +135,7 @@ export const updateStatus = async (request, response) => {
   )
 };
 
-export const downloadResumeFile = async (request, response, next) => {
+export const downloadResumeFile = async (request, response) => {
   const application = await getJobApplicationById(request.params.id);
   const resumeUrl = application.resume?.url || application.resumeUrl || (typeof application.resume === 'string' ? application.resume : null);
   if (!resumeUrl) {
@@ -141,26 +144,13 @@ export const downloadResumeFile = async (request, response, next) => {
     throw error;
   }
 
-  const storageKey = application.resume?.publicId;
-  if (storageKey?.startsWith('private/resumes/')) {
-    const safeName = (application.fullName || 'Candidate').replace(/[^a-zA-Z0-9_-]/g, '_');
-    const extension = storageKey.split('.').pop().toLowerCase();
-    const disposition = request.query.inline === '1' ? 'inline' : 'attachment';
-    const file = await getStoredPrivateFile(storageKey);
-    response.setHeader('Content-Type', file.ContentType || 'application/octet-stream');
-    response.setHeader('Content-Disposition', `${disposition}; filename="${safeName}_Resume.${extension}"`);
-    response.setHeader('Cache-Control', 'private, no-store');
-    response.setHeader('X-Content-Type-Options', 'nosniff');
-    if (file.ContentLength) response.setHeader('Content-Length', file.ContentLength);
-    file.Body.on('error', (error) => {
-      if (response.headersSent) response.destroy(error);
-      else next(error);
-    });
-    file.Body.pipe(response);
-    return;
+  const safeName = (application.fullName || 'Candidate').replace(/[^a-zA-Z0-9_-]/g, '_');
+  let attachmentUrl = resumeUrl;
+  if (attachmentUrl.includes('cloudinary.com') && attachmentUrl.includes('/upload/')) {
+    attachmentUrl = attachmentUrl.replace(
+      '/upload/',
+      `/upload/fl_attachment:${encodeURIComponent(safeName + '_Resume')}/`
+    );
   }
-
-  const notFound = new Error('Resume file is unavailable. Migrate the legacy file before downloading it.');
-  notFound.statusCode = 404;
-  throw notFound;
+  return response.redirect(attachmentUrl);
 };
