@@ -334,9 +334,9 @@ export default function MediaPage() {
                     <div className="mg-case-step-img">
                       <img
                         src={[
-                          '/media/planning-survey-rooftop.jpg',
-                          '/media/installation-technicians.jpg',
-                          '/media/completed-rooftop-project.jpg'
+                          '/planning-survey-rooftop.jpg',
+                          '/installation-technicians.jpg',
+                          '/completed-rooftop-project.jpg'
                         ][i]}
                         alt={s.title}
                         loading="lazy"
