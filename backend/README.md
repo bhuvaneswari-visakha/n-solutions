@@ -31,6 +31,18 @@ Edit `.env` and set a long random `JWT_SECRET` and a reachable `MONGODB_URI`. On
 
 The default `ADMIN_REGISTRATION_MODE=bootstrap` permits the first admin registration only. After an admin exists, registration returns `403` unless the caller also supplies `X-Admin-Registration-Key` matching `ADMIN_REGISTRATION_KEY`. For a production deployment, use `ADMIN_REGISTRATION_MODE=disabled` after provisioning, or use `key` with a strong secret managed outside source control.
 
+## Connect MongoDB Compass to the Existing Atlas Database
+
+MongoDB Compass is a desktop client for viewing and managing MongoDB. It does not replace Atlas or the backend's database connection. The backend continues to use the existing Atlas cluster configured by `MONGODB_URI`; Compass connects directly to that same cluster.
+
+1. In MongoDB Atlas, open the existing project and cluster, then go to **Connect** → **Compass**. Copy the connection string Atlas provides. Do not create a new cluster or database.
+2. In Atlas **Network Access**, allow the current computer's public IP address so Compass can reach the cluster. Do not use `0.0.0.0/0` for convenience.
+3. Use an Atlas database user for Compass. Prefer a separate user with read-only access to the existing application database if you only need to inspect it. Grant broader access only if you need to make changes.
+4. Open Compass, paste the Atlas connection string, enter the database user's credentials when prompted, and connect. Browse the existing database and collections; avoid database or collection creation, drops, or edits unless intended.
+5. Keep the connection string and password private. The backend's `MONGODB_URI` belongs only in the ignored `backend/.env` for local development and in the backend service's environment variables on Render. Never put it in Vercel/frontend variables, frontend source, or Git.
+
+When connecting with Compass, select the same database named in the existing backend `MONGODB_URI` (or browse the databases available to that database user). Connecting with Compass does not alter the backend, API, authentication, admin panel, or deployment configuration. Changes made through Compass directly affect the live Atlas data, so use the least-privileged database role appropriate to your task.
+
 ## Run
 
 ```bash
@@ -57,17 +69,9 @@ The API listens on `http://localhost:5000` by default. MongoDB connection failur
 | `CORS_ORIGIN` | Comma-separated allowed origins; `*` is supported for local development |
 | `ADMIN_REGISTRATION_MODE` | `bootstrap`, `key`, or `disabled` |
 | `ADMIN_REGISTRATION_KEY` | Secret required by `key` mode or to reopen bootstrap registration |
+| `UPLOAD_DIR` | Local upload root; defaults to `backend/uploads` (relative paths resolve from `backend/`) |
 | `DASHBOARD_DEFAULT_LIMIT` | Default recent-list size, default `10` |
 | `DASHBOARD_MAX_LIMIT` | Maximum recent-list size, default `50` |
-
-## Production Security and Operations
-
-- Set `NODE_ENV=production` and set `CORS_ORIGIN` in Render to the exact HTTPS origin(s) used by the deployed frontend, comma-separated (for example `https://nsolutions.in,https://www.nsolutions.in`). Production startup rejects wildcard and non-HTTPS origins. Add a Vercel deployment origin only if it is intentionally used by administrators or visitors.
-- Keep `MONGODB_URI`, `JWT_SECRET`, `ADMIN_REGISTRATION_KEY`, mail credentials, and other secrets only in Render's backend environment settings or the ignored `backend/.env` file. Never create `VITE_*` variables for backend secrets. Disable admin registration after provisioning and use a unique, randomly generated JWT secret.
-- The Express API sends restrictive content, framing, referrer, and permissions headers. It sends HSTS when the request reaches the app over HTTPS. `frontend/vercel.json` adds browser security headers and HSTS for the frontend. Vercel and Render provide managed TLS; after deployment, verify HTTP requests redirect to HTTPS and both deployed domains present valid certificates.
-- Configure the Render service health check to use `/health`, monitor Render service/database logs and deployment alerts, and add an external uptime/error-monitoring provider through its dashboard if required. `/health` confirms that the API process responds; monitor Atlas availability separately. No third-party analytics or monitoring account has been configured in this repository.
-- Configure Atlas automated snapshots or continuous cloud backups according to the current Atlas plan. Confirm retention, restrict backup access, and periodically test restoration into a separate non-production database. No backup or restore was run against production data as part of this change.
-- Set the frontend production API base URL in Vercel to the HTTPS backend `/api` URL. Verify the value in the deployed build without adding credentials to frontend configuration.
 
 ## Local Upload Storage
 
@@ -213,7 +217,7 @@ Lead types are `residential`, `commercial`, `industrial`, and `other`. Lead stat
 
 All project routes require `Authorization: Bearer <token returned by login>`.
 
-`POST /api/projects` accepts `multipart/form-data` with these fields: `title`, `category`, `location`, `description`, `services`, `status`, and an image field named `image`. `services` may be a JSON array string such as `["Solar Installation","System Design"]`. The image is uploaded to Cloudinary and only its `secure_url` and `public_id` are stored in MongoDB.
+`POST /api/projects` accepts `multipart/form-data` with these fields: `title`, `category`, `location`, `description`, `services`, `status`, and image fields named `images` (up to 20) or `image`. `services` may be a JSON array string such as `["Solar Installation","System Design"]`. Uploaded images are saved on local disk; MongoDB retains the image `url` and `publicId` asset fields.
 
 `GET /api/projects` lists all projects newest first.
 
@@ -229,15 +233,7 @@ All project routes require `Authorization: Bearer <token returned by login>`.
 
 Allowed project categories are `residential`, `commercial`, and `industrial`. Allowed statuses are `completed` and `in_progress`; new projects default to `in_progress`.
 
-`DELETE /api/projects/:id` removes the project and attempts to remove its Cloudinary image. A Cloudinary cleanup failure is logged without undoing the database deletion.
-
-Set these variables in `.env` before using project creation:
-
-```text
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-```
+`DELETE /api/projects/:id` removes the project and its local image files.
 
 The dashboard `activeProjects` value counts projects whose status is `in_progress`.
 
@@ -246,6 +242,8 @@ The dashboard `activeProjects` value counts projects whose status is `in_progres
 `POST /api/job-applications` is public and accepts a resume upload with the applicant details.
 
 `GET /api/job-applications` requires `Authorization: Bearer <token returned by login>` and returns all submitted applications newest first, including applicant details, application status, job title, and the resume URL.
+
+`GET /api/job-applications/:id/resume/download` requires an authenticated admin token and streams the private file; legacy external resumes must be migrated into `UPLOAD_DIR/private/resumes/` before they can be downloaded through the admin UI.
 
 ### Testimonial routes
 

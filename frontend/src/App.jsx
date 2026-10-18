@@ -6,13 +6,11 @@ import MediaPage from './pages/MediaPage'
 import CareersPage from './pages/CareersPage'
 import LeadQuoteModal from './pages/LeadQuoteModel.jsx'
 import ContactPage from './pages/ContactPage'
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
-import TermsConditionsPage from './pages/TermsConditionsPage'
-import NotFoundPage from './pages/NotFoundPage'
 import AdminPortal from './admin/AdminPortal'
-import { navigate, SiteFooter, GoogleIcon, JustdialIcon, JustdialSvgLogo } from './components/Shared'
+import { navigate, SiteFooter } from './components/Shared'
 import { homeContent, aboutContent, servicesAndSolutionsContent } from './content/siteContent'
 import { apiGet } from './utils/api'
+import { useSEO } from './utils/useSEO'
 import WhatsAppWidget from "./components/WhatsAppWidget";
 import {
   FiArrowUpRight, FiArrowDown, FiCheck, FiChevronRight, FiChevronLeft,
@@ -416,29 +414,19 @@ function EmptyState({ label, text }) {
 const verifiedTestimonials = [
   {
     id: 1, rating: 5,
-    quote: "N Solutions executed our 3.6 MWp captive solar farm at Sompeta with impeccable civil-structural precision and on-schedule 33 kV grid synchronization. Our annual power tariff savings and plant PR exceeding 81% have transformed our seafood processing cost dynamics.",
-    comment: "N Solutions executed our 3.6 MWp captive solar farm at Sompeta with impeccable civil-structural precision and on-schedule 33 kV grid synchronization. Our annual power tariff savings and plant PR exceeding 81% have transformed our seafood processing cost dynamics.",
-    name: "Coastal Corporation Ltd", role: "Corporate Client", company: "Sompeta, AP",
-    metric: "3.6 MWp Captive Solar"
-  },
-  {
-    id: 2, rating: 5,
     quote: "N Solutions delivered our 50 kWp rooftop plant on time with exceptional build quality. The net-metering approval was handled end-to-end by their team — zero hassle for us.",
-    comment: "N Solutions delivered our 50 kWp rooftop plant on time with exceptional build quality. The net-metering approval was handled end-to-end by their team — zero hassle for us.",
     name: "Ramesh Babu", role: "Plant Head", company: "Sri Sai Industries, Vizag",
     metric: "₹4.2L annual savings"
   },
   {
-    id: 3, rating: 5,
+    id: 2, rating: 5,
     quote: "Professional EPC execution. Our 25 kWp system has been producing above PVSyst estimates for 18 months straight. The O&M support is prompt and reliable.",
-    comment: "Professional EPC execution. Our 25 kWp system has been producing above PVSyst estimates for 18 months straight. The O&M support is prompt and reliable.",
     name: "Priya Nair", role: "Facility Manager", company: "GreenLeaf Exports, Tirupati",
     metric: "103% generation yield"
   },
   {
-    id: 4, rating: 5,
+    id: 3, rating: 5,
     quote: "We availed the PM Surya Ghar subsidy through N Solutions. The documentation and portal registration was seamless. Highly recommend for residential solar.",
-    comment: "We availed the PM Surya Ghar subsidy through N Solutions. The documentation and portal registration was seamless. Highly recommend for residential solar.",
     name: "K. Venkata Rao", role: "Homeowner", company: "Kakinada",
     metric: "Subsidy processed in 12 days"
   },
@@ -500,15 +488,17 @@ function TestimonialsShowcase({ theme = 'light' }) {
 
         if (!isMounted) return
 
-        if (result.success && Array.isArray(result.data) && result.data.length > 0) {
-          setTestimonials(result.data)
+        if (result.success) {
+          const items = Array.isArray(result.data)
+            ? result.data
+            : []
+
+          setTestimonials(items)
         } else {
-          setTestimonials(verifiedTestimonials)
+          console.error('Failed to fetch testimonials:', result.message)
         }
       } catch (error) {
-        if (isMounted) {
-          setTestimonials(verifiedTestimonials)
-        }
+        console.error('Failed to fetch testimonials:', error)
       } finally {
         if (isMounted) {
           setLoading(false)
@@ -523,103 +513,42 @@ function TestimonialsShowcase({ theme = 'light' }) {
     }
   }, [])
 
-  const displayList = testimonials.length > 0 ? testimonials : verifiedTestimonials
-
   return (
     <div className={`testimonials-showcase-section theme-${theme}`}>
-      {/* Platform Trust & Reputation Banner */}
-      <div className="testimonials-trust-bar">
-        <div className="trust-bar-lead">
-          <FiStar className="trust-star-icon" />
-          <span>Real Client Reviews &amp; Industry Verification</span>
-        </div>
-
-        <div className="trust-bar-platforms">
-          <a
-            href="https://share.google/9B4OC1mWUc2h4to0T"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="trust-platform-badge google"
-            title="Read Verified Reviews for N Solutions on Google"
-          >
-            <GoogleIcon size={16} />
-            <span className="badge-platform-name">Google Reviews</span>
-            <span className="badge-score-pill">5.0 ★</span>
-          </a>
-
-          <a
-            href="https://jsdl.in/RSL-ZYP1792307440"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="trust-platform-badge justdial"
-            title="Read 275+ Verified Ratings on Justdial"
-          >
-            <JustdialIcon size={16} />
-            <span className="badge-platform-name">Justdial</span>
-            <span className="badge-score-pill">5.0 ★ (275+ Ratings)</span>
-          </a>
-        </div>
-      </div>
-
       {loading ? (
         <div className="testimonials-grid-modern">
           <div className="testimonial-loading">
             Loading testimonials...
           </div>
         </div>
+      ) : testimonials.length === 0 ? (
+        <div className="testimonials-grid-modern">
+          <div className="testimonial-loading">
+            No testimonials available.
+          </div>
+        </div>
       ) : (
         <div className="testimonials-grid-modern">
-          {displayList.map((t) => (
+          {testimonials.map((t) => (
             <Reveal
               className="testimonial-card-modern"
-              key={t.id || t.name}
+              key={t.id}
             >
               <div className="testimonial-top-row">
-                <div className="testimonial-stars-and-sources">
-                  <div
-                    className="testimonial-stars"
-                    aria-label={`${t.rating || 5} out of 5 stars`}
-                  >
-                    {[...Array(t.rating || 5)].map((_, i) => (
-                      <FiStar
-                        key={i}
-                        style={{
-                          fill: '#f5a623',
-                          color: '#f5a623',
-                          marginRight: '3px'
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Google & Justdial review badges next to the stars (matching user screenshot green marks) */}
-                  <div className="testimonial-source-pills">
-                    <a
-                      href="https://share.google/9B4OC1mWUc2h4to0T"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="testimonial-source-chip google-chip"
-                      title="Rated 5.0 on Google Reviews — View Profile"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <GoogleIcon size={14} />
-                      <span className="source-label">Google</span>
-                      <span className="source-rating">5.0 ★</span>
-                    </a>
-
-                    <a
-                      href="https://jsdl.in/RSL-ZYP1792307440"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="testimonial-source-chip justdial-chip"
-                      title="Rated 5.0 on Justdial (275+ Ratings) — View Profile"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <JustdialIcon size={14} />
-                      <span className="source-label">Justdial</span>
-                      <span className="source-rating">5.0 ★</span>
-                    </a>
-                  </div>
+                <div
+                  className="testimonial-stars"
+                  aria-label={`${t.rating} out of 5 stars`}
+                >
+                  {[...Array(t.rating || 5)].map((_, i) => (
+                    <FiStar
+                      key={i}
+                      style={{
+                        fill: '#f5a623',
+                        color: '#f5a623',
+                        marginRight: '3px'
+                      }}
+                    />
+                  ))}
                 </div>
 
                 <span className="testimonial-verified-badge">
@@ -628,7 +557,7 @@ function TestimonialsShowcase({ theme = 'light' }) {
               </div>
 
               <p className="testimonial-quote-text">
-                “{t.comment || t.quote}”
+                “{t.comment}”
               </p>
 
               <div className="testimonial-author-row">
@@ -638,9 +567,15 @@ function TestimonialsShowcase({ theme = 'light' }) {
                   </strong>
 
                   <span className="testimonial-author-role">
-                    {t.role ? `${t.role} · ` : ''}{t.company}
+                    {t.role} · {t.company}
                   </span>
                 </div>
+
+                {t.metric && (
+                  <span className="testimonial-metric-chip">
+                    {t.metric}
+                  </span>
+                )}
               </div>
             </Reveal>
           ))}
@@ -1056,11 +991,6 @@ const aboutProcess = [
   ['06', 'Support & maintenance', 'Provide ongoing support and maintenance following commissioning.'],
 ]
 
-const installationServices = [
-  { number: '01', title: 'Commercial solar installation', text: 'Turnkey solar installations for commercial establishments, designed to make effective use of available rooftop or project space and support the transition to clean energy.', detail: 'We support the project through requirement assessment, site evaluation, system planning, installation, testing, and commissioning.', benefits: ['Potential reduction in electricity costs', 'Efficient use of available rooftop space', 'Grid-connected system options', 'Customized system sizing', 'Professional installation and commissioning', 'Long-term solar energy generation', 'Support for applicable net-metering requirements'], applications: 'Offices, shopping centres, hospitals, hotels, educational institutions, and commercial buildings.', image: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1400&q=88' },
-  { number: '02', title: 'Residential solar installation', text: 'Reliable rooftop solar solutions for homes, planned according to household electricity requirements, available roof area, and applicable solar program requirements.', detail: 'We support customers from initial consultation and site assessment through system installation and commissioning.', benefits: ['Clean and renewable electricity generation', 'Potential reduction in household electricity bills', 'Effective rooftop utilization', 'Grid-connected rooftop solutions', 'Customized system planning', 'Support for applicable government schemes', 'Low-maintenance energy solution'], applications: 'Individual homes, apartments, residential buildings, villas, and housing communities.', image: 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?auto=format&fit=crop&w=1400&q=88' },
-  { number: '03', title: 'Industrial solar installation', text: 'Solar solutions designed for industrial facilities with larger energy requirements and more complex site and electrical conditions.', detail: 'Our approach considers the facility, energy requirement, available installation area, electrical infrastructure, and project scope before implementation.', benefits: ['Supports large energy requirements', 'Potential reduction in electricity expenditure', 'Efficient use of industrial rooftops or available land', 'Customized system design', 'Professional installation and commissioning', 'Suitable for larger solar capacities', 'Ongoing maintenance support'], applications: 'Factories, manufacturing units, warehouses, processing facilities, and industrial campuses.', image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1400&q=88' },
-]
 
 const servicesProcess = [
   ['01', 'Consultation & requirement assessment', 'Understand energy requirements, project objectives, site needs, and expectations.'],
@@ -1083,12 +1013,6 @@ const productItems = ['Solar PV panels', 'Solar inverters', 'Earth pits', 'Light
 
 const productCategories = ['Solar Panels', 'Solar Inverters', 'Earth Pits & Lightning Arrestors', 'Accessories']
 
-const productCategoryImages = {
-  'Solar Panels': 'https://tse2.mm.bing.net/th/id/OIP.Uk-gBBAPNXoTYcLKUea27QHaEo?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
-  'Solar Inverters': 'https://www.livemint.com/lm-img/img/2023/10/26/1600x900/2-0-753746399-solar-0_1680330329680_1698338750055.jpg',
-  'Earth Pits & Lightning Arrestors': 'https://tse3.mm.bing.net/th/id/OIP.NnEW42ljKQbA0343soSdwgHaEJ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
-  'Accessories': 'https://tse1.mm.bing.net/th/id/OIP.MXONou_5bkxe7B-FmrD9AgHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'
-}
 
 function displayProductCategory(category = '') {
   const value = category.toLowerCase()
@@ -1135,8 +1059,8 @@ function SiteHeader({ activePath = '' }) {
   const items = ['Home', 'About', 'Services', 'Projects', 'Products', 'Media', 'Careers', 'Contact']
   return <header className={`site-header`} style={{background:'#ffffff'}}>
     <a className="brand" href="/" onClick={(e) => handleNav(e, '/')} aria-label="N Solutions home"><img className="brand-logo" src="/logo.png" alt="N Solutions" /></a>
-    <button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-    <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
+    <button type="button" className="menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-controls="site-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
+    <nav id="site-navigation" className={menuOpen ? 'nav-links is-open' : 'nav-links'}>
       {items.map((item) => {
         const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`
         const isCurrent = activePath === path || (path === '/' && activePath === '')
@@ -1179,7 +1103,14 @@ function SiteHeader({ activePath = '' }) {
 
 function AboutPage() {
   const [horizonTab, setHorizonTab] = useState('vision')
-  const { companyOverview, leadership, chairmanMessage, visionAndMission, journey, whatWeDo, howWeWork } = aboutContent
+  const { companyOverview, chairmanMessage, visionAndMission, journey, whatWeDo, howWeWork } = aboutContent
+
+  useSEO({
+    title: 'About Us – Solar EPC Company with 16+ Years Experience',
+    description: 'Learn about N Solutions – an ISO 9001:2015 certified Solar EPC company with 16+ years of experience delivering commercial, industrial, and residential solar projects across 9 states in India.',
+    keywords: 'about N Solutions, solar EPC company, solar company India, ISO certified solar, MNRE empanelled, NREDCAP registered, solar experience India',
+    canonical: 'https://nsolutions.in/about',
+  })
 
   return (
     <>
@@ -1254,7 +1185,7 @@ function AboutPage() {
           <div className="about-overview-right">
             <Reveal className="about-overview-visual">
               <img
-                src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=85"
+                src="/local/photo-5.jpg"
                 alt="N Solutions solar energy infrastructure"
                 className="about-overview-image"
                 loading="eager"
@@ -1306,59 +1237,25 @@ function AboutPage() {
       </div>
     </section>
 
-    {/* Our Leadership & Vision */}
-    <section className="about-leadership-section" id="leadership">
-      <div className="wrap">
-        <Reveal className="section-heading">
-          <div>
-            <p className="eyebrow"><span /> {leadership?.eyebrow || "02 — Our Leadership"}</p>
-            <h2>{leadership?.title || "Pioneering Vision."}<br /><em>{leadership?.subtitle || "Responsible Execution."}</em></h2>
-          </div>
-          <p className="heading-note">{leadership?.lead || chairmanMessage.lead}</p>
-        </Reveal>
-
-        {/* 2 Leadership Cards */}
-        <div className="leadership-cards-grid">
-          {(leadership?.leaders || []).map((leader, idx) => (
-            <Reveal className="leadership-card" key={idx}>
-              <div className="leadership-image-wrap">
-                <img
-                  src={leader.image}
-                  alt={`${leader.name} - ${leader.role}`}
-                  loading="eager"
-                  className={idx === 0 ? 'leadership-image-founder' : 'leadership-image-manager'}
-                  onError={(e) => {
-                    if (idx === 0) e.target.src = '/leadership/smt-r-lakshmi-bai-full.png'
-                    else e.target.src = '/leadership/sri-ch-csv-raju-full.jpg'
-                  }}
-                />
-                <div className="leadership-image-scrim" />
-                <span className="leadership-badge">{leader.badge || leader.role}</span>
-              </div>
-              <div className="leadership-info">
-                <h3 className="leadership-name">{leader.name}</h3>
-                <p className="leadership-role">{leader.role}</p>
-                <p className="leadership-bio">{leader.bio}</p>
-              </div>
-            </Reveal>
+    {/* Extended Chairman's Message */}
+    <section className="about-message">
+      <div className="wrap message-grid">
+        <Reveal className="message-copy">
+          <p className="eyebrow light"><span /> {chairmanMessage.eyebrow}</p>
+          <h2>{chairmanMessage.title}<br /><em>{chairmanMessage.subtitle}</em></h2>
+          <p className="about-lead">{chairmanMessage.lead}</p>
+          {chairmanMessage.paragraphs.map((para, idx) => (
+            <p key={idx}>{para}</p>
           ))}
-        </div>
-
-        {/* Leadership Philosophy & Vision Narrative */}
-        <div className="about-leadership-narrative">
-          <Reveal className="about-narrative-copy">
-            {chairmanMessage.paragraphs.map((para, idx) => (
-              <p key={idx}>{para}</p>
-            ))}
-          </Reveal>
-          <Reveal className="about-narrative-quote">
-            <blockquote>{chairmanMessage.quote}</blockquote>
-            <div className="signature">
-              <strong>{chairmanMessage.author}</strong>
-              <small>{chairmanMessage.role}</small>
-            </div>
-          </Reveal>
-        </div>
+          <blockquote>{chairmanMessage.quote}</blockquote>
+          <div className="signature">
+            <strong>{chairmanMessage.author}</strong>
+            <small>{chairmanMessage.role}</small>
+          </div>
+        </Reveal>
+        <Reveal className="message-placeholder">
+          <img src='' alt="chairma's image to be added" />
+        </Reveal>
       </div>
     </section>
 
@@ -1493,7 +1390,7 @@ function AboutPage() {
             const num = cap.number || cap[0]
             const title = cap.title || cap[1]
             const text = cap.text || cap[2]
-            const image = cap.image || 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1000&q=85'
+            const image = cap.image || '/local/photo-5.jpg'
             const tag = cap.tag || 'Solar Capability'
             const icon = getCapabilityIcon(num)
             return (
@@ -1563,6 +1460,13 @@ function AboutPage() {
 
 function ServicesPage() {
   const { header, services, cta } = servicesAndSolutionsContent
+
+  useSEO({
+    title: 'Solar Services & Solutions – EPC, O&M, Subsidy & Net Metering',
+    description: 'N Solutions offers end-to-end solar services: commercial & industrial EPC, residential rooftop installation, PM Surya Ghar subsidy assistance, net metering, operation & maintenance across Andhra Pradesh and 9 states.',
+    keywords: 'solar EPC services, commercial solar installation, industrial solar, residential solar, PM Surya Ghar subsidy, net metering, solar O&M, solar solutions India',
+    canonical: 'https://nsolutions.in/services',
+  })
 
   return (
     <>
@@ -1742,25 +1646,18 @@ function ServicesPage() {
 
 
 function RouteShell() {
-  return (
-    <>
-      <SEO title="Page Not Found | N Solutions" description="The page you requested could not be found." path={window.location.pathname} noIndex />
-      <div className="route-shell">
-        <SiteHeader activePath={window.location.pathname} />
-        <main>
-          <p className="eyebrow"><span /> N Solutions Solar EPC</p>
-          <h1>Page not found</h1>
-          <p>The page may have moved or the address may be incorrect.</p>
-          <a className="button button-accent" href="/" onClick={(event) => { event.preventDefault(); navigate('/') }}>Back to Home <Arrow /></a>
-        </main>
-        <SiteFooter />
-      </div>
-    </>
-  )
+  return <div className="route-shell"><SiteHeader activePath={window.location.pathname} /><main><p className="eyebrow"><span /> N Solutions Solar EPC</p><h1>This page is being prepared.</h1><p>Return to the Home page while the next section is connected.</p><a className="button button-accent" href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>Back to Home <Arrow /></a></main></div>
 }
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname)
+
+  useSEO({
+    title: 'N Solutions – Solar EPC Company | Built on Experience, Driven by Solar',
+    description: 'N Solutions is an ISO 9001:2015 certified Solar EPC company with 16+ years delivering residential, commercial & industrial solar projects across 9 states in India. MNRE empanelled. PM Surya Ghar registered.',
+    keywords: 'N Solutions solar, solar EPC India, solar installation Vizianagaram, solar company Andhra Pradesh, residential solar, commercial solar EPC, PM Surya Ghar, APEPDCL empanelled',
+    canonical: 'https://nsolutions.in/',
+  })
 
   useEffect(() => {
     const onPopState = () => setCurrentPath(window.location.pathname)
@@ -1795,19 +1692,15 @@ function App() {
     }
   }, [])
 
-  if (currentPath === '/about') return <><AboutPage /><WhatsAppWidget /></>
-  if (currentPath === '/services') return <><ServicesPage /><WhatsAppWidget /></>
-  if (currentPath === '/projects') return <><ProjectsPage /><WhatsAppWidget /></>
-  if (currentPath === '/products') return <><ProductsPage /><WhatsAppWidget /></>
-  if (currentPath === '/media') return <><MediaPage /><WhatsAppWidget /></>
-  if (currentPath === '/careers') return <><CareersPage /><WhatsAppWidget /></>
-  if (currentPath === '/contact') return <><ContactPage /><WhatsAppWidget /></>
-  if (currentPath === '/privacy' || currentPath === '/privacy-policy') return <><PrivacyPolicyPage /><WhatsAppWidget /></>
-  if (currentPath === '/terms' || currentPath === '/terms-and-conditions') return <><TermsConditionsPage /><WhatsAppWidget /></>
-  if (currentPath === '/admin' || currentPath.startsWith('/admin')) {
-    return <><SEO title="Admin | N Solutions" description="N Solutions administrator portal." path="/admin" noIndex /><AdminPortal /></>
-  }
-  if (currentPath !== '/') return <><NotFoundPage /><WhatsAppWidget /></>
+  if (currentPath === '/about') return <AboutPage />
+  if (currentPath === '/services') return <ServicesPage />
+  if (currentPath === '/projects') return <ProjectsPage />
+  if (currentPath === '/products') return <ProductsPage />
+  if (currentPath === '/media') return <MediaPage />
+  if (currentPath === '/careers') return <CareersPage />
+  if (currentPath === '/contact') return <ContactPage />
+  if (currentPath === '/admin' || currentPath.startsWith('/admin')) return <AdminPortal />
+  if (currentPath !== '/') return <RouteShell />
 
 
   return (
@@ -1828,6 +1721,7 @@ function App() {
         <div className="hero-content wrap"><p className="eyebrow light"><span /> 16+ years of solar experience</p><h1>Built on <em>experience.</em><br />Driven by solar.</h1><p className="hero-copy">N Solutions delivers customized solar solutions through engineering, procurement, installation, commissioning, and ongoing support.</p><div className="hero-actions"><a className="button button-accent" href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact') }}>Talk to N Solutions <Arrow /></a><a className="button button-ghost" href="/projects" onClick={(e) => { e.preventDefault(); navigate('/projects') }}>Explore our projects <Arrow /></a></div></div>
         <div className="hero-note"><span>01</span><div><strong>Solar, engineered.</strong><small>Residential to MW-scale projects</small></div></div>
       </section>
+      
 
       <section className="proof" id="proof"><div className="wrap proof-grid"><p className="eyebrow"><span /> Experience that speaks for itself</p><div className="proof-intro"><h2>Built on experience.<br /><em>Driven by solar.</em></h2><p>N Solutions is an Engineering, Procurement and Construction solar company with 16+ years of experience across 9 states in India.</p><p>We combine engineering expertise, reliable solar technology, and professional project execution to help customers move towards cleaner energy, improved efficiency, and sustainable growth.</p></div><div className="proof-aside proof-aside-video"><video className="proof-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/proof-solar.mp4" type="video/mp4" /></video><span className="proof-aside-mark">16+</span><div><strong>Years of solar operations</strong><p>From MW-scale solar power projects to residential rooftop installations under PM Surya Ghar.</p></div><span className="proof-aside-line" /></div><div className="stats"><AnimatedMetric value={16} suffix="+" label="Years of experience" /><AnimatedMetric value={9} label="States across India" /><AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" /><AnimatedMetric value={500} suffix="+" label="PM Surya Ghar sites" /></div></div></section>
 
@@ -1862,52 +1756,26 @@ function App() {
         <a className="section-cta text-link" href="/services" onClick={(e) => { e.preventDefault(); navigate('/services') }}>Explore Our Services <Arrow /></a>
       </section>
 
-      <section className="home-leadership wrap" id="leadership">
-        <Reveal className="section-heading">
-          <div>
-            <p className="eyebrow"><span /> {homeContent.leadership?.eyebrow || "04 — Our Leadership"}</p>
-            <h2>{homeContent.leadership?.title || "Visionary leadership,"}<br /><em>{homeContent.leadership?.subtitle || "grounded in experience."}</em></h2>
+      <section className="chairman wrap">
+        <Reveal className="chairman-copy">
+          <p className="eyebrow"><span /> {homeContent.chairmanMessage.eyebrow}</p>
+          <h2>{homeContent.chairmanMessage.title}<br /><em>{homeContent.chairmanMessage.subtitle}</em></h2>
+          <blockquote>“{homeContent.chairmanMessage.quote}”</blockquote>
+          <div className="message-ready">
+            {(homeContent.chairmanMessage.paragraphs || homeContent.chairmanMessage.body || []).map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
           </div>
-          <p className="heading-note">
-            {homeContent.leadership?.description || "Guiding N Solutions with over 16 years of solar operations across 9 states, uniting ethical vision with engineering execution."}
-          </p>
+          <div className="signature">
+            <strong>{homeContent.chairmanMessage.author}</strong>
+            <small>{homeContent.chairmanMessage.role}</small>
+          </div>
         </Reveal>
-
-        <div className="leadership-cards-grid">
-          {(homeContent.leadership?.leaders || []).map((leader, idx) => (
-            <Reveal className="leadership-card" key={idx}>
-              <div className="leadership-image-wrap">
-                <img
-                  src={leader.image}
-                  alt={`${leader.name} - ${leader.role}`}
-                  loading="eager"
-                  className={idx === 0 ? 'leadership-image-founder' : 'leadership-image-manager'}
-                  onError={(e) => {
-                    if (idx === 0) e.target.src = '/leadership/smt-r-lakshmi-bai-full.png'
-                    else e.target.src = '/leadership/sri-ch-csv-raju-full.jpg'
-                  }}
-                />
-                <div className="leadership-image-scrim" />
-                <span className="leadership-badge">{leader.badge || leader.role}</span>
-              </div>
-              <div className="leadership-info">
-                <h3 className="leadership-name">{leader.name}</h3>
-                <p className="leadership-role">{leader.role}</p>
-                <p className="leadership-bio">{leader.bio}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal className="leadership-quote-strip">
-          <div className="quote-mark" aria-hidden="true">“</div>
-          <div className="quote-body">
-            <blockquote>{homeContent.chairmanMessage.quote}</blockquote>
-            <div className="signature">
-              <strong>{homeContent.chairmanMessage.author}</strong>
-              <small>{homeContent.chairmanMessage.role}</small>
-            </div>
-          </div>
+        <Reveal>
+          <img
+  src="/media/chairman.jpg"
+  alt="Chairman of N Solutions"
+/>
         </Reveal>
       </section>
 
@@ -2002,9 +1870,9 @@ function App() {
             <a className="button button-accent" href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact') }}>Talk to N Solutions <Arrow /></a>
         </div>
       </section>
-
+     
     </main>
-
+          
     <SiteFooter />
   </div>
   </>

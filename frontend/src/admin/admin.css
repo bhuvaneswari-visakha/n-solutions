@@ -957,6 +957,7 @@
 /* Topbar */
 .adm-topbar {
   height: 68px;
+  flex-shrink: 0;
   background: #ffffff;
   border-bottom: 1px solid var(--adm-border);
   display: flex;
@@ -1250,6 +1251,51 @@
   font-family: var(--adm-font-heading);
 }
 
+.adm-products-table {
+  min-width: 940px;
+  table-layout: fixed;
+}
+
+.adm-products-table th:nth-child(1) { width: 15%; }
+.adm-products-table th:nth-child(2) { width: 12%; }
+.adm-products-table th:nth-child(3) { width: 12%; }
+.adm-products-table th:nth-child(4) { width: 23%; }
+.adm-products-table th:nth-child(5) { width: 20%; }
+.adm-products-table th:nth-child(6) { width: 8%; }
+.adm-products-table th:nth-child(7) { width: 10%; }
+
+.adm-testimonials-table {
+  min-width: 760px;
+  table-layout: fixed;
+}
+
+.adm-testimonials-table th:nth-child(1) { width: 16%; }
+.adm-testimonials-table th:nth-child(2) { width: 20%; }
+.adm-testimonials-table th:nth-child(3) { width: 9%; }
+.adm-testimonials-table th:nth-child(4) { width: 35%; }
+.adm-testimonials-table th:nth-child(5) { width: 10%; }
+.adm-testimonials-table th:nth-child(6) { width: 10%; }
+
+.adm-table-truncate {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adm-type-badge.adm-table-truncate {
+  width: fit-content;
+}
+
+.adm-testimonial-quote {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .adm-status-tag {
   display: inline-flex;
   align-items: center;
@@ -1476,8 +1522,60 @@
     justify-content: center;
     padding: 18px 0;
   }
+  .adm-nav-brand-text {
+    display: none;
+  }
   .adm-content {
     padding: 20px 16px;
+  }
+}
+
+@media (max-width: 700px) {
+  .adm-topbar {
+    height: auto;
+    min-height: 68px;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  .adm-topbar-title {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .adm-topbar-title h2 {
+    font-size: 1rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .adm-topbar-actions {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .adm-website-btn {
+    padding: 7px 12px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 420px) {
+  .adm-website-btn {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .adm-topbar {
+    flex-wrap: wrap;
+  }
+
+  .adm-topbar-title {
+    flex-basis: 100%;
   }
 }
 

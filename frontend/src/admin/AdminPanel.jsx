@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { adminLogout } from './adminAuth'
 import { navigate } from '../components/Shared'
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete, apiRequest, apiUpload  } from '../utils/api'
+import { API_BASE_URL, apiGet, apiPost, apiPut, apiPatch, apiDelete, apiRequest, apiUpload, resolveMediaUrl } from '../utils/api'
 import {
   FiGrid,
   FiTrendingUp,
@@ -38,6 +38,25 @@ import {
 import { FaSun } from 'react-icons/fa'
 import './admin.css'
 
+function SelectedFilePreview({ file, video = false }) {
+  const [previewUrl, setPreviewUrl] = useState('')
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl('')
+      return undefined
+    }
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
+
+  if (!previewUrl) return null
+  const style = { display: 'block', maxWidth: '100%', maxHeight: '180px', marginTop: '8px', borderRadius: '8px' }
+  return video
+    ? <video src={previewUrl} controls style={style} />
+    : <img src={previewUrl} alt={`Preview of ${file.name}`} style={style} />
+}
 
 export default function AdminPanel({ adminUser, onLogout }) {
   
@@ -138,6 +157,7 @@ const [mediaTab, setMediaTab] = useState('all');
   const [testimonialFilter, setTestimonialFilter] = useState('all')
 
   // Admin Profile state
+  const [profileCurrentPassword, setProfileCurrentPassword] = useState('')
   const [profilePassword, setProfilePassword] = useState('')
   const [profileConfirmPassword, setProfileConfirmPassword] = useState('')
   const [submittingForms, setSubmittingForms] = useState({})
@@ -1342,9 +1362,14 @@ const handleCreateMedia = async (e) => {
     showToast(`Downloading ${candidateName}'s resume...`, 'info')
 
     try {
-      // 1. Attempt blob fetch for direct browser file save with candidate filename
-      const response = await fetch(app.resumeUrl)
-      if (!response.ok) throw new Error('Fetch failed')
+      const token = localStorage.getItem('nsolutions_admin_token')
+      const response = await fetch(`${API_BASE_URL}/job-applications/${app.id}/resume/download`, {
+        headers: { Authorization: `Bearer ${token || ''}` }
+      })
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}))
+        throw new Error(errorBody.message || 'Resume download failed.')
+      }
       const blob = await response.blob()
       const blobUrl = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -1353,35 +1378,16 @@ const handleCreateMedia = async (e) => {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(blobUrl)
+      window.setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000)
       showToast(`Downloaded ${filename} successfully!`, 'success')
-    } catch (fetchErr) {
-      // 2. Fallback: Use Cloudinary fl_attachment or backend download endpoint
-      let downloadUrl = app.resumeUrl
-      if (downloadUrl.includes('cloudinary.com') && downloadUrl.includes('/upload/')) {
-        downloadUrl = downloadUrl.replace(
-          '/upload/',
-          `/upload/fl_attachment:${encodeURIComponent(safeName + '_Resume')}/`
-        )
-      } else if (app.id) {
-        const token = localStorage.getItem('nsolutions_admin_token')
-        const apiBase = import.meta.env.VITE_API_BASE_URL || '/api'
-        downloadUrl = `${apiBase}/job-applications/${app.id}/resume/download?token=${encodeURIComponent(token || '')}`
-      }
-      const link = document.createElement('a')
-      link.href = downloadUrl
-      link.target = '_blank'
-      link.rel = 'noopener noreferrer'
-      link.download = filename
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      showToast(`Resume download started for ${candidateName}!`, 'success')
+    } catch (error) {
+      console.error('Resume download failed:', error)
+      showToast(error.message || 'Resume download failed.', 'error')
     }
   }
 
   // Resume Preview Handler
-  const handleViewResume = (app, e) => {
+  const handleViewResume = async (app, e) => {
     if (e) {
       e.stopPropagation()
       e.preventDefault()
@@ -1390,7 +1396,28 @@ const handleCreateMedia = async (e) => {
       showToast('No resume file attached to this application.', 'error')
       return
     }
-    window.open(app.resumeUrl, '_blank', 'noopener,noreferrer')
+    const viewer = window.open('about:blank', '_blank')
+    if (!viewer) {
+      showToast('Allow pop-ups to view the resume.', 'error')
+      return
+    }
+    viewer.opener = null
+    try {
+      const token = localStorage.getItem('nsolutions_admin_token')
+      const response = await fetch(`${API_BASE_URL}/job-applications/${app.id}/resume/download?inline=1`, {
+        headers: { Authorization: `Bearer ${token || ''}` }
+      })
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}))
+        throw new Error(errorBody.message || 'Resume preview failed.')
+      }
+      const previewUrl = window.URL.createObjectURL(await response.blob())
+      viewer.location.replace(previewUrl)
+      window.setTimeout(() => window.URL.revokeObjectURL(previewUrl), 60_000)
+    } catch (error) {
+      viewer.close()
+      showToast(error.message || 'Resume preview failed.', 'error')
+    }
   }
 
 const handleDeleteMedia = async (id) => {
@@ -1453,7 +1480,7 @@ const loadMedia = async () => {
             title: item.title || '',
             description: item.description || '',
             location: item.location || '',
-            imageUrl: item.image?.url || '',
+            imageUrl: resolveMediaUrl(item.image?.url || ''),
             date: item.createdAt || '',
             category: item.category || ''
           }))
@@ -1466,8 +1493,8 @@ const loadMedia = async () => {
             type: 'video',
             title: item.title || '',
             description: item.description || '',
-            imageUrl: item.thumbnail?.url || '',
-            videoUrl: item.videoUrl || '',
+            imageUrl: resolveMediaUrl(item.thumbnail?.url || ''),
+            videoUrl: resolveMediaUrl(item.videoUrl || ''),
             date: item.createdAt || '',
             category: item.category || ''
           }))
@@ -1481,7 +1508,7 @@ const loadMedia = async () => {
             title: item.title || '',
             description: item.summary || '',
             source: item.source || '',
-            imageUrl: item.image?.url || '',
+            imageUrl: resolveMediaUrl(item.image?.url || ''),
             date: item.publicationDate || item.createdAt || '',
             category: item.source || 'Press & News',
             articleUrl: item.articleUrl || ''
@@ -1499,7 +1526,7 @@ const loadMedia = async () => {
             location: item.location || '',
             company: item.company || '',
             description: item.quote || item.description || '',
-            imageUrl: item.image?.url || item.imageUrl || '',
+            imageUrl: resolveMediaUrl(item.image?.url || item.imageUrl || ''),
             date: item.createdAt || '',
             category: item.role || 'Client'
           }))
@@ -1597,18 +1624,37 @@ const loadMedia = async () => {
   }
 }
   // Admin Profile handler
-  const handleUpdateProfilePassword = (e) => {
-    e.preventDefault()
-    if (!profilePassword) return
+  const handleUpdateProfilePassword = async () => {
+    if (!profileCurrentPassword) {
+      showToast('Enter your current password')
+      return
+    }
     if (profilePassword !== profileConfirmPassword) {
       showToast('Passwords do not match')
       return
     }
-    if (profilePassword.length < 6) {
-      showToast('Password must be at least 6 characters')
+    if (
+      profilePassword.length < 8
+      || profilePassword.length > 72
+      || !/[A-Za-z]/.test(profilePassword)
+      || !/\d/.test(profilePassword)
+    ) {
+      showToast('New password must be 8-72 characters and include at least one letter and one number.')
       return
     }
-    showToast('Administrator password updated successfully')
+
+    const result = await apiPatch('/auth/profile/password', {
+      currentPassword: profileCurrentPassword,
+      newPassword: profilePassword
+    })
+
+    if (!result.success) {
+      showToast(result.message || 'Failed to update administrator password')
+      return
+    }
+
+    showToast(result.raw?.message || 'Administrator password updated successfully')
+    setProfileCurrentPassword('')
     setProfilePassword('')
     setProfileConfirmPassword('')
   }
@@ -1750,7 +1796,7 @@ const loadMedia = async () => {
           <a
             href="/"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
             className="adm-nav-item adm-sidebar-action"
           >
             <span className="adm-nav-icon"><FiArrowUpRight /></span>
@@ -1790,7 +1836,7 @@ const loadMedia = async () => {
             <a
               href="/"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noreferrer"
               className="adm-website-btn"
               title="Open public website in new tab"
             >
@@ -2270,7 +2316,7 @@ const loadMedia = async () => {
     </div>
 
     <div className="adm-table-wrap">
-      <table className="adm-table">
+      <table className="adm-table adm-products-table">
         <thead>
           <tr>
             <th>Product</th>
@@ -2315,49 +2361,49 @@ const loadMedia = async () => {
 
                 {/* Product */}
                 <td>
-                  <strong>{prod.name}</strong>
+                  <strong className="adm-table-truncate" title={prod.name}>{prod.name}</strong>
                 </td>
 
                 {/* Category */}
                 <td>
-                  <span className="adm-type-badge">
+                  <span className="adm-type-badge adm-table-truncate" title={prod.category}>
                     {prod.category}
                   </span>
                 </td>
 
                 {/* Brand */}
                 <td>
-                  {prod.brand || '—'}
+                  <span className="adm-table-truncate" title={prod.brand || '—'}>
+                    {prod.brand || '—'}
+                  </span>
                 </td>
 
                 {/* Description */}
-                <td
-                  style={{
-                    maxWidth: '260px',
-                    whiteSpace: 'normal',
-                    lineHeight: '1.4'
-                  }}
-                >
-                  {prod.description || '—'}
+                <td>
+                  <span className="adm-table-truncate" title={prod.description || '—'}>
+                    {prod.description || '—'}
+                  </span>
                 </td>
 
                 {/* Applications */}
-                <td
-                  style={{
-                    maxWidth: '220px',
-                    whiteSpace: 'normal'
-                  }}
-                >
-                  {Array.isArray(prod.applications)
+                <td>
+                  <span
+                    className="adm-table-truncate"
+                    title={Array.isArray(prod.applications)
+                      ? prod.applications.join(', ')
+                      : prod.applications || '—'}
+                  >
+                    {Array.isArray(prod.applications)
                     ? prod.applications.join(', ')
                     : prod.applications || '—'}
+                  </span>
                 </td>
 
                 {/* Image */}
                 <td>
                   {prod.image?.url ? (
                     <img
-                      src={prod.image.url}
+                      src={resolveMediaUrl(prod.image.url)}
                       alt={prod.name}
                       style={{
                         width: '55px',
@@ -2604,6 +2650,7 @@ const loadMedia = async () => {
                 </div>
 
                 <div className="adm-app-toolbar">
+                  
                   <div className="adm-search-box">
                     <FiSearch size={14} className="adm-search-icon" />
                     <input
@@ -3409,13 +3456,13 @@ const loadMedia = async () => {
               </div>
 
               <div className="adm-table-wrap">
-                <table className="adm-table">
+                <table className="adm-table adm-testimonials-table">
                   <thead>
                     <tr>
                       <th>Client Name</th>
                       <th>Company / Location</th>
                       <th>Rating</th>
-                      <th style={{ width: '40%' }}>Review Quote</th>
+                      <th>Review Quote</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
@@ -3425,18 +3472,25 @@ const loadMedia = async () => {
                       .filter((t) => testimonialFilter === 'all' || t.status === testimonialFilter)
                       .map((t) => (
                         <tr key={t.id}>
-                          <td style={{ fontWeight: 600 }}>{t.clientName}</td>
+                          <td style={{ fontWeight: 600 }}>
+                            <span className="adm-table-truncate" title={t.clientName}>{t.clientName}</span>
+                          </td>
                           <td>
-                            <div>{t.company}</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--adm-text-dim)' }}>{t.location}</div>
+                            <div className="adm-table-truncate" title={t.company}>{t.company}</div>
+                            <div className="adm-table-truncate" style={{ fontSize: '0.75rem', color: 'var(--adm-text-dim)' }} title={t.location}>{t.location}</div>
                           </td>
                           <td>
                             <div style={{ color: '#f59e0b', fontSize: '0.88rem', letterSpacing: '2px' }}>
                               {'★'.repeat(t.rating || 5)}
                             </div>
                           </td>
-                          <td style={{ fontSize: '0.85rem', color: 'var(--adm-text-muted)', fontStyle: 'italic' }}>
-                            "{t.comment}"
+                          <td>
+                            <span
+                              className="adm-table-truncate adm-testimonial-quote"
+                              title={t.comment}
+                            >
+                              "{t.comment}"
+                            </span>
                           </td>
                           <td>
                             <select
@@ -3512,11 +3566,29 @@ const loadMedia = async () => {
                 </div>
                 <form onSubmit={(e) => handleAdminFormSubmit('profile', handleUpdateProfilePassword, e)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div className="adm-form-group" style={{ margin: 0 }}>
-                    <label>New Password</label>
+                    <label htmlFor="profile-current-password">Current Password</label>
                     <input
+                      id="profile-current-password"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      placeholder="Enter current password"
+                      value={profileCurrentPassword}
+                      onChange={(e) => setProfileCurrentPassword(e.target.value)}
+                      className="adm-search-input"
+                      style={{ width: '100%' }}
+                    />
+                  </div>
+                  <div className="adm-form-group" style={{ margin: 0 }}>
+                    <label htmlFor="profile-new-password">New Password</label>
+                    <input
+                      id="profile-new-password"
                       type="password"
                       required
-                      placeholder="Minimum 6 characters"
+                      minLength={8}
+                      maxLength={72}
+                      autoComplete="new-password"
+                      placeholder="8-72 characters, include a letter and number"
                       value={profilePassword}
                       onChange={(e) => setProfilePassword(e.target.value)}
                       className="adm-search-input"
@@ -3524,11 +3596,13 @@ const loadMedia = async () => {
                     />
                   </div>
                   <div className="adm-form-group" style={{ margin: 0 }}>
-                    <label>Confirm New Password</label>
+                    <label htmlFor="profile-confirm-password">Confirm New Password</label>
                     <input
+                      id="profile-confirm-password"
                       type="password"
                       required
                       placeholder="Re-enter password"
+                      autoComplete="new-password"
                       value={profileConfirmPassword}
                       onChange={(e) => setProfileConfirmPassword(e.target.value)}
                       className="adm-search-input"
@@ -3908,7 +3982,7 @@ const loadMedia = async () => {
                   <input
                     type="file"
                     required={!newProject.images.some((item) => item.file) && index === 0}
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
                     className="adm-search-input"
                     style={{ width: '100%' }}
                     onChange={(e) => {
@@ -3934,6 +4008,7 @@ const loadMedia = async () => {
                   >
                     <FiTrash2 />
                   </button>
+                  <SelectedFilePreview file={image.file} />
                 </div>
               ))}
               <button
@@ -4154,7 +4229,7 @@ const loadMedia = async () => {
             <input
               type="file"
               required
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               className="adm-search-input"
               style={{ width: '100%' }}
               onChange={(e) =>
@@ -4165,6 +4240,7 @@ const loadMedia = async () => {
               }
             />
 
+            <SelectedFilePreview file={newProduct.image} />
             {newProduct.image && (
               <div
                 style={{
@@ -4279,7 +4355,7 @@ const loadMedia = async () => {
                 <input
                   type="file"
                   required
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
                   onChange={(e) =>
                     setNewMedia({
                       ...newMedia,
@@ -4287,6 +4363,7 @@ const loadMedia = async () => {
                     })
                   }
                 />
+                <SelectedFilePreview file={newMedia.photo} />
                 {newMedia.photo && (
                   <small style={{ color: 'var(--adm-text-muted)' }}>
                     Selected: {newMedia.photo.name}
@@ -4345,7 +4422,7 @@ const loadMedia = async () => {
                 <input
                   type="file"
                   required
-                  accept="video/*"
+                  accept="video/mp4,video/quicktime,video/webm"
                   onChange={(e) =>
                     setNewMedia({
                       ...newMedia,
@@ -4353,6 +4430,7 @@ const loadMedia = async () => {
                     })
                   }
                 />
+                <SelectedFilePreview file={newMedia.video} video />
                 {newMedia.video && (
                   <small style={{ color: 'var(--adm-text-muted)' }}>
                     Selected: {newMedia.video.name}
@@ -4402,7 +4480,7 @@ const loadMedia = async () => {
                 <input
                   type="file"
                   required
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
                   onChange={(e) =>
                     setNewMedia({
                       ...newMedia,
@@ -4410,6 +4488,7 @@ const loadMedia = async () => {
                     })
                   }
                 />
+                <SelectedFilePreview file={newMedia.photo} />
                 {newMedia.photo && (
                   <small style={{ color: 'var(--adm-text-muted)' }}>
                     Selected: {newMedia.photo.name}

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal } from '../components/Shared'
 import { apiPost } from '../utils/api'
-
+import { useSEO } from '../utils/useSEO'
 import {
   FiPhone,
   FiSmartphone,
@@ -76,6 +76,13 @@ export default function ContactPage() {
   const [submitError, setSubmitError] = useState('')
   const [activeFaq, setActiveFaq] = useState(null)
   const submittingRef = useRef(false)
+
+  useSEO({
+    title: 'Contact Us & Project Consultation – Get a Free Solar Quote',
+    description: 'Contact N Solutions for a free solar feasibility study or project consultation. We serve commercial, industrial and residential solar customers across Andhra Pradesh and 9 states in India.',
+    keywords: 'contact N Solutions, solar quote India, solar feasibility study, solar consultation, solar company contact, solar EPC enquiry, N Solutions phone',
+    canonical: 'https://nsolutions.in/contact',
+  })
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -173,10 +180,10 @@ export default function ContactPage() {
             <div className="wrap contact-quick-items">
               <div>
                 <strong>Vizianagaram HQ</strong>
-                <small>#27-23-27, MIG-214, APHB Colony, Babametta</small>
+                <small>MIG-214, APHB Colony, Babametta</small>
               </div>
               <div>
-                <strong>9492731212 | 9494703452</strong>
+                <strong>+91 7993836424</strong>
                 <small>Direct Solar Engineering Desk</small>
               </div>
               <div>
@@ -214,17 +221,17 @@ export default function ContactPage() {
                     <h3>N Solutions — Vizianagaram</h3>
                   </div>
                   <p>
-                    #27-23-27, MIG-214, APHB Colony,<br />
-                    Babametta, Vizianagaram – 535002,<br />
-                    Andhra Pradesh, India.
+                    D.No. 27-23-27, MIG – 214, A.P.H.B. Colony, Phase II,<br />
+                    Babametta, Vizianagaram, Andhra Pradesh – 535002.
                   </p>
                   <p style={{ marginTop: '2px', fontSize: '13px', color: '#4a5c68' }}>
-                    <strong>Managing Partner:</strong> Sri Ch. C. S. V. Raju
+                    <strong>Managing Partner:</strong> Mr. Ch. C. S. V. Raju
                   </p>
                   <div className="hub-links">
-                    <span><FiPhone size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Phone:</strong> 9492731212 &nbsp;/&nbsp; 9494703452</span>
+                    <span><FiPhone size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Mobile:</strong> +91 79938 36424 &nbsp;/&nbsp; +91 94927 31212</span>
+                    <span><FiSmartphone size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Project Hotline:</strong> +91 94947 03452</span>
                     <span><FiMail size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Email:</strong> info@nsol.in &nbsp;/&nbsp; nsolutions@live.com</span>
-                    <span><FiGlobe size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Web:</strong> www.nsol.in &nbsp;|&nbsp; www.nsolar.in &nbsp;|&nbsp; www.nsolutions.in</span>
+                    <span><FiGlobe size={13} style={{ marginRight: 5, verticalAlign: 'middle', color: 'var(--brand-primary-dark, #0875b6)' }} /><strong>Website:</strong> www.nsol.in</span>
                   </div>
                 </div>
 
