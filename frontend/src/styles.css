@@ -15100,6 +15100,13 @@ button:focus-visible {
   }
 }
 
+@media (min-width: 701px) and (max-width: 1024px) {
+  .leadership-image-wrap img.leadership-image-manager {
+    object-fit: contain;
+    object-position: center center !important;
+  }
+}
+
 /* ==========================================================================
    PRIVACY POLICY DOCUMENT PAGE (CLEAN DOCUMENT STYLE)
    ========================================================================== */
