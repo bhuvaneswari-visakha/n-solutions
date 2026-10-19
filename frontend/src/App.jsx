@@ -2106,138 +2106,95 @@ function App() {
       </section>
 
       {/* HERO STATS STRIP */}
-      <section className="hero-stats-banner" id="project-stats" aria-label="Company Statistics">
-        <div className="wrap">
-          <div className="hero-stats-grid">
-            <AnimatedMetric value={16} suffix="+" label="Years of experience" delay={80} />
-            <AnimatedMetric value={9} label="States across India" delay={180} />
-            <AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" delay={280} />
-            <AnimatedMetric value={1270} suffix="+" label="Total Installations Delivered" delay={380} />
-          </div>
-        </div>
-      </section>
-
       {/* SECTOR MILESTONES SHOWCASE — SPLIT-SCREEN DESIGN */}
-      <section className="home-milestones-highlight split-screen-section" id="sector-milestones" aria-labelledby="sector-milestones-heading">
-        <div className="wrap">
-          <Reveal className="section-heading milestones-heading-row">
-            <div className="milestones-heading-col">
-              <p className="eyebrow"><span /> {homeContent.whoWeAre.eyebrow}</p>
-              <h2 id="sector-milestones-heading">{homeContent.whoWeAre.title}<br /><em>{homeContent.whoWeAre.subtitle}</em></h2>
-            </div>
+       <section className="about-milestones-showcase" id="project-scale">
+      <div className="wrap">
+        <Reveal className="section-heading">
+          <div>
+            <p className="eyebrow light"><span />— Proven Execution Scale</p>
+            <h2>Proven delivery.<br /><em>Tangible impact.</em></h2>
+          </div>
+          <p className="heading-note">
+            Over 1,270+ turnkey solar installations engineered and commissioned across residential clusters, public sector infrastructure, commercial hubs, and industrial plants.
+          </p>
+        </Reveal>
 
-            <div className="milestones-overview-card">
-              <div className="overview-pill-row">
-                <span className="overview-pill">
-                  <span className="overview-pill-dot" />
-                  Verified Sector Delivery
-                </span>
-                <span className="overview-sub-pill">Pan-India Operations</span>
-              </div>
-              <p className="overview-note-text">
-                Over 16+ years of disciplined solar EPC operations across 9 states in India — verified delivery across residential, government, commercial, and industrial sectors.
-              </p>
-              <div className="overview-meta-chips">
-                <span className="meta-chip"><strong>16+</strong> Yrs Track Record</span>
-                <span className="meta-chip"><strong>9</strong> States Active</span>
-                <span className="meta-chip"><strong>5</strong> Delivery Domains</span>
-              </div>
+        <div className="milestones-cards-grid">
+          <Reveal className="milestone-feature-card milestone-card-pm">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiSun /></span>
+              <span className="milestone-sector-tag">Rooftop Solar</span>
             </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={750} suffix="+" label="Sites Completed" delay={120} />
+            </div>
+            <h3>PM Surya Ghar</h3>
+            <p>Subsidized residential solar installations delivering clean energy across Andhra Pradesh and nationwide.</p>
           </Reveal>
 
-          {/* SPLIT-SCREEN LAYOUT: Large Featured on Left, 4 Smaller on Right */}
-          <div className="split-stats-layout">
-            
-            {/* LEFT: LARGE FEATURED STATISTIC (PM SURYA GHAR) */}
-            <div className="split-featured-col">
-              <div className="split-featured-card">
-                {/* Decorative Solar Glow in Card */}
-                <div className="featured-card-ambient" aria-hidden="true" />
-                
-                <div className="featured-card-header">
-                  <div className="featured-icon-badge">
-                    <FiSun className="featured-sun-icon" />
-                    <span className="featured-badge-text">{featuredStatistic.category}</span>
-                  </div>
-                  <span className="featured-pill-live">
-                    <span className="featured-pill-pulse" /> Active Deployment
-                  </span>
-                </div>
-
-                <div className="featured-metric-wrap">
-                  <div className="featured-metric-number">
-                    <AnimatedMetric
-                      value={featuredStatistic.value}
-                      suffix={featuredStatistic.suffix}
-                      delay={featuredStatistic.delay}
-                    />
-                  </div>
-                  <span className="featured-metric-label">Sites Completed &amp; Connected</span>
-                </div>
-
-                <div className="featured-card-body">
-                  <h3 className="featured-card-title">{featuredStatistic.title}</h3>
-                  <p className="featured-card-desc">{featuredStatistic.description}</p>
-
-                  <div className="featured-highlights-list">
-                    {featuredStatistic.highlights.map((highlight, hIdx) => (
-                      <div className="featured-highlight-item" key={hIdx}>
-                        <FiCheck className="highlight-check-icon" />
-                        <span>{highlight}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="featured-card-footer">
-                  <a
-                    href={featuredStatistic.path}
-                    className="featured-cta-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      navigate(featuredStatistic.path)
-                    }}
-                  >
-                    <span>Explore PM Surya Ghar Solutions</span>
-                    <Arrow />
-                  </a>
-                </div>
-              </div>
+          <Reveal className="milestone-feature-card milestone-card-residential">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiHome /></span>
+              <span className="milestone-sector-tag">Residential</span>
             </div>
-
-            {/* RIGHT: FOUR SMALLER STATISTICS (2x2 Grid) */}
-            <div className="split-secondary-col">
-              <div className="split-secondary-grid">
-                {secondaryStatistics.map((stat, idx) => (
-                  <div className={`secondary-stat-card card-${stat.colorClass}`} key={idx}>
-                    <div className="secondary-card-top">
-                      <div className={`secondary-icon-pod ${stat.colorClass}`}>
-                        {stat.icon}
-                      </div>
-                      <span className={`secondary-category-pill ${stat.colorClass}`}>
-                        {stat.category}
-                      </span>
-                    </div>
-
-                    <div className="secondary-metric-wrap">
-                      <AnimatedMetric value={stat.value} suffix={stat.suffix} delay={stat.delay} />
-                    </div>
-
-                    <div className="secondary-card-content">
-                      <h4 className="secondary-card-title">{stat.title}</h4>
-                      <p className="secondary-card-desc">{stat.subtitle}</p>
-                    </div>
-
-                    <div className={`secondary-card-bottom-line ${stat.colorClass}`} />
-                  </div>
-                ))}
-              </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={140} suffix="+" label="Rooftops Commissioned" delay={220} />
             </div>
+            <h3>Residential Projects</h3>
+            <p>Custom rooftop systems engineered for independent homes, luxury villas, and multi-family residential clusters.</p>
+          </Reveal>
 
-          </div>
+          <Reveal className="milestone-feature-card milestone-card-govt">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiShield /></span>
+              <span className="milestone-sector-tag">Government</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={120} suffix="+" label="Institutional Sites" delay={320} />
+            </div>
+            <h3>Government Projects</h3>
+            <p>High-standard solar installations for civic administrative buildings, educational institutions, and public utilities.</p>
+          </Reveal>
+
+          <Reveal className="milestone-feature-card milestone-card-commercial">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiBriefcase /></span>
+              <span className="milestone-sector-tag">Commercial</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={200} suffix="+" label="Enterprises Powered" delay={420} />
+            </div>
+            <h3>Commercial Projects</h3>
+            <p>Turnkey grid-connected solar installations for hospitals, IT offices, colleges, hotels, and retail complexes.</p>
+          </Reveal>
+
+          <Reveal className="milestone-feature-card milestone-card-industrial">
+            <div className="milestone-card-top">
+              <span className="milestone-icon-badge"><FiZap /></span>
+              <span className="milestone-sector-tag">High-Voltage</span>
+            </div>
+            <div className="milestone-card-metric">
+              <AnimatedMetric value={60} suffix="+" label="MW-Scale & Plants" delay={520} />
+            </div>
+            <h3>Industrial Projects</h3>
+            <p>Multi-megawatt and heavy rooftop solar plants engineered for factories, manufacturing units, and warehouses.</p>
+          </Reveal>
         </div>
-      </section>
 
+        <Reveal className="milestones-summary-strip">
+          <div className="summary-stat">
+            <AnimatedMetric value={1270} suffix="+" label="Total Installations Across 9 States" delay={250} />
+          </div>
+          <div className="summary-divider" aria-hidden="true" />
+          <div className="summary-text">
+            <p>Engineering excellence grounded in 16+ years of specialized solar EPC operations throughout India.</p>
+          </div>
+          <a className="button button-accent" href="/projects" onClick={(e) => { e.preventDefault(); navigate('/projects') }}>
+            Explore Our Projects <Arrow />
+          </a>
+        </Reveal>
+      </div>
+    </section>
       <section className="proof" id="proof"><div className="wrap proof-grid"><p className="eyebrow"><span /> Experience that speaks for itself</p><div className="proof-intro"><h2>Built on experience.<br /><em>Driven by solar.</em></h2><p>N Solutions is an Engineering, Procurement and Construction solar company with 16+ years of experience across 9 states in India.</p><p>We combine engineering expertise, reliable solar technology, and professional project execution to help customers move towards cleaner energy, improved efficiency, and sustainable growth.</p></div><div className="proof-aside proof-aside-video"><video className="proof-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/proof-solar.mp4" type="video/mp4" /></video><span className="proof-aside-mark">16+</span><div><strong>Years of solar operations</strong><p>From MW-scale solar power projects to residential rooftop installations under PM Surya Ghar.</p></div><span className="proof-aside-line" /></div></div></section>
 
       <section className="who wrap" id="who-we-are">
