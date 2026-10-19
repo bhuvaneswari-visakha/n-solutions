@@ -1307,7 +1307,7 @@ function AboutPage() {
         preload="auto"
         aria-hidden="true"
       >
-        <source src="/media/solar-hero.mp4" type="video/mp4" />
+        <source src="/media/services-hero.mp4" type="video/mp4" />
       </video>
       <div className="about-hero-shade" />
       <div className="wrap about-hero-content">
@@ -1751,7 +1751,7 @@ function ServicesPage() {
       <main>
         <section className="services-hero">
           <video className="hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
-            <source src="/media/services-hero.mp4" type="video/mp4" />
+            <source src="/media/solar-hero.mp4" type="video/mp4" />
           </video>
           <div className="services-hero-shade" />
 
