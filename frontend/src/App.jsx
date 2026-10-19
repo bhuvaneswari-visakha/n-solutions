@@ -2106,12 +2106,22 @@ function App() {
       </section>
 
       {/* HERO STATS STRIP */}
-      {/* SECTOR MILESTONES SHOWCASE — SPLIT-SCREEN DESIGN */}
-       <section className="about-milestones-showcase" id="project-scale">
+      <section className="hero-stats-banner" id="project-stats" aria-label="Company Statistics">
+        <div className="wrap">
+          <div className="hero-stats-grid">
+            <AnimatedMetric value={16} suffix="+" label="Years of experience" delay={80} />
+            <AnimatedMetric value={9} suffix="+" label="States across India" delay={180} />
+            <AnimatedMetric value={360} suffix="+" label="End-to-end solar EPC" delay={280} />
+            <AnimatedMetric value={1270} suffix="+" label="Total Installations Delivered" delay={380} />
+          </div>
+        </div>
+      </section>
+
+    <section className="about-milestones-showcase" id="project-scale">
       <div className="wrap">
         <Reveal className="section-heading">
           <div>
-            <p className="eyebrow light"><span />— Proven Execution Scale</p>
+            <p className="eyebrow light"><span /> 02 — Proven Execution Scale</p>
             <h2>Proven delivery.<br /><em>Tangible impact.</em></h2>
           </div>
           <p className="heading-note">
