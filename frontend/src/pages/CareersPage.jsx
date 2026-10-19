@@ -345,9 +345,6 @@ export default function CareersPage() {
                 We are continuously searching for talented solar engineers, electrical project managers, AutoCAD draftsmen, and certified site supervisors across India.
               </p>
             </div>
-            <div className="spontaneous-actions">
-              <span>Or email your resume to <strong>careers@nsolutions.in</strong></span>
-            </div>
           </div>
         </section>
 
@@ -368,9 +365,9 @@ export default function CareersPage() {
                 <span className="badge-tag">{selectedJob.deptLabel}</span>
                 <h2>{selectedJob.title}</h2>
                 <div className="job-modal-pills">
-                  <span>📍 {selectedJob.location}</span>
-                  <span>⏱ {selectedJob.experience}</span>
-                  <span>📋 {selectedJob.type}</span>
+                  <span> {selectedJob.location}</span>
+                  <span> {selectedJob.experience}</span>
+                  <span> {selectedJob.type}</span>
                 </div>
               </div>
 
