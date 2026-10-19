@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import SEO from "../components/SEO/SEO";
 import { SiteHeader, SiteFooter, Arrow, Reveal, navigate } from '../components/Shared'
 import { apiGet, apiPost } from '../utils/api'
@@ -51,6 +52,20 @@ export default function CareersPage() {
   const [selectedJob, setSelectedJob] = useState(null)
   const [isApplying, setIsApplying] = useState(false)
   const [applicationSuccess, setApplicationSuccess] = useState(false)
+
+  useEffect(() => {
+    if (!selectedJob) return
+
+    const previousBodyOverflow = document.body.style.overflow
+    const previousHtmlOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousHtmlOverflow
+    }
+  }, [selectedJob])
   
   // Application Form State
   const [applicantName, setApplicantName] = useState('')
@@ -133,7 +148,7 @@ export default function CareersPage() {
 
   const handleApplyClick = (job) => {
     setSelectedJob(job)
-    setIsApplying(true)
+    setIsApplying(false)
     setApplicationSuccess(false)
   }
 
@@ -338,6 +353,7 @@ export default function CareersPage() {
 
         {/* JOB DETAILS MODAL */}
         {selectedJob && !isApplying && (
+          createPortal(
           <div className="job-modal-backdrop" onClick={() => setSelectedJob(null)}>
             <div className="job-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -405,10 +421,12 @@ export default function CareersPage() {
               </div>
             </div>
           </div>
+          , document.body)
         )}
 
         {/* APPLICATION FORM MODAL */}
         {isApplying && (
+          createPortal(
           <div className="job-modal-backdrop" onClick={() => setIsApplying(false)}>
             <div className="job-modal-card apply-modal-card" onClick={(e) => e.stopPropagation()}>
               <button 
@@ -603,6 +621,7 @@ export default function CareersPage() {
               )}
             </div>
           </div>
+          , document.body)
         )}
       </main>
 
