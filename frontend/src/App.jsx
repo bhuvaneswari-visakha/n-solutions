@@ -1351,7 +1351,7 @@ function AboutPage() {
         preload="auto"
         aria-hidden="true"
       >
-        <source src="media\services-hero.mp4" type="video/mp4" />
+        <source src="/media/services-hero.mp4" type="video/mp4" />
       </video>
       <div className="about-hero-shade" />
       <div className="wrap about-hero-content">
@@ -1403,7 +1403,7 @@ function AboutPage() {
           <div className="about-overview-right">
             <Reveal className="about-overview-visual">
               <img
-                src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=85"
+                src="local/photo-1.jpg"
                 alt="N Solutions solar energy infrastructure"
                 className="about-overview-image"
                 loading="eager"
