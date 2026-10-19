@@ -1,5 +1,17 @@
 export const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+const isStrongPassword = (password) => (
+  typeof password === 'string'
+  && password.length >= 12
+  && password.length <= 72
+  && /[a-z]/.test(password)
+  && /[A-Z]/.test(password)
+  && /\d/.test(password)
+  && /[^A-Za-z0-9\s]/.test(password)
+);
+
+const strongPasswordMessage = 'Password must be 12-72 characters and include an uppercase letter, a lowercase letter, a number, and a special character.';
+
 export const validateRegistrationInput = ({ name, email, password }) => {
   const errors = {};
 
@@ -9,15 +21,7 @@ export const validateRegistrationInput = ({ name, email, password }) => {
   if (typeof email !== 'string' || !isValidEmail(email.trim())) {
     errors.email = 'A valid email is required.';
   }
-  if (
-    typeof password !== 'string'
-    || password.length < 8
-    || password.length > 72
-    || !/[A-Za-z]/.test(password)
-    || !/\d/.test(password)
-  ) {
-    errors.password = 'Password must be 8-72 characters and include at least one letter and one number.';
-  }
+  if (!isStrongPassword(password)) errors.password = strongPasswordMessage;
 
   return errors;
 };
@@ -49,15 +53,7 @@ export const validatePassword = ({ currentPassword, newPassword }) => {
   if (typeof currentPassword !== 'string' || currentPassword.length === 0) {
     errors.currentPassword = 'Current password is required.';
   }
-  if (
-    typeof newPassword !== 'string'
-    || newPassword.length < 8
-    || newPassword.length > 72
-    || !/[A-Za-z]/.test(newPassword)
-    || !/\d/.test(newPassword)
-  ) {
-    errors.newPassword = 'New password must be 8-72 characters and include at least one letter and one number.';
-  }
+  if (!isStrongPassword(newPassword)) errors.newPassword = strongPasswordMessage.replace('Password', 'New password');
   return errors;
 };
 

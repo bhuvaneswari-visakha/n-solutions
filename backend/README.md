@@ -24,24 +24,41 @@ Dashboard services currently return zero counts and empty lists when the future 
 ```bash
 cd backend
 npm install
-copy .env.example .env
+test -f .env || cp .env.example .env
 ```
 
-Edit `.env` and set a long random `JWT_SECRET` and a reachable `MONGODB_URI`. On macOS/Linux, use `cp .env.example .env` instead of `copy`.
+In PowerShell, use `if (!(Test-Path .env)) { Copy-Item .env.example .env }` instead. These commands preserve an existing `.env` and its credentials.
+
+The example config connects to a local MongoDB server at `mongodb://127.0.0.1:27017/nsolutions`. Start MongoDB Community Server on this computer, then connect MongoDB Compass to the same URI to browse the `nsolutions` database. Compass is the GUI client; the backend connects directly to MongoDB.
+
+Edit `.env` and set a long random `JWT_SECRET` (at least 32 characters) and a private `ADMIN_REGISTRATION_KEY`. Keep `.env` out of Git.
 
 The default `ADMIN_REGISTRATION_MODE=bootstrap` permits the first admin registration only. After an admin exists, registration returns `403` unless the caller also supplies `X-Admin-Registration-Key` matching `ADMIN_REGISTRATION_KEY`. For a production deployment, use `ADMIN_REGISTRATION_MODE=disabled` after provisioning, or use `key` with a strong secret managed outside source control.
 
-## Connect MongoDB Compass to the Existing Atlas Database
+## Local MongoDB and Compass
 
-MongoDB Compass is a desktop client for viewing and managing MongoDB. It does not replace Atlas or the backend's database connection. The backend continues to use the existing Atlas cluster configured by `MONGODB_URI`; Compass connects directly to that same cluster.
+1. Install and start MongoDB Community Server locally. MongoDB Compass alone is not a database server.
+2. In Compass, connect to `mongodb://127.0.0.1:27017` (or use the full database URI `mongodb://127.0.0.1:27017/nsolutions`).
+3. Start the backend with the example `MONGODB_URI`. MongoDB creates the `nsolutions` database and collections when the application first writes data; Mongoose creates schema indexes as models initialize.
+4. Existing online data is not copied automatically. Back it up/export it first and restore into a separate local database as described below. Do not use a `--drop` restore option.
 
-1. In MongoDB Atlas, open the existing project and cluster, then go to **Connect** → **Compass**. Copy the connection string Atlas provides. Do not create a new cluster or database.
-2. In Atlas **Network Access**, allow the current computer's public IP address so Compass can reach the cluster. Do not use `0.0.0.0/0` for convenience.
-3. Use an Atlas database user for Compass. Prefer a separate user with read-only access to the existing application database if you only need to inspect it. Grant broader access only if you need to make changes.
-4. Open Compass, paste the Atlas connection string, enter the database user's credentials when prompted, and connect. Browse the existing database and collections; avoid database or collection creation, drops, or edits unless intended.
-5. Keep the connection string and password private. The backend's `MONGODB_URI` belongs only in the ignored `backend/.env` for local development and in the backend service's environment variables on Render. Never put it in Vercel/frontend variables, frontend source, or Git.
+### Copy existing online records to local MongoDB
 
-When connecting with Compass, select the same database named in the existing backend `MONGODB_URI` (or browse the databases available to that database user). Connecting with Compass does not alter the backend, API, authentication, admin panel, or deployment configuration. Changes made through Compass directly affect the live Atlas data, so use the least-privileged database role appropriate to your task.
+Install MongoDB Database Tools, then take a dump from the current online URI. Keep the URI private and substitute it locally; do not put real credentials in documentation or commit them:
+
+```bash
+mongodump --uri="<EXISTING_ONLINE_MONGODB_URI>" --out="./mongo-backup"
+```
+
+Restore that dump under the local `nsolutions` database:
+
+```bash
+mongorestore --uri="mongodb://127.0.0.1:27017/nsolutions" --nsFrom="<SOURCE_DATABASE>.*" --nsTo="nsolutions.*" "./mongo-backup/<SOURCE_DATABASE>"
+```
+
+Replace `<SOURCE_DATABASE>` with the database name in the online URI/dump. Restore into a fresh or empty local database. `mongorestore` does not remove collections unless `--drop` is supplied; if matching `_id` values already exist, the restore can report duplicate-key errors and will not replace those records. Compass also supports exporting/importing individual collections, but `mongodump`/`mongorestore` better preserves BSON types and indexes. Do not delete the source database or backup as part of this process.
+
+Database dumps contain records, not uploaded files. Copy corresponding existing local upload files separately while preserving their relative locations and filenames under `backend/uploads/`. For URLs pointing to a third-party media host, download and migrate the files separately; restoring database records alone does not bring those files local. Keep private resumes private.
 
 ## Run
 
@@ -57,12 +74,40 @@ npm start
 
 The API listens on `http://localhost:5000` by default. MongoDB connection failure stops startup and is logged clearly.
 
+## Run the full project locally
+
+First install MongoDB Community Server and start its service. In Compass, connect to `mongodb://127.0.0.1:27017`. From the repository root, open two terminals.
+
+Backend terminal (PowerShell):
+
+```powershell
+cd backend
+npm install
+if (!(Test-Path .env)) { Copy-Item .env.example .env }
+```
+
+Edit `backend/.env`: keep the local `MONGODB_URI`, set a random `JWT_SECRET` of at least 32 characters, and set `ADMIN_REGISTRATION_KEY` to a private value. Then run:
+
+```powershell
+npm run dev
+```
+
+Frontend terminal:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173`. Vite proxies API and `/uploads` requests to `http://localhost:5000`; override this with `VITE_PROXY_TARGET` in `frontend/.env.local` if needed. Run `npm start` from `backend` instead of `npm run dev` for the non-watch backend process.
+
 ## Environment Variables
 
 | Variable | Purpose |
 | --- | --- |
 | `PORT` | HTTP port, default `5000` |
-| `MONGODB_URI` | MongoDB connection string |
+| `MONGODB_URI` | MongoDB connection string; local default: `mongodb://127.0.0.1:27017/nsolutions`. Production must use a MongoDB service reachable by the backend host. |
 | `JWT_SECRET` | JWT signing secret, minimum 32 characters |
 | `JWT_EXPIRES_IN` | JWT duration accepted by `jsonwebtoken`, default `7d` |
 | `NODE_ENV` | Runtime environment |
@@ -79,13 +124,17 @@ Uploads use Multer `diskStorage` and are staged under `UPLOAD_DIR/.staging` befo
 
 The API accepts JPEG, PNG, WebP, and GIF images (10 MB per image), MP4/MOV/WebM videos (80 MB), and PDF/DOC/DOCX resumes (5 MB). Project image batches are capped at 80 MB total; video and thumbnail batches at 90 MB total. MIME type, extension, and file signature are checked. Temporary staging files are cleaned up after each response and stale files older than 24 hours are removed at backend startup.
 
-This setup is intended for local development. Files live on the backend host's filesystem and are not automatically shared with other instances.
+This setup is intended for local development. Files live on the backend host's filesystem and are not automatically shared with other instances. MongoDB Compass stores and manages database records; it does not store uploaded image, video, or resume files.
 
 Render deployment:
 
 Render's normal service filesystem is ephemeral. To retain uploaded files across redeployments and restarts, provision a Render Persistent Disk and mount it at the backend upload directory, then set `UPLOAD_DIR` to that mount path. Without this disk configuration, local uploads can be lost. Production persistence on Render has not been verified by this project.
 
 For a separately hosted frontend, set `VITE_API_BASE_URL` to the backend `/api` URL at build time. Local Vite development uses `VITE_PROXY_TARGET` (default `http://localhost:5000`) to proxy both API and uploaded-media paths.
+
+## Production database
+
+The backend requires a reachable MongoDB database at startup and exits if the connection fails. The local URI `mongodb://127.0.0.1:27017/nsolutions` refers to the machine running the backend. On Render, `127.0.0.1` refers to the Render service itself, not your computer; changing Render's `MONGODB_URI` to the local URI will break backend startup and database-backed live features. Keep the existing production database URI configured in Render until a replacement production database is provisioned and migrated. Do not expose a personal computer's MongoDB server to the public internet to make it reachable. Local development settings in `backend/.env` do not change Render's environment variables.
 
 ## API Endpoints
 
@@ -99,9 +148,11 @@ Request:
 {
   "name": "Admin",
   "email": "admin@nsolutions.com",
-  "password": "StrongPassword123"
+  "password": "StrongPassword123!"
 }
 ```
+
+Admin passwords must be 12-72 characters and include an uppercase letter, a lowercase letter, a number, and a special character. The same rule applies when an admin changes their password.
 
 Successful response (`201`):
 
@@ -129,7 +180,7 @@ Request:
 ```json
 {
   "email": "admin@nsolutions.com",
-  "password": "StrongPassword123"
+  "password": "StrongPassword123!"
 }
 ```
 

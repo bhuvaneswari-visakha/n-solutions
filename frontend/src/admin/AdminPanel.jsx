@@ -1634,12 +1634,14 @@ const loadMedia = async () => {
       return
     }
     if (
-      profilePassword.length < 8
+      profilePassword.length < 12
       || profilePassword.length > 72
-      || !/[A-Za-z]/.test(profilePassword)
+      || !/[a-z]/.test(profilePassword)
+      || !/[A-Z]/.test(profilePassword)
       || !/\d/.test(profilePassword)
+      || !/[^A-Za-z0-9\s]/.test(profilePassword)
     ) {
-      showToast('New password must be 8-72 characters and include at least one letter and one number.')
+      showToast('New password must be 12-72 characters and include an uppercase letter, a lowercase letter, a number, and a special character.')
       return
     }
 
