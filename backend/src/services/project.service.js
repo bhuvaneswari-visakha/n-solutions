@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Project } from '../models/Project.js';
-import { deleteProjectImage } from '../config/cloudinary.js';
+import { deleteProjectImage } from './media-storage.service.js';
 
 const projectResponse = (project) => ({
   id: project._id.toString(),

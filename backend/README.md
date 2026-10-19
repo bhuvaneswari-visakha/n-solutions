@@ -87,23 +87,6 @@ Render's normal service filesystem is ephemeral. To retain uploaded files across
 
 For a separately hosted frontend, set `VITE_API_BASE_URL` to the backend `/api` URL at build time. Local Vite development uses `VITE_PROXY_TARGET` (default `http://localhost:5000`) to proxy both API and uploaded-media paths.
 
-### Existing asset migration
-
-Existing records can continue to reference their legacy URLs until migrated. To copy legacy Cloudinary-hosted assets into local storage, back up MongoDB, set `UPLOAD_DIR` to the intended backend upload directory, and run:
-
-```bash
-cd backend
-npm run migrate:media
-```
-
-The default is a read-only dry run. Apply after reviewing the identified record counts:
-
-```bash
-npm run migrate:media -- --apply
-```
-
-The default is a read-only dry run. Applying downloads eligible old assets, validates and writes them into local public/private folders, verifies byte lengths, and updates MongoDB only after storage succeeds. Failed downloads or writes leave the record unchanged and are reported; the source asset is not deleted. The migration is optional; ensure the destination disk has sufficient space and remains available while migrating.
-
 ## API Endpoints
 
 ### `POST /api/auth/register`

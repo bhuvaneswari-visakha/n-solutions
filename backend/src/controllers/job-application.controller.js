@@ -1,4 +1,4 @@
-import { deleteResume, uploadResume } from '../config/cloudinary.js';
+import { deleteResume, getStoredPrivateFile, uploadResume } from '../services/media-storage.service.js';
 import {
   createJobApplication,
   findJobForApplication,
@@ -74,12 +74,8 @@ export const submit = async (request, response) => {
 
   let resume;
   try {
-    resume = await uploadResume(
-      request.file.buffer,
-      request.file.originalname
-    );
+    resume = await uploadResume(request.file);
   } catch (error) {
-    if (error.statusCode === 503) throw error;
     const uploadError = new Error('Resume upload failed.');
     uploadError.statusCode = 500;
     throw uploadError;
@@ -145,12 +141,19 @@ export const downloadResumeFile = async (request, response) => {
   }
 
   const safeName = (application.fullName || 'Candidate').replace(/[^a-zA-Z0-9_-]/g, '_');
-  let attachmentUrl = resumeUrl;
-  if (attachmentUrl.includes('cloudinary.com') && attachmentUrl.includes('/upload/')) {
-    attachmentUrl = attachmentUrl.replace(
-      '/upload/',
-      `/upload/fl_attachment:${encodeURIComponent(safeName + '_Resume')}/`
-    );
+  const publicId = application.resume?.publicId;
+  if (publicId?.startsWith('private/resumes/')) {
+    const file = await getStoredPrivateFile(publicId);
+    const extension = publicId.split('/').pop().split('.').pop();
+    response.set({
+      'Content-Length': file.ContentLength,
+      'Content-Type': file.ContentType,
+      'Content-Disposition': `attachment; filename="${safeName}_Resume.${extension}"`,
+      'X-Content-Type-Options': 'nosniff'
+    });
+    file.Body.pipe(response);
+    return;
   }
-  return response.redirect(attachmentUrl);
+
+  return response.redirect(resumeUrl);
 };

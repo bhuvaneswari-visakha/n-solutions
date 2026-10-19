@@ -1,4 +1,4 @@
-import { deleteMediaImage, deleteMediaVideo, uploadMediaImage, uploadMediaVideo } from '../config/cloudinary.js';
+import { deleteMediaImage, deleteMediaVideo, uploadMediaImage, uploadMediaVideo } from '../services/media-storage.service.js';
 import { VIDEO_CATEGORIES } from '../models/Video.js';
 import { createVideo, deleteVideo, getVideo, listVideos, updateVideo } from '../services/video.service.js';
 import { sendSuccess } from '../utils/response.js';
@@ -39,9 +39,9 @@ export const create = async (request, response) => {
   let thumbnail;
   let uploadedVideo;
   try {
-    if (thumbnailFile) thumbnail = await uploadMediaImage(thumbnailFile.buffer);
+    if (thumbnailFile) thumbnail = await uploadMediaImage(thumbnailFile, 'videos');
     if (videoFile) {
-      uploadedVideo = await uploadMediaVideo(videoFile.buffer);
+      uploadedVideo = await uploadMediaVideo(videoFile);
       input.videoUrl = uploadedVideo.url;
       input.videoPublicId = uploadedVideo.publicId;
     }
@@ -62,8 +62,8 @@ export const update = async (request, response) => {
   const files = request.files || {}; const thumbnailFile = files.thumbnail?.[0]; const videoFile = files.video?.[0]; const input = { ...request.body }; const details = validate(input, true); if (input.videoUrl !== undefined && !input.videoUrl) details.videoUrl = 'Video URL must not be empty.'; if (!thumbnailFile && !videoFile && Object.keys(input).length === 0) details.video = 'At least one field is required.'; if (Object.keys(details).length) throw validationError(details);
   let thumbnail; let uploadedVideo;
   try {
-    if (thumbnailFile) { thumbnail = await uploadMediaImage(thumbnailFile.buffer); input.thumbnail = thumbnail; }
-    if (videoFile) { uploadedVideo = await uploadMediaVideo(videoFile.buffer); input.videoUrl = uploadedVideo.url; input.videoPublicId = uploadedVideo.publicId; }
+    if (thumbnailFile) { thumbnail = await uploadMediaImage(thumbnailFile, 'videos'); input.thumbnail = thumbnail; }
+    if (videoFile) { uploadedVideo = await uploadMediaVideo(videoFile); input.videoUrl = uploadedVideo.url; input.videoPublicId = uploadedVideo.publicId; }
     const result = await updateVideo(request.params.id, input);
     if (result.previousThumbnail) await cleanupImage(result.previousThumbnail);
     if (result.previousVideo) await cleanupVideo(result.previousVideo);
