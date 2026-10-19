@@ -53,8 +53,6 @@ export async function apiRequest(endpoint, options = {}) {
     ...options,
     headers
   }
-  console.log('API URL:', url)
-console.log('Auth token exists:', !!token)
   try {
     const response = await fetch(url, config)
     

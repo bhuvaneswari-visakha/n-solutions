@@ -10,10 +10,11 @@ const SEO = ({
   image = "/images/og-default.jpg",
   type = "website",
 }) => {
-  const canonicalUrl = `SITEURL{path}`;
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  const canonicalUrl = `${SITE_URL}${cleanPath}`;
   const imageUrl = image.startsWith("http")
     ? image
-    : `SITEURL{image}`;
+    : `${SITE_URL}${image.startsWith("/") ? image : `/${image}`}`;
 
   return (
     <Helmet>
