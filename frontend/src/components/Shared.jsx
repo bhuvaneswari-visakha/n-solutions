@@ -934,15 +934,17 @@ function LogoPartnersSection() {
 }
 
 
-export function SiteFooter() {
+export function SiteFooter({ showClients = true, hideClients = false, showPartners = true, hidePartners = false } = {}) {
   const handleNav = (e, path) => {
     e.preventDefault()
     navigate(path)
   }
 
+  const shouldRenderPartners = showClients && !hideClients && showPartners && !hidePartners
+
   return (
     <footer className="site-footer">
-      <LogoPartnersSection/>
+      {shouldRenderPartners && <LogoPartnersSection/>}
       {/* ================= MAIN FOOTER ================= */}
       <section className="footer-main">
 
