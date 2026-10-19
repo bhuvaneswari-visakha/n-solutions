@@ -634,19 +634,7 @@ export default function ProductsPage() {
       <main>
         {/* HERO SECTION */}
         <section className="products-hero">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-            poster="/about/solar-poster.webp"
-          >
-            <source
-              src="/about/solar-video.mp4"
-              type="video/mp4"
-            />
-          </video>
+          <video className="hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true"><source src="/media/products.mp4" type="video/mp4" /></video>
           <div className="products-hero-shade" />
 
           <div className="wrap products-hero-content">
