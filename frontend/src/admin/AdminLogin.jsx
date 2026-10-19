@@ -37,7 +37,12 @@ export default function AdminLogin({ onLoginSuccess }) {
         })
       })
 
-      const result = await response.json()
+      let result = {}
+      try {
+        result = await response.json()
+      } catch {
+        result = { success: false, message: response.ok ? 'Unexpected response format' : 'Unable to connect to server. Please try again.' }
+      }
 
       if (!response.ok || !result.success) {
         setError(result.message || 'Invalid email or password.')

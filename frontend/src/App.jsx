@@ -1,14 +1,24 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, lazy, Suspense } from 'react'
 import SEO from "./components/SEO/SEO";
 import ProjectsPage, { projectsData } from './pages/ProjectsPage'
-import ProductsPage from './pages/ProductsPage'
-import MediaPage from './pages/MediaPage'
-import CareersPage from './pages/CareersPage'
-import ContactPage from './pages/ContactPage'
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
-import TermsConditionsPage from './pages/TermsConditionsPage'
-import NotFoundPage from './pages/NotFoundPage'
-import AdminPortal from './admin/AdminPortal'
+
+const ProductsPage = lazy(() => import('./pages/ProductsPage'))
+const MediaPage = lazy(() => import('./pages/MediaPage'))
+const CareersPage = lazy(() => import('./pages/CareersPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
+const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const AdminPortal = lazy(() => import('./admin/AdminPortal'))
+
+const PageFallback = () => (
+  <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ textAlign: 'center', color: '#0875b6', fontFamily: 'inherit' }}>
+      <div style={{ width: 36, height: 36, border: '3px solid #e2e8f0', borderTopColor: '#0875b6', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+      <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Loading...</span>
+    </div>
+  </div>
+)
 import {
   navigate,
   SiteFooter,
@@ -2015,16 +2025,16 @@ function App() {
   if (currentPath === '/about') return <><AboutPage /><WhatsAppWidget /></>
   if (currentPath === '/services') return <><ServicesPage /><WhatsAppWidget /></>
   if (currentPath === '/projects') return <><ProjectsPage /><WhatsAppWidget /></>
-  if (currentPath === '/products') return <><ProductsPage /><WhatsAppWidget /></>
-  if (currentPath === '/media') return <><MediaPage /><WhatsAppWidget /></>
-  if (currentPath === '/careers') return <><CareersPage /><WhatsAppWidget /></>
-  if (currentPath === '/contact') return <><ContactPage /><WhatsAppWidget /></>
-  if (currentPath === '/privacy' || currentPath === '/privacy-policy') return <><PrivacyPolicyPage /><WhatsAppWidget /></>
-  if (currentPath === '/terms' || currentPath === '/terms-and-conditions') return <><TermsConditionsPage /><WhatsAppWidget /></>
+  if (currentPath === '/products') return <Suspense fallback={<PageFallback />}><ProductsPage /><WhatsAppWidget /></Suspense>
+  if (currentPath === '/media') return <Suspense fallback={<PageFallback />}><MediaPage /><WhatsAppWidget /></Suspense>
+  if (currentPath === '/careers') return <Suspense fallback={<PageFallback />}><CareersPage /><WhatsAppWidget /></Suspense>
+  if (currentPath === '/contact') return <Suspense fallback={<PageFallback />}><ContactPage /><WhatsAppWidget /></Suspense>
+  if (currentPath === '/privacy' || currentPath === '/privacy-policy') return <Suspense fallback={<PageFallback />}><PrivacyPolicyPage /><WhatsAppWidget /></Suspense>
+  if (currentPath === '/terms' || currentPath === '/terms-and-conditions') return <Suspense fallback={<PageFallback />}><TermsConditionsPage /><WhatsAppWidget /></Suspense>
   if (currentPath === '/admin' || currentPath.startsWith('/admin')) {
-    return <><SEO title="Admin | N Solutions" description="N Solutions administrator portal." path="/admin" noIndex /><AdminPortal /></>
+    return <Suspense fallback={<PageFallback />}><SEO title="Admin | N Solutions" description="N Solutions administrator portal." path="/admin" noIndex /><AdminPortal /></Suspense>
   }
-  if (currentPath !== '/') return <><NotFoundPage /><WhatsAppWidget /></>
+  if (currentPath !== '/') return <Suspense fallback={<PageFallback />}><NotFoundPage /><WhatsAppWidget /></Suspense>
 
 
   const featuredStatistic = {
