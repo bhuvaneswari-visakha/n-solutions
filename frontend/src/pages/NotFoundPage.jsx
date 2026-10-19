@@ -104,7 +104,7 @@ export default function NotFoundPage() {
             <div className="not-found-actions">
               <a
                 href="/"
-                className="button button-accent not-found-btn-primary"
+                className="not-found-btn not-found-btn-primary"
                 onClick={(e) => {
                   e.preventDefault()
                   navigate('/')
@@ -117,7 +117,7 @@ export default function NotFoundPage() {
 
               <a
                 href="/services"
-                className="button button-ghost not-found-btn-secondary"
+                className="not-found-btn not-found-btn-secondary"
                 onClick={(e) => {
                   e.preventDefault()
                   navigate('/services')
@@ -182,7 +182,7 @@ export default function NotFoundPage() {
         </section>
       </main>
 
-      <SiteFooter />
+      <SiteFooter hideClients={true} showClients={false} hidePartners={true} showPartners={false} />
     </div>
   )
 }

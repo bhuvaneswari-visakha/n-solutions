@@ -529,12 +529,42 @@ function IndustriesSection() {
 
 function FoundationSection() {
   const values = [
-    { title: 'Teamwork', text: 'We work across disciplines to deliver dependable solar projects.', icon: <FiUsers /> },
-    { title: 'Transparency', text: 'Clear communication and accountable project delivery at every stage.', icon: <FiShield /> },
-    { title: 'Quality', text: 'Careful engineering and installation built for lasting performance.', icon: <FiAward /> },
-    { title: 'Customer Focus', text: 'Solutions shaped around each customer’s site, needs, and goals.', icon: <FiBriefcase /> },
-    { title: 'Purposeful Goals', text: 'We measure success through safety, quality, and project outcomes.', icon: <FiTarget /> },
-    { title: 'Innovation', text: 'We apply proven technology with practical engineering.', icon: <FiCpu /> },
+    {
+      title: 'Teamwork',
+      text: 'We work across disciplines to deliver dependable solar projects.',
+      icon: <FiUsers />,
+      image: '/foundation/foundation-teamwork.png'
+    },
+    {
+      title: 'Transparency',
+      text: 'Clear communication and accountable project delivery at every stage.',
+      icon: <FiShield />,
+      image: '/foundation/foundation-transparency.jpg'
+    },
+    {
+      title: 'Quality',
+      text: 'Careful engineering and installation built for lasting performance.',
+      icon: <FiAward />,
+      image: '/foundation/foundation-quality.jpg'
+    },
+    {
+      title: 'Customer Focus',
+      text: 'Solutions shaped around each customer’s site, needs, and goals.',
+      icon: <FiBriefcase />,
+      image: '/foundation/foundation-customer-focus.jpg'
+    },
+    {
+      title: 'Purposeful Goals',
+      text: 'We measure success through safety, quality, and project outcomes.',
+      icon: <FiTarget />,
+      image: '/foundation/foundation-purposeful-goals.png'
+    },
+    {
+      title: 'Innovation',
+      text: 'We apply proven technology with practical engineering.',
+      icon: <FiCpu />,
+      image: '/foundation/foundation-innovation.jpg'
+    },
   ]
 
   return (
@@ -546,11 +576,25 @@ function FoundationSection() {
           <p>Shared principles shape how we engineer, deliver, and support every solar project.</p>
         </Reveal>
         <div className="foundation-grid">
-          {values.map(({ title, text, icon }) => (
-            <Reveal className="foundation-card" key={title}>
-              <span className="foundation-icon" aria-hidden="true">{icon}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
+          {values.map(({ title, text, icon, image }) => (
+            <Reveal className={`foundation-card ${image ? 'has-image' : 'no-image'}`} key={title}>
+              <div className="foundation-media-box">
+                {image ? (
+                  <>
+                    <img src={image} alt={title} className="foundation-card-img" />
+                    <span className="foundation-icon-badge" aria-hidden="true">{icon}</span>
+                  </>
+                ) : (
+                  <div className="foundation-placeholder-box">
+                    <span className="foundation-icon" aria-hidden="true">{icon}</span>
+                    <span className="foundation-awaiting-tag">Core Value</span>
+                  </div>
+                )}
+              </div>
+              <div className="foundation-card-body">
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
             </Reveal>
           ))}
         </div>
@@ -1983,6 +2027,65 @@ function App() {
   if (currentPath !== '/') return <><NotFoundPage /><WhatsAppWidget /></>
 
 
+  const featuredStatistic = {
+    value: 750,
+    suffix: '+',
+    title: 'PM Surya Ghar: Muft Bijli Yojana',
+    category: 'National Flagship Scheme',
+    subtitle: 'Rooftop Solar Independence',
+    description: 'Empowering 750+ homes with clean, grid-connected solar power, streamlined government subsidies, tier-1 bifacial modules, and rapid net-metering execution across Andhra Pradesh.',
+    highlights: [
+      '500+ Sites in Vizianagaram',
+      '100% Direct MNRE Subsidy Handled',
+      'Tier-1 Inverters & ALMM Panels'
+    ],
+    path: '/products',
+    delay: 80
+  }
+
+  const secondaryStatistics = [
+    {
+      value: 140,
+      suffix: '+',
+      title: 'Residential Projects',
+      category: 'Homes & Villas',
+      subtitle: 'Custom rooftop setups for independent houses & residential villas.',
+      icon: <FiHome />,
+      colorClass: 'sky',
+      delay: 160
+    },
+    {
+      value: 120,
+      suffix: '+',
+      title: 'Government Projects',
+      category: 'Public Sector',
+      subtitle: 'Public utilities, municipal buildings & institutional EPC tenders.',
+      icon: <FiShield />,
+      colorClass: 'blue',
+      delay: 240
+    },
+    {
+      value: 200,
+      suffix: '+',
+      title: 'Commercial Projects',
+      category: 'Commercial EPC',
+      subtitle: 'Offices, colleges, shopping complexes & private healthcare facilities.',
+      icon: <FiBriefcase />,
+      colorClass: 'indigo',
+      delay: 320
+    },
+    {
+      value: 60,
+      suffix: '+',
+      title: 'Industrial Projects',
+      category: 'MW Captive Plants',
+      subtitle: 'High-voltage captive power plants & manufacturing rooftops.',
+      icon: <FiCpu />,
+      colorClass: 'teal',
+      delay: 400
+    }
+  ]
+
   return (
     <>
     <SEO
@@ -2009,40 +2112,128 @@ function App() {
             <AnimatedMetric value={16} suffix="+" label="Years of experience" delay={80} />
             <AnimatedMetric value={9} label="States across India" delay={180} />
             <AnimatedMetric value={360} suffix="°" label="End-to-end solar EPC" delay={280} />
-            <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar sites" delay={380} />
+            <AnimatedMetric value={1270} suffix="+" label="Total Installations Delivered" delay={380} />
           </div>
         </div>
       </section>
 
-      {/* SECTOR MILESTONES SHOWCASE — SIMPLE LIGHT DESIGN WITH WHO WE ARE HEADING */}
-      <section className="home-milestones-highlight" id="sector-milestones" aria-labelledby="sector-milestones-heading">
+      {/* SECTOR MILESTONES SHOWCASE — SPLIT-SCREEN DESIGN */}
+      <section className="home-milestones-highlight split-screen-section" id="sector-milestones" aria-labelledby="sector-milestones-heading">
         <div className="wrap">
-          <Reveal className="section-heading">
-            <div>
+          <Reveal className="section-heading milestones-heading-row">
+            <div className="milestones-heading-col">
               <p className="eyebrow"><span /> {homeContent.whoWeAre.eyebrow}</p>
               <h2 id="sector-milestones-heading">{homeContent.whoWeAre.title}<br /><em>{homeContent.whoWeAre.subtitle}</em></h2>
             </div>
-            <p className="heading-note">
-              Over 16+ years of disciplined solar EPC operations across 9 states in India — verified delivery across residential, government, commercial, and industrial sectors.
-            </p>
+
+            <div className="milestones-overview-card">
+              <div className="overview-pill-row">
+                <span className="overview-pill">
+                  <span className="overview-pill-dot" />
+                  Verified Sector Delivery
+                </span>
+                <span className="overview-sub-pill">Pan-India Operations</span>
+              </div>
+              <p className="overview-note-text">
+                Over 16+ years of disciplined solar EPC operations across 9 states in India — verified delivery across residential, government, commercial, and industrial sectors.
+              </p>
+              <div className="overview-meta-chips">
+                <span className="meta-chip"><strong>16+</strong> Yrs Track Record</span>
+                <span className="meta-chip"><strong>9</strong> States Active</span>
+                <span className="meta-chip"><strong>5</strong> Delivery Domains</span>
+              </div>
+            </div>
           </Reveal>
 
-          <div className="home-milestones-grid">
-            <div className="home-milestone-col">
-              <AnimatedMetric value={750} suffix="+" label="PM Surya Ghar" delay={80} />
+          {/* SPLIT-SCREEN LAYOUT: Large Featured on Left, 4 Smaller on Right */}
+          <div className="split-stats-layout">
+            
+            {/* LEFT: LARGE FEATURED STATISTIC (PM SURYA GHAR) */}
+            <div className="split-featured-col">
+              <div className="split-featured-card">
+                {/* Decorative Solar Glow in Card */}
+                <div className="featured-card-ambient" aria-hidden="true" />
+                
+                <div className="featured-card-header">
+                  <div className="featured-icon-badge">
+                    <FiSun className="featured-sun-icon" />
+                    <span className="featured-badge-text">{featuredStatistic.category}</span>
+                  </div>
+                  <span className="featured-pill-live">
+                    <span className="featured-pill-pulse" /> Active Deployment
+                  </span>
+                </div>
+
+                <div className="featured-metric-wrap">
+                  <div className="featured-metric-number">
+                    <AnimatedMetric
+                      value={featuredStatistic.value}
+                      suffix={featuredStatistic.suffix}
+                      delay={featuredStatistic.delay}
+                    />
+                  </div>
+                  <span className="featured-metric-label">Sites Completed &amp; Connected</span>
+                </div>
+
+                <div className="featured-card-body">
+                  <h3 className="featured-card-title">{featuredStatistic.title}</h3>
+                  <p className="featured-card-desc">{featuredStatistic.description}</p>
+
+                  <div className="featured-highlights-list">
+                    {featuredStatistic.highlights.map((highlight, hIdx) => (
+                      <div className="featured-highlight-item" key={hIdx}>
+                        <FiCheck className="highlight-check-icon" />
+                        <span>{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="featured-card-footer">
+                  <a
+                    href={featuredStatistic.path}
+                    className="featured-cta-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      navigate(featuredStatistic.path)
+                    }}
+                  >
+                    <span>Explore PM Surya Ghar Solutions</span>
+                    <Arrow />
+                  </a>
+                </div>
+              </div>
             </div>
-            <div className="home-milestone-col">
-              <AnimatedMetric value={140} suffix="+" label="Residential Projects" delay={160} />
+
+            {/* RIGHT: FOUR SMALLER STATISTICS (2x2 Grid) */}
+            <div className="split-secondary-col">
+              <div className="split-secondary-grid">
+                {secondaryStatistics.map((stat, idx) => (
+                  <div className={`secondary-stat-card card-${stat.colorClass}`} key={idx}>
+                    <div className="secondary-card-top">
+                      <div className={`secondary-icon-pod ${stat.colorClass}`}>
+                        {stat.icon}
+                      </div>
+                      <span className={`secondary-category-pill ${stat.colorClass}`}>
+                        {stat.category}
+                      </span>
+                    </div>
+
+                    <div className="secondary-metric-wrap">
+                      <AnimatedMetric value={stat.value} suffix={stat.suffix} delay={stat.delay} />
+                    </div>
+
+                    <div className="secondary-card-content">
+                      <h4 className="secondary-card-title">{stat.title}</h4>
+                      <p className="secondary-card-desc">{stat.subtitle}</p>
+                    </div>
+
+                    <div className={`secondary-card-bottom-line ${stat.colorClass}`} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="home-milestone-col">
-              <AnimatedMetric value={120} suffix="+" label="Government Projects" delay={240} />
-            </div>
-            <div className="home-milestone-col">
-              <AnimatedMetric value={200} suffix="+" label="Commercial Projects" delay={320} />
-            </div>
-            <div className="home-milestone-col">
-              <AnimatedMetric value={60} suffix="+" label="Industrial Projects" delay={400} />
-            </div>
+
           </div>
         </div>
       </section>
