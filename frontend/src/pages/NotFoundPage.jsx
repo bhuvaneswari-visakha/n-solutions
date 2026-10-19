@@ -76,19 +76,12 @@ export default function NotFoundPage() {
             {/* Visual Solar 404 Graphic */}
             <div className="not-found-visual-badge">
               <span className="not-found-digit">4</span>
-              <div className="solar-sun-glyph" aria-hidden="true">
-                <div className="sun-core">
-                  <FiSun className="sun-icon-spin" />
-                </div>
-                <div className="sun-rays" />
-                <div className="sun-pulse-ring" />
-              </div>
+              <span className="not-found-digit">0</span>
               <span className="not-found-digit">4</span>
             </div>
 
             {/* Small Label */}
             <div className="error-pill-label">
-              <span className="error-pill-dot" />
               <span>ERROR 404</span>
             </div>
 

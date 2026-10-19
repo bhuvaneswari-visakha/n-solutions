@@ -16850,11 +16850,11 @@ button:focus-visible {
    ===================================================== */
 .about-milestones-showcase {
   padding: 100px 0 90px;
-  background: linear-gradient(180deg, #f8fafc 0%, #eef5fb 100%);
+  background: linear-gradient(180deg, var(--section-alt) 0%, var(--section-alt2) 100%);
   position: relative;
   overflow: hidden;
-  border-top: 1px solid rgba(21, 101, 192, 0.08);
-  border-bottom: 1px solid rgba(21, 101, 192, 0.08);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .about-milestones-showcase::before {
@@ -16865,7 +16865,7 @@ button:focus-visible {
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(21, 101, 192, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -16877,7 +16877,7 @@ button:focus-visible {
   width: 450px;
   height: 450px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(230, 126, 0, 0.06) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -16892,12 +16892,12 @@ button:focus-visible {
 .milestone-feature-card {
   position: relative;
   background: #ffffff;
-  border: 1.5px solid rgba(21, 101, 192, 0.12);
+  border: 1.5px solid var(--line);
   border-radius: 22px;
   padding: 30px 24px 28px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 30px rgba(13, 71, 161, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(21, 101, 192, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
   overflow: hidden;
   cursor: default;
@@ -16916,48 +16916,48 @@ button:focus-visible {
 }
 
 .milestone-card-pm::before {
-  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-light));
 }
 
 .milestone-card-residential::before {
-  background: linear-gradient(90deg, #0284c7, #38bdf8);
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-light));
 }
 
 .milestone-card-govt::before {
-  background: linear-gradient(90deg, #1d4ed8, #4f46e5);
+  background: linear-gradient(90deg, var(--brand-primary-dark), var(--brand-primary));
 }
 
 .milestone-card-commercial::before {
-  background: linear-gradient(90deg, #2563eb, #0ea5e9);
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
 }
 
 .milestone-card-industrial::before {
-  background: linear-gradient(90deg, #059669, #10b981);
+  background: linear-gradient(90deg, var(--brand-primary-dark), var(--brand-primary-light));
 }
 
 .milestone-feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 22px 48px rgba(13, 71, 161, 0.12), 0 6px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 22px 48px rgba(21, 101, 192, 0.12), 0 6px 16px rgba(0, 0, 0, 0.04);
 }
 
 .milestone-card-pm:hover {
-  border-color: rgba(245, 158, 11, 0.35);
+  border-color: rgba(21, 101, 192, 0.35);
 }
 
 .milestone-card-residential:hover {
-  border-color: rgba(2, 132, 199, 0.35);
+  border-color: rgba(21, 101, 192, 0.35);
 }
 
 .milestone-card-govt:hover {
-  border-color: rgba(29, 78, 216, 0.35);
+  border-color: rgba(67, 114, 184, 0.35);
 }
 
 .milestone-card-commercial:hover {
-  border-color: rgba(37, 99, 235, 0.35);
+  border-color: rgba(21, 101, 192, 0.35);
 }
 
 .milestone-card-industrial:hover {
-  border-color: rgba(5, 150, 105, 0.35);
+  border-color: rgba(67, 114, 184, 0.35);
 }
 
 .milestone-feature-card:hover::before {
@@ -16992,33 +16992,33 @@ button:focus-visible {
 }
 
 .milestone-card-pm .milestone-icon-badge {
-  background: #fffbeb;
-  color: #d97706;
-  border: 1px solid #fef3c7;
+  background: var(--section-alt2);
+  color: var(--brand-primary);
+  border: 1px solid var(--line);
 }
 
 .milestone-card-residential .milestone-icon-badge {
-  background: #f0f9ff;
-  color: #0284c7;
-  border: 1px solid #e0f2fe;
+  background: var(--section-alt2);
+  color: var(--brand-primary);
+  border: 1px solid var(--line);
 }
 
 .milestone-card-govt .milestone-icon-badge {
-  background: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #dbeafe;
+  background: var(--section-alt2);
+  color: var(--brand-primary-dark);
+  border: 1px solid var(--line);
 }
 
 .milestone-card-commercial .milestone-icon-badge {
-  background: #f0fdf4;
-  color: #2563eb;
-  border: 1px solid #dcfce7;
+  background: var(--section-alt2);
+  color: var(--brand-primary);
+  border: 1px solid var(--line);
 }
 
 .milestone-card-industrial .milestone-icon-badge {
-  background: #ecfdf5;
-  color: #059669;
-  border: 1px solid #d1fae5;
+  background: var(--section-alt2);
+  color: var(--brand-primary-dark);
+  border: 1px solid var(--line);
 }
 
 .milestone-sector-tag {
@@ -17027,7 +17027,7 @@ button:focus-visible {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--muted);
   text-align: right;
   line-height: 1.3;
 }
@@ -17068,7 +17068,7 @@ button:focus-visible {
   font-family: 'Manrope', sans-serif;
   font-size: clamp(38px, 3.8vw, 50px);
   font-weight: 800;
-  color: #0f2b48;
+  color: var(--ink);
   letter-spacing: -0.04em;
   line-height: 1.05;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.3s ease;
@@ -17083,7 +17083,7 @@ button:focus-visible {
 }
 
 .animated-metric-wrap.is-animating strong {
-  text-shadow: 0 4px 14px rgba(15, 43, 72, 0.12);
+  text-shadow: 0 4px 14px rgba(28, 43, 58, 0.12);
 }
 
 .animated-metric-wrap.is-complete strong {
@@ -17104,23 +17104,14 @@ button:focus-visible {
 }
 
 .milestone-card-pm .milestone-card-metric strong span {
-  color: #ea580c;
+  color: var(--brand-primary);
 }
 
-.milestone-card-residential .milestone-card-metric strong span {
-  color: #0284c7;
-}
-
-.milestone-card-govt .milestone-card-metric strong span {
-  color: #1d4ed8;
-}
-
-.milestone-card-commercial .milestone-card-metric strong span {
-  color: #2563eb;
-}
-
+.milestone-card-residential .milestone-card-metric strong span,
+.milestone-card-govt .milestone-card-metric strong span,
+.milestone-card-commercial .milestone-card-metric strong span,
 .milestone-card-industrial .milestone-card-metric strong span {
-  color: #059669;
+  color: var(--brand-primary);
 }
 
 .milestone-card-metric small {
@@ -17130,14 +17121,14 @@ button:focus-visible {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .milestone-feature-card h3 {
   font-family: 'Manrope', sans-serif;
   font-size: 18px;
   font-weight: 800;
-  color: #0f2b48;
+  color: var(--ink);
   margin: 18px 0 8px;
   letter-spacing: -0.02em;
 }
@@ -17145,7 +17136,7 @@ button:focus-visible {
 .milestone-feature-card p {
   font-size: 13px;
   line-height: 1.6;
-  color: #64748b;
+  color: var(--muted);
   margin: 0;
   flex: 1;
 }
@@ -17157,11 +17148,11 @@ button:focus-visible {
   justify-content: space-between;
   gap: 32px;
   background: #ffffff;
-  border: 1.5px solid rgba(21, 101, 192, 0.15);
+  border: 1.5px solid var(--line);
   border-radius: 18px;
   padding: 24px 36px;
   margin-top: 40px;
-  box-shadow: 0 8px 24px rgba(13, 71, 161, 0.04);
+  box-shadow: 0 8px 24px rgba(21, 101, 192, 0.04);
 }
 
 .milestones-summary-strip .summary-stat strong {
@@ -17170,7 +17161,7 @@ button:focus-visible {
   font-family: 'Manrope', sans-serif;
   font-size: 36px;
   font-weight: 900;
-  color: #1565c0;
+  color: var(--brand-primary);
   letter-spacing: -0.03em;
   line-height: 1;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -17178,7 +17169,7 @@ button:focus-visible {
 }
 
 .milestones-summary-strip .summary-stat strong span {
-  color: #0284c7;
+  color: var(--brand-primary-light);
   display: inline-block;
   margin-left: 2px;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -17198,7 +17189,7 @@ button:focus-visible {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--muted);
   margin-top: 4px;
   white-space: nowrap;
 }
@@ -17206,7 +17197,7 @@ button:focus-visible {
 .milestones-summary-strip .summary-divider {
   width: 1px;
   height: 48px;
-  background: rgba(21, 101, 192, 0.14);
+  background: var(--line);
   flex-shrink: 0;
 }
 
@@ -17217,7 +17208,7 @@ button:focus-visible {
 .milestones-summary-strip .summary-text p {
   font-size: 14.5px;
   line-height: 1.6;
-  color: #334155;
+  color: var(--ink);
   margin: 0;
 }
 
