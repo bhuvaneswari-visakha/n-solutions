@@ -78,13 +78,13 @@ export default function MediaPage() {
           id: video.id || video._id,
           title: video.title || '',
           description: video.description || '',
-          videoUrl: video.videoUrl || ''
+          videoUrl: resolveMediaUrl(video.videoUrl || '')
         })))
         setTeamPhotos((data.gallery || [])
           .filter(item => item.category === 'Company' && item.image?.url)
           .map(item => ({
             id: item.id || item._id,
-            img: item.image.url,
+            img: resolveMediaUrl(item.image.url),
             label: item.title || '',
             description: item.description || ''
           })))
@@ -97,7 +97,7 @@ export default function MediaPage() {
         setClients((data.clients || []).map(item => ({
           id: item.id || item._id,
           name: item.name || '',
-          image: item.image?.url || '',
+          image: resolveMediaUrl(item.image?.url || ''),
           description: item.description || item.quote || ''
         })))
       } catch (err) {

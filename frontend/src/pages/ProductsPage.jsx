@@ -40,7 +40,7 @@ function mapPublicProduct(product) {
     brand: product?.brand || '',
     category: PUBLIC_PRODUCT_CATEGORY_MAP[categoryLabel] || 'protection',
     categoryLabel,
-    image: product?.image?.url || '',
+    image: resolveMediaUrl(product?.image?.url || ''),
     badge: categoryLabel,
     summary: product?.description || '',
     applications,
