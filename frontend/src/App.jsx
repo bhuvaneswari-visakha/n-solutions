@@ -1351,7 +1351,7 @@ function AboutPage() {
         preload="auto"
         aria-hidden="true"
       >
-        <source src="frontend\public\media\services-hero.mp4" type="video/mp4" />
+        <source src="media\services-hero.mp4" type="video/mp4" />
       </video>
       <div className="about-hero-shade" />
       <div className="wrap about-hero-content">
